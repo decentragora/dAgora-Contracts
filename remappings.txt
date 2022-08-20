@@ -1,0 +1,8 @@
+@chainlink/=lib/chainlink/
+@openzeppelin/=lib/openzeppelin-contracts/
+ERC721A/=lib/ERC721A/contracts/
+chainlink/=lib/chainlink/contracts/src/v0.8/dev/vendor/@arbitrum/nitro-contracts/src/
+ds-test/=lib/solmate/lib/ds-test/src/
+forge-std/=lib/forge-std/src/
+openzeppelin-contracts/=lib/openzeppelin-contracts/
+solmate/=lib/solmate/src/
