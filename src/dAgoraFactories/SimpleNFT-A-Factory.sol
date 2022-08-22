@@ -6,6 +6,9 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { SimpleNFTA } from "../dAgoraWizards/Simple-NFT-A.sol";
 import '../IdAgoraMemberships.sol';
 
+/// @title dAgora Simple NFT A Factory
+/// @author DadlessNsad || 0xOrphan
+/// @notice Used to create new Simple NFT A contracts for dAgora members.
 contract dAgoraSimpleNFTAFactory is Ownable, ReentrancyGuard {
     SimpleNFTA nfta;
 
@@ -15,13 +18,27 @@ contract dAgoraSimpleNFTAFactory is Ownable, ReentrancyGuard {
         uint256 nftAIndex;
     }
 
+    /// @notice The address of the dAgora Memberships contract.
     address public dAgoraMembership;
+
+    /// @notice The total count of NFTs created for members..
     uint256 public totalNftACount = 0;
+
+    /// @notice Used to pause and unpause the contract.
     bool public paused;
 
+    /// @notice Maps deployed contracts to their owners.
     mapping(address => Deploys) private _deployedContracts;
+
+    /// @notice Tracks users deployed contracts amount.
     mapping(address => uint256) public _addressDeployCount;
 
+
+    /// @notice Emitted when a new NFT A contract is deployed.
+    /// @param _nftContract The address of the deployed contract.
+    /// @param _owner The address of the owner.
+    /// @param _UserDeployCount Users total amount of deployed contracts.
+    /// @param _totalNftACount The total amount of NFTs created for members.
     event SimpleNFTACreated(
         address _nftContract, 
         address _owner, 
@@ -29,17 +46,29 @@ contract dAgoraSimpleNFTAFactory is Ownable, ReentrancyGuard {
         uint256 _totalNftACount
     );
 
-    constructor(address _dAgoraMembership) {
+
+    /// @notice Sets the contracts variables.
+    /// @param _dAgoraMembership The address of the dAgora Memberships contract.
+        constructor(address _dAgoraMembership) {
         dAgoraMembership = _dAgoraMembership;
     }
 
+
+    /// @notice Checks if the contract is paused.
     modifier isPaused() {
         require(!paused, "Factory is paused");
         _;
     }
 
 
-
+    /// @notice Function to create contracts for members.
+    /// @param _name The name of the NFT.
+    /// @param _symbol The symbol of the NFT.
+    /// @param _baseURI The base URI of the NFT.
+    /// @param _mintCost The cost of minting an NFT.
+    /// @param _bulkBuyLimit the max amount of NFTs that can be minted at once.
+    /// @param _maxTotalSupply The max supply of the NFT.
+    /// @param _newOwner The address of the new owner of deployed contract.
     function createNFT(
         string memory _name,
         string memory _symbol,
@@ -94,18 +123,21 @@ contract dAgoraSimpleNFTAFactory is Ownable, ReentrancyGuard {
         );
     }
 
+    /// @notice Function to check users deployed contract addresses.
+    /// @param _owner The address of the user we want to check.
     function deployedContracts(address _owner) public view returns (Deploys memory) {
         return _deployedContracts[_owner];
     }
 
-    function pause() public onlyOwner {
-        paused = true;
-    }
 
-    function unpause() public onlyOwner {
-        paused = false;
+    /// @notice Function allows owner to pause/unPause the contract.
+    function togglePause() public onlyOwner {
+        paused = !paused;
     }
+        
 
+    /// @notice Function to check if a user is a valid member & can create NFT contracts.
+    /// @return boolean
     function _canCreate() internal view returns(bool){
         uint256 _currentSupply =  IdAgoraMembership(dAgoraMembership).totalSupply();
         if(IdAgoraMembership(dAgoraMembership).balanceOf(msg.sender) > 0) {

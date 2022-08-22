@@ -6,6 +6,9 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { PowerPlusNFT } from "../dAgoraWizards/PowerPlusNFT.sol";
 import '../IdAgoraMemberships.sol';
 
+/// @title PowerPlusNFT Factory
+/// @author DadlessNsad || 0xOrphan
+/// @notice Allows dAgora members to create new PowerPlusNFT contracts.
 contract dAgoraPowerPlusNFTFactory is Ownable, ReentrancyGuard {
     PowerPlusNFT nft;
 
@@ -15,13 +18,28 @@ contract dAgoraPowerPlusNFTFactory is Ownable, ReentrancyGuard {
         uint256 contractId;
     }
 
+
+    /// @notice The address of the dAgora Memberships contract.
     address public dAgoraMembership;
+
+        /// @notice The total count of NFTs created for members..
     uint256 public powerPlusNFTCount = 0;
+
+    /// @notice Used to pause and unpause the contract.
     bool public paused;
 
+    /// @notice Maps deployed contracts to their owners.
     mapping(address => Deploys) private _deployedContracts;
+    
+    /// @notice Tracks users deployed contracts amount.
     mapping(address => uint256) public _addressDeployCount;
 
+
+    /// @notice Emitted when a new NFT contract is deployed.
+    /// @param powerPlusContract The address of the deployed contract.
+    /// @param owner The address of the owner.
+    /// @param _contractId Users total amount of deployed contracts.
+    /// @param _powerPlusNFTCount The total amount of NFTs created for members.
     event PowerPlusNFTCreated(
         address powerPlusContract, 
         address owner,
@@ -29,15 +47,32 @@ contract dAgoraPowerPlusNFTFactory is Ownable, ReentrancyGuard {
         uint256 _powerPlusNFTCount
     );
 
+
+    /// @notice Sets the contracts variables.
+    /// @param _dAgoraMembership The address of the dAgora Memberships contract.
     constructor(address _dAgoraMembership) {
         dAgoraMembership = _dAgoraMembership;
     }
 
+
+    /// @notice Checks if the contract is paused.
     modifier isPaused() {
         require(!paused, "Factory is paused");
         _;
     }
 
+
+    /// @notice Function to create contracts for members.
+    /// @param _name The name of the NFT.
+    /// @param _symbol The symbol of the NFT.
+    /// @param _baseURI The base URI of the NFT.
+    /// @param _mintCost The cost to mint a NFT.
+    /// @param _bulkBuyLimit the max amount of NFTs that can be minted at once.
+    /// @param _maxWhiteListAmount The max amount of NFTs that can be minted by allow listed addresses.
+    /// @param _royaltyCut The % of royalties to be paid to the creator.
+    /// @param _newOwner The address of the new owner.
+    /// @param _royaltyReceiver The address to receive royalties.
+    /// @param _merkleRoot The merkle root of the allowed list addresses.
     function createPowerPlusNFT(
         string memory _name,
         string memory _symbol,
@@ -95,18 +130,19 @@ contract dAgoraPowerPlusNFTFactory is Ownable, ReentrancyGuard {
         );
     }
 
+    /// @notice Function to check users deployed contract addresses.
+    /// @param _owner The address of the user we want to check.
     function deployedContracts(address _owner) public view returns (Deploys memory) {
         return _deployedContracts[_owner];
     }
 
-    function pause() public onlyOwner {
-        paused = true;
+    /// @notice Function allows owner to pause/unPause the contract.
+    function togglePaused () public onlyOwner {
+        paused = !paused;
     }
 
-    function unpause() public onlyOwner {
-        paused = false;
-    }
-
+    /// @notice Function to check if a user is a valid member & can create NFT contracts.
+    /// @return boolean
     function _canCreate() internal view returns(bool){
         uint256 _currentSupply =  IdAgoraMembership(dAgoraMembership).totalSupply();
         if(IdAgoraMembership(dAgoraMembership).balanceOf(msg.sender) > 0) {

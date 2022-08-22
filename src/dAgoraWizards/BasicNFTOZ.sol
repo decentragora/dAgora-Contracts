@@ -1,9 +1,3 @@
-/// @title A title that should describe the contract/interface
-/// @author The name of the author
-/// @notice Explain to an end user what this does
-/// @dev Explain to a developer any extra details
-
-/// Spdx licenense idenitofeir
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
@@ -13,7 +7,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-
+/// @title dAgora Simple NFT A
+/// @author DadlessNsad || 0xOrphan
+/// @notice Used to create new Simple NFT A contracts for dAgora members.
 contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
     using Strings for string;
     using Counters for Counters.Counter;
