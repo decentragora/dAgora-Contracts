@@ -445,7 +445,7 @@ contract dAgoraMemberships is
         durationCheck(_durationInMonths)
         nonReentrant
     {
-        require(tier.tier  < 3, "Membership tier must be 0,1,2");
+        require(tier.tier < 4, "Cannot gift a precisian membership");
         require(claimed[_to] != true, "Can't Gift user who already has membership");
         uint256 tokenId = totalSupply() + 1;
         uint256 duration = block.timestamp + (_durationInMonths * 30 days);
@@ -467,7 +467,7 @@ contract dAgoraMemberships is
         onlyOwner
         nonReentrant
     {
-        require(newTier.tier  < 3, "Membership tier must be 0,1,2");
+        require(newTier.tier < 4, "Cannot gift a precisian membership");
         require(tokenTier[_tokenId].tier < newTier.tier, "Cannot upgrade to a tier that is less than current tier");
         uint256 oldTier = tokenTier[_tokenId].tier;
         tokenTier[_tokenId] = newTier;

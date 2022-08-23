@@ -1,5 +1,9 @@
 # BasicNFTPlus
 
+dAgora Basic NFT OZ
+
+Used as a template for creating new NFT contracts.
+
 ## Variables
 
 ### baseURI
@@ -8,11 +12,15 @@
 string baseURI
 ```
 
+Where the NFTs metadata is stored.
+
 ### baseExtension
 
 ```solidity
 string baseExtension
 ```
+
+The file extension for the NFTs baseURI.
 
 ### merkleRoot
 
@@ -20,11 +28,16 @@ string baseExtension
 bytes32 merkleRoot
 ```
 
+Used to store the allowed addresses for minting.
+
+_This is used to store the addresses that are allowed to mint NFTs during presale._
 ### paused
 
 ```solidity
 bool paused
 ```
+
+Used to pause and unpause the contract.
 
 ### preSale
 
@@ -32,17 +45,7 @@ bool paused
 bool preSale
 ```
 
-### maxAllowListAmount
-
-```solidity
-uint256 maxAllowListAmount
-```
-
-### bulkBuyLimit
-
-```solidity
-uint256 bulkBuyLimit
-```
+Used to change and set the sale state of the contract.
 
 ### mintCost
 
@@ -50,17 +53,41 @@ uint256 bulkBuyLimit
 uint256 mintCost
 ```
 
+The price to mint a new NFT.
+
+### bulkBuyLimit
+
+```solidity
+uint256 bulkBuyLimit
+```
+
+The maximum amount of NFTs that can be minted in one transaction.
+
+### maxAllowListAmount
+
+```solidity
+uint256 maxAllowListAmount
+```
+
+The maximum amount of NFTs that can be minted by a allowed listed address.
+
 ### maxTotalSupply
 
 ```solidity
 uint256 maxTotalSupply
 ```
 
+The maximum amount of NFTs that can be minted.
+
 ### presaleMintBalance
 
 ```solidity
 mapping(address => uint256) presaleMintBalance
 ```
+
+Maps a address to the amount of NFTs they have minted.
+
+_This is used to keep track of the amount of NFTs a address has minted during presale._
 
 ## Functions
 
@@ -80,19 +107,21 @@ constructor(
 ) 
 ```
 
+Event emitted when a membership is purchased.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_name` | string |  |
-| `_symbol` | string |  |
-| `_baseURI` | string |  |
-| `_mintCost` | uint256 |  |
-| `_bulkBuyLimit` | uint16 |  |
-| `_maxAllowListAmount` | uint16 |  |
-| `_maxTotalSupply` | uint256 |  |
-| `_newOwner` | address |  |
-| `_merkleRoot` | bytes32 |  |
+| `_name` | string | The name of the NFT. |
+| `_symbol` | string | The symbol of the NFT. |
+| `_baseURI` | string | The baseURI of the NFT. |
+| `_mintCost` | uint256 | The cost to mint a new NFT. |
+| `_bulkBuyLimit` | uint16 | The maximum amount of NFTs that can be minted in one transaction. |
+| `_maxAllowListAmount` | uint16 | The max amount of NFTs that can be minted by a allowed listed address. |
+| `_maxTotalSupply` | uint256 | The maximum amount of NFTs that can be minted. |
+| `_newOwner` | address | The address of the owner/ msg.sender. |
+| `_merkleRoot` | bytes32 | The merkle root of the allowed addresses. |
 
 ### presaleMint
 
@@ -103,12 +132,16 @@ function presaleMint(
 ) public
 ```
 
+Function for allowlisted addresses to mint NFTs.
+
+Used to mint NFTs during presale.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_proof` | bytes32[] |  |
-| `_amount` | uint256 |  |
+| `_proof` | bytes32[] | The merkle proof of the msg.sender's address. |
+| `_amount` | uint256 | The amount of NFTs to mint. |
 
 ### mintNFT
 
@@ -118,11 +151,15 @@ function mintNFT(
 ) public
 ```
 
+Function for public to mint NFTs.
+
+Used to mint NFTs during public sale.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_amount` | uint256 |  |
+| `_amount` | uint256 | The amount of NFTs to mint. |
 
 ### reserveTokens
 
@@ -132,11 +169,15 @@ function reserveTokens(
 ) public
 ```
 
+Only Contract Owner can use this function to Mint NFTs.
+
+The total supply of NFTs must be less than or equal to the maxTotalSupply.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_amount` | uint256 |  |
+| `_amount` | uint256 | The amount of NFTs to mint. |
 
 ### setMerkleRoot
 
@@ -146,11 +187,13 @@ function setMerkleRoot(
 ) public
 ```
 
+Allows contract owner to change the merkle root.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_merkleRoot` | bytes32 |  |
+| `_merkleRoot` | bytes32 | The new merkle root. |
 
 ### togglePreSale
 
@@ -158,11 +201,19 @@ function setMerkleRoot(
 function togglePreSale() public
 ```
 
+Allows contract owner to change the contracts sale state.
+
+Used to change the contract from presale to public sale.
+
 ### togglePaused
 
 ```solidity
 function togglePaused() public
 ```
+
+Allows contract owner to change the contracts paused state.
+
+Used to pause & unpause the contract.
 
 ### setBaseURI
 
@@ -172,11 +223,13 @@ function setBaseURI(
 ) public
 ```
 
+Allows the owner to change the baseURI.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_baseURI` | string |  |
+| `_baseURI` | string | The new baseURI. |
 
 ### setBaseExtension
 
@@ -186,11 +239,13 @@ function setBaseExtension(
 ) public
 ```
 
+Allows the owner to change the Base extension.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_newBaseExtension` | string |  |
+| `_newBaseExtension` | string | The new baseExtension. |
 
 ### setMintCost
 
@@ -200,11 +255,13 @@ function setMintCost(
 ) public
 ```
 
+Allows the owner to change the mint cost.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_newMintCost` | uint256 |  |
+| `_newMintCost` | uint256 | The new mint cost. |
 
 ### setMaxAllowListAmount
 
@@ -214,11 +271,13 @@ function setMaxAllowListAmount(
 ) public
 ```
 
+Allows the owner to change the max allow list amount.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_newMaxAllowListAmount` | uint256 |  |
+| `_newMaxAllowListAmount` | uint256 | The new max allow list amount. |
 
 ### setBulkBuyLimit
 
@@ -228,11 +287,15 @@ function setBulkBuyLimit(
 ) public
 ```
 
+Only Contract Owner can use this function to pause the contract.
+
+The bulkBuyLimit must be less than the maxTotalSupply.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_newBulkBuyLimit` | uint256 |  |
+| `_newBulkBuyLimit` | uint256 | The new bulkBuyLimit. |
 
 ### totalSupply
 
@@ -240,6 +303,13 @@ function setBulkBuyLimit(
 function totalSupply() public returns (uint256)
 ```
 
+Checks the current token supply of the contract.
+
+#### Return Values
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `[0]` | uint256 | The current token supply. |
 ### tokenURI
 
 ```solidity
@@ -260,6 +330,28 @@ function tokenURI(
 function withdraw() public
 ```
 
+Withdraws the funds from the contract to contract owner.
+
+Only Contract Owner can use this function.
+
+### withdrawErc20s
+
+```solidity
+function withdrawErc20s(
+    address _tokenAddr
+) public
+```
+
+Allows owner to withdraw any ERC20 tokens sent to this contract.
+
+Only Contract Owner can use this function.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_tokenAddr` | address | The address of the ERC20 token. |
+
 ## Modifiers
 
 ### isPaused
@@ -267,6 +359,10 @@ function withdraw() public
 ```solidity
 modifier isPaused()
 ```
+
+Checks if the contract is paused.
+
+_Used to prevent users from minting NFTs when the contract is paused._
 
 ### isValidMerkleProof
 
@@ -280,9 +376,15 @@ modifier isValidMerkleProof(bytes32[] merkleProof, bytes32 root)
 modifier isPreSale()
 ```
 
+Checks if the contract is in presale state.
+
+_Used to prevent users not in allow list from minting NFTs when the contract is in presale state._
+
 ### isPublic
 
 ```solidity
 modifier isPublic()
 ```
+
+Checks if the contract is in public sale state.
 

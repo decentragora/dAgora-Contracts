@@ -1,5 +1,9 @@
 # BasicNFTOZ
 
+dAgora Basic NFT OZ
+
+Used as a template for creating new NFT contracts.
+
 ## Variables
 
 ### baseURI
@@ -8,11 +12,15 @@
 string baseURI
 ```
 
+Where the NFTs metadata is stored.
+
 ### baseExtension
 
 ```solidity
 string baseExtension
 ```
+
+The file extension for the NFTs baseURI.
 
 ### paused
 
@@ -20,11 +28,15 @@ string baseExtension
 bool paused
 ```
 
+Used to pause and unpause the contract.
+
 ### mintCost
 
 ```solidity
 uint256 mintCost
 ```
+
+The price to mint a new NFT.
 
 ### bulkBuyLimit
 
@@ -32,11 +44,15 @@ uint256 mintCost
 uint16 bulkBuyLimit
 ```
 
+The maximum amount of NFTs that can be minted in one transaction.
+
 ### maxTotalSupply
 
 ```solidity
 uint256 maxTotalSupply
 ```
+
+The maximum amount of NFTs that can be minted.
 
 ## Functions
 
@@ -54,17 +70,19 @@ constructor(
 ) 
 ```
 
+Event emitted when a membership is purchased.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_name` | string |  |
-| `_symbol` | string |  |
-| `_baseURI` | string |  |
-| `_mintCost` | uint256 |  |
-| `_bulkBuyLimit` | uint16 |  |
-| `_maxTotalSupply` | uint256 |  |
-| `_newOwner` | address |  |
+| `_name` | string | The name of the NFT. |
+| `_symbol` | string | The symbol of the NFT. |
+| `_baseURI` | string | The baseURI of the NFT. |
+| `_mintCost` | uint256 | The cost to mint a new NFT. |
+| `_bulkBuyLimit` | uint16 | The maximum amount of NFTs that can be minted in one transaction. |
+| `_maxTotalSupply` | uint256 | The maximum amount of NFTs that can be minted. |
+| `_newOwner` | address | The address of the owner/ msg.sender. |
 
 ### mintNFT
 
@@ -74,11 +92,17 @@ function mintNFT(
 ) public
 ```
 
+Main function used to mint NFTs.
+
+The amount of NFTs to mint must be less than or equal to the bulkBuyLimit.
+The total supply of NFTs must be less than or equal to the maxTotalSupply.
+The Contracts paused state must be false.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_amount` | uint256 |  |
+| `_amount` | uint256 | The amount of NFTs to mint. |
 
 ### reserveTokens
 
@@ -88,11 +112,15 @@ function reserveTokens(
 ) public
 ```
 
+Only Contract Owner can use this function to Mint NFTs.
+
+The total supply of NFTs must be less than or equal to the maxTotalSupply.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_amount` | uint256 |  |
+| `_amount` | uint256 | The amount of NFTs to mint. |
 
 ### tokenURI
 
@@ -112,15 +140,17 @@ function tokenURI(
 
 ```solidity
 function setBaseURI(
-    string _baseURI
+    string _newBaseURI
 ) public
 ```
+
+Only Contract Owner can use this function to set the baseURI.
 
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_baseURI` | string |  |
+| `_newBaseURI` | string | The new baseURI. |
 
 ### setBaseExtension
 
@@ -130,11 +160,13 @@ function setBaseExtension(
 ) public
 ```
 
+Only Contract Owner can use this function to set the baseExtension.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_newBaseExtension` | string |  |
+| `_newBaseExtension` | string | The new baseExtension. |
 
 ### setMintCost
 
@@ -144,11 +176,13 @@ function setMintCost(
 ) public
 ```
 
+Only Contract Owner can use this function to set the mintCost.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_newMintCost` | uint256 |  |
+| `_newMintCost` | uint256 | The new mintCost. |
 
 ### setBulkBuyLimit
 
@@ -158,17 +192,25 @@ function setBulkBuyLimit(
 ) public
 ```
 
+Only Contract Owner can use this function to pause the contract.
+
+The bulkBuyLimit must be less than the maxTotalSupply.
+
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_newBulkBuyLimit` | uint16 |  |
+| `_newBulkBuyLimit` | uint16 | The new bulkBuyLimit. |
 
 ### togglePaused
 
 ```solidity
 function togglePaused() public
 ```
+
+Only Contract Owner can use this function to pause the contract.
+
+Used to prevent users from minting NFTs.
 
 ### _beforeTokenTransfer
 
@@ -208,6 +250,28 @@ function supportsInterface(
 function withdraw() public
 ```
 
+Withdraws the funds from the contract to contract owner.
+
+Only Contract Owner can use this function.
+
+### withdrawErc20s
+
+```solidity
+function withdrawErc20s(
+    address _tokenAddr
+) public
+```
+
+Allows owner to withdraw any ERC20 tokens sent to this contract.
+
+Only Contract Owner can use this function.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_tokenAddr` | address | The address of the ERC20 token. |
+
 ## Modifiers
 
 ### isPaused
@@ -215,4 +279,8 @@ function withdraw() public
 ```solidity
 modifier isPaused()
 ```
+
+Checks if the contract is paused.
+
+_Used to prevent users from minting NFTs when the contract is paused._
 

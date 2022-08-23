@@ -10,17 +10,39 @@ pragma solidity ^0.8.15;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "ERC721A/ERC721A.sol";
 
+/// @title Simple NFT A
+/// @author 0xOrphan || DadlessNsad
+/// @notice This is a template contract used to create new NFT contracts.
+/// @dev This contract is a simple ERC721A contract that can be used to mint NFTs. and is apart of DecentrAgoras tools.
+
 contract SimpleNFTA is ERC721A, Ownable {  
 
+    /// @notice Where the NFTs metadata is stored.
     string public baseURI;
+
+    /// @notice The file extension for the NFTs baseURI.
     string public baseExtension = ".json";
 
+    /// @notice Used to pause and unpause the contract.
     bool public paused = true;              
 
+    /// @notice The price to mint a new NFT.
     uint256 public mintCost;
-    uint256 public bulkBuyLimit;
-    uint256 public maxTotalSupply;    
 
+    /// @notice The maximum amount of NFTs that can be minted in one transaction.
+    uint256 public bulkBuyLimit;
+
+    /// @notice The maximum amount of NFTs that can be minted.
+    uint256 public maxTotalSupply;
+
+    /// @notice Event emitted when a membership is purchased.
+    /// @param _name The name of the NFT.
+    /// @param _symbol The symbol of the NFT.
+    /// @param _baseURI The baseURI of the NFT.
+    /// @param _mintCost The cost to mint a new NFT.
+    /// @param _bulkBuyLimit The maximum amount of NFTs that can be minted in one transaction.
+    /// @param _maxTotalSupply The maximum amount of NFTs that can be minted.
+    /// @param _newOwner The address of the owner/ msg.sender.
     constructor(
         string memory _name,
         string memory _symbol,
@@ -39,11 +61,19 @@ contract SimpleNFTA is ERC721A, Ownable {
         transferOwnership(_newOwner);
     } 
 
+    /// @notice Checks if the contract is paused.
+    /// @dev Used to prevent users from minting NFTs when the contract is paused.
     modifier isPaused() {
         require(!paused, "Contract is Paused");
         _;
     }
 
+
+    /// @notice Main function used to mint NFTs.
+    /// @param _amount The amount of NFTs to mint.
+    /// @dev The amount of NFTs to mint must be less than or equal to the bulkBuyLimit.
+    /// @dev The total supply of NFTs must be less than or equal to the maxTotalSupply.
+    /// @dev The Contracts paused state must be false.
     function mintNFT(uint256 _amount)                
         public    
         payable      
@@ -65,15 +95,18 @@ contract SimpleNFTA is ERC721A, Ownable {
         _safeMint(msg.sender, _amount);
     }
 
-    function reserveTokens(uint256 _quanitity)
+    /// @notice Only Contract Owner can use this function to Mint NFTs.
+    /// @param _amount The amount of NFTs to mint.
+    /// @dev The total supply of NFTs must be less than or equal to the maxTotalSupply.
+    function reserveTokens(uint256 _amount)
         public 
         onlyOwner
     { 
         require(
-            _quanitity + totalSupply() <= maxTotalSupply,
+            _amount + totalSupply() <= maxTotalSupply,
             "Soldout"
         );
-        _safeMint(msg.sender, _quanitity);
+        _safeMint(msg.sender, _amount);
     }
 
     function tokenURI(uint256 _tokenId)
@@ -94,7 +127,8 @@ contract SimpleNFTA is ERC721A, Ownable {
             )
         );
     }
-
+    /// @notice Only Contract Owner can use this function to set the baseURI.
+    /// @param _newBaseURI The new baseURI.
     function setBaseURI(string memory _newBaseURI)
         public 
         onlyOwner 
@@ -102,21 +136,8 @@ contract SimpleNFTA is ERC721A, Ownable {
         baseURI = _newBaseURI;
     }
 
-
-    function setMintCost(uint256 _newMintCost) 
-        public 
-        onlyOwner 
-    {
-        mintCost = _newMintCost;
-    }
-
-    function setBulkBuyLimit(uint256 _newBulkBuyLimit) 
-        public 
-        onlyOwner 
-    {
-        bulkBuyLimit = _newBulkBuyLimit;
-    }
-
+    /// @notice Only Contract Owner can use this function to set the baseExtension.
+    /// @param _newBaseExtension The new baseExtension.
     function setBaseExtension(string memory _newBaseExtension)
         public
         onlyOwner
@@ -124,6 +145,27 @@ contract SimpleNFTA is ERC721A, Ownable {
         baseExtension =_newBaseExtension;
     }
 
+    /// @notice Only Contract Owner can use this function to set the mintCost.
+    /// @param _newMintCost The new mintCost.
+    function setMintCost(uint256 _newMintCost) 
+        public 
+        onlyOwner 
+    {
+        mintCost = _newMintCost;
+    }
+
+    /// @notice Only Contract Owner can use this function to pause the contract.
+    /// @param _newBulkBuyLimit The new bulkBuyLimit.
+    /// @dev The bulkBuyLimit must be less than the maxTotalSupply.
+    function setBulkBuyLimit(uint256 _newBulkBuyLimit) 
+        public 
+        onlyOwner 
+    {
+        bulkBuyLimit = _newBulkBuyLimit;
+    }
+
+    /// @notice Only Contract Owner can use this function to pause the contract.
+    /// @dev Used to prevent users from minting NFTs.
     function togglePaused()
         public
         onlyOwner
@@ -131,6 +173,8 @@ contract SimpleNFTA is ERC721A, Ownable {
         paused = !paused;
     }
 
+    /// @notice Withdraws the funds from the contract to contract owner.
+    /// @dev Only Contract Owner can use this function.
     function withdraw() public onlyOwner {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance
@@ -141,6 +185,9 @@ contract SimpleNFTA is ERC721A, Ownable {
         );
     }
 
+    /// @notice Allows owner to withdraw any ERC20 tokens sent to this contract.
+    /// @param _tokenAddr The address of the ERC20 token.
+    /// @dev Only Contract Owner can use this function.
     function withdrawErc20s(address _tokenAddr) public onlyOwner {
         (bool success, ) = payable(msg.sender).call{
             value: address(_tokenAddr).balance

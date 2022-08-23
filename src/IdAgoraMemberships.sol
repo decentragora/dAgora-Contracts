@@ -7,6 +7,7 @@ import "ERC721A/IERC721A.sol";
 /// @author DadlessNSad || 0xOrphan
 /// @notice Used to interact with the dAgora Memberships NFT
 interface IdAgoraMembership is IERC721A {
+    
     /// @notice Emitted when a new membership is created and minted to a user address.
     /// @param receiver The address of the minter
     event Claimed(address receiver);

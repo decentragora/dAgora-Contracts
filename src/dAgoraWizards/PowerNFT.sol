@@ -10,23 +10,48 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "ERC721A/ERC721A.sol";
 import "@openzeppelin/contracts/token/common/ERC2981.sol";
 
-
+/// @title Power NFT Contract
+/// @author DadlessNsad || 0xOrphan
+/// @notice This is a template contract used to create new NFT contracts.
 contract PowerNFT is 
     ERC721A,
     ERC2981,
     Ownable 
 {
+
+    /// @notice Where the NFTs metadata is stored.
     string public baseURI;
+
+    /// @notice The file extension for the NFTs baseURI.
     string public baseExtension = ".json";
 
-    bool public paused = true;              
 
+    /// @notice Used to pause and unpause the contract.
+    bool public paused = true;          
+
+    /// @notice The address that the royalty % will go to.
     address public royaltyReceiver;
     
+    /// @notice The price to mint a new NFT.
     uint256 public mintCost;
+
+    /// @notice The maximum amount of NFTs that can be minted in one transaction.
     uint16 public bulkBuyLimit;  
+
+    /// @notice The maximum amount of NFTs that can be minted.
     uint256 public maxTotalSupply;
 
+
+    /// @notice Sets the contracts variables.
+    /// @param _name The name of the NFT.
+    /// @param _symbol The symbol of the NFT.
+    /// @param _baseURI The baseURI of the NFT.
+    /// @param _mintCost The cost to mint a new NFT.
+    /// @param _bulkBuyLimit The maximum amount of NFTs that can be minted in one transaction.
+    /// @param _maxTotalSupply The maximum amount of NFTs that can be minted.
+    /// @param _royaltyCut The amount of the royalty cut.
+    /// @param _newOwner The address that will be the owner of the contract.
+    /// @param _royaltyReceiver The address that the royalty % will go to.
     constructor(
         string memory _name,
         string memory _symbol,
@@ -51,11 +76,15 @@ contract PowerNFT is
         _setDefaultRoyalty(royaltyReceiver, _royaltyCut);
     }
 
+    /// @notice Checks if the contract is paused.
+    /// @dev Used to prevent users from minting NFTs when the contract is paused.
     modifier isPaused() {
         require(!paused, "Contract is Paused");
         _;
     }
 
+    /// @notice Main function used to mint NFTs.
+    /// @param _amount The amount of NFTs to mint.
     function mintNFT(uint256 _amount)                
         public    
         payable      
@@ -77,15 +106,18 @@ contract PowerNFT is
     _safeMint(msg.sender, _amount);
     }
 
-    function reserveTokens(uint256 _quanitity)
+    /// @notice Only Contract Owner can use this function to Mint NFTs.
+    /// @param _amount The amount of NFTs to mint.
+    /// @dev The total supply of NFTs must be less than or equal to the maxTotalSupply.
+    function reserveTokens(uint256 _amount)
         public 
         onlyOwner
     { 
         require(
-            _quanitity + totalSupply() <= maxTotalSupply,
+            _amount + totalSupply() <= maxTotalSupply,
             "Soldout"
         );  
-        _safeMint(msg.sender, _quanitity);
+        _safeMint(msg.sender, _amount);
     }
 
     function tokenURI(uint256 _tokenId)
@@ -120,10 +152,16 @@ contract PowerNFT is
     }
 
 
+    /// @notice Used to set the royalty receiver & amount.
+    /// @param _receiver The address that the royalty % will go to.
+    /// @param _value The amount of the royalty cut.
+    /// @dev The value must be less than or equal to 10000. example (250 / 10000) * 100 = 2.5%.
     function setRoyalties(address _receiver, uint96 _value) public onlyOwner {
         _setDefaultRoyalty(_receiver, _value);
     }
 
+    /// @notice Allows the owner to change the baseURI.
+    /// @param _newBaseURI The new baseURI.
     function setBaseURI(string memory _newBaseURI)
         public 
         onlyOwner 
@@ -131,6 +169,8 @@ contract PowerNFT is
         baseURI = _newBaseURI;
     }
 
+    /// @notice Allows the owner to change the Base extension.
+    /// @param _newBaseExtension The new baseExtension.
     function setBaseExtension(string memory _newBaseExtension)
         public
         onlyOwner
@@ -138,6 +178,8 @@ contract PowerNFT is
         baseExtension = _newBaseExtension;
     }
 
+    /// @notice Allows the owner to change the mint cost.
+    /// @param _newMintCost The new mint cost.
     function setMintCost(uint256 _newMintCost) 
         public 
         onlyOwner 
@@ -145,6 +187,8 @@ contract PowerNFT is
         mintCost = _newMintCost;
     }
 
+    /// @param _newBulkBuyLimit The new bulkBuyLimit.
+    /// @dev The bulkBuyLimit must be less than the maxTotalSupply.
     function setBulkBuyLimit(uint16 _newBulkBuyLimit) 
         public 
         onlyOwner 
@@ -153,16 +197,33 @@ contract PowerNFT is
     }
 
 
-    function togglePause() 
+    /// @notice Allows contract owner to change the contracts paused state.
+    /// @dev Used to pause & unpause the contract.
+    function togglePaused()
         public
         onlyOwner 
     {
         paused = !paused;
     }
 
+    /// @notice Allows the owner to withdraw ether from contract.
+    /// @dev The owner can only withdraw ether from the contract.
     function withdraw() public onlyOwner {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance
+        }("");
+        require(
+            success, 
+            "Address: unable to send value"
+        );
+    }
+
+    /// @notice Allows owner to withdraw any ERC20 tokens sent to this contract.
+    /// @param _tokenAddr The address of the ERC20 token.
+    /// @dev Only Contract Owner can use this function.
+    function withdrawErc20s(address _tokenAddr) public onlyOwner {
+        (bool success, ) = payable(msg.sender).call{
+            value: address(_tokenAddr).balance
         }("");
         require(
             success, 
