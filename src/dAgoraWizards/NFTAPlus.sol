@@ -15,8 +15,6 @@ import "ERC721A/ERC721A.sol";
 /// @author 0xOrphan || DadlessNsad
 /// @notice This contract is used as a template for creating new NFT contracts.
 contract NFTAPlus is ERC721A, Ownable {
-
-
     /// @notice Where the NFTs metadata is stored.
     string public baseURI;
 
@@ -27,13 +25,11 @@ contract NFTAPlus is ERC721A, Ownable {
     /// @dev This is used to store the addresses that are allowed to mint NFTs during presale.
     bytes32 public merkleRoot;
 
-
     /// @notice Used to pause and unpause the contract.
     bool public paused = true;
 
     /// @notice Used to change and set the sale state of the contract.
     bool public preSale = true;
-
 
     /// @notice The maximum amount of NFTs that can be minted in one transaction.
     uint16 public bulkBuyLimit;
@@ -50,7 +46,6 @@ contract NFTAPlus is ERC721A, Ownable {
     /// @notice Maps a address to the amount of NFTs they have minted.
     /// @dev This is used to keep track of the amount of NFTs a address has minted during presale.
     mapping(address => uint256) public presaleMintBalance;
-
 
     /// @notice Sets the contracts variables.
     /// @param _name The name of the NFT.
@@ -72,7 +67,9 @@ contract NFTAPlus is ERC721A, Ownable {
         uint256 _maxTotalSupply,
         address _newOwner,
         bytes32 _merkleRoot
-    ) ERC721A(_name, _symbol) {
+    )
+        ERC721A(_name, _symbol)
+    {
         baseURI = _baseURI;
         mintCost = _mintCost;
         bulkBuyLimit = _bulkBuyLimit;
@@ -91,11 +88,7 @@ contract NFTAPlus is ERC721A, Ownable {
 
     modifier isValidMerkleProof(bytes32[] calldata merkleProof, bytes32 root) {
         require(
-            MerkleProof.verify(
-                merkleProof,
-                root,
-                keccak256(abi.encodePacked(msg.sender))
-            ),
+            MerkleProof.verify(merkleProof, root, keccak256(abi.encodePacked(msg.sender))),
             "Address does not exist in list"
         );
         _;
@@ -114,13 +107,12 @@ contract NFTAPlus is ERC721A, Ownable {
         _;
     }
 
-
     /// @notice Function for allowlisted addresses to mint NFTs.
     /// @dev Used to mint NFTs during presale.
     /// @param proof The merkle proof of the msg.sender's address.
     /// @param _amount The amount of NFTs to mint.
-  
-    function preSaleMint(bytes32[] calldata proof, uint256 _amount) 
+
+    function preSaleMint(bytes32[] calldata proof, uint256 _amount)
         public
         payable
         notPaused
@@ -129,7 +121,7 @@ contract NFTAPlus is ERC721A, Ownable {
     {
         require(
             _amount + presaleMintBalance[msg.sender] <= maxAllowListAmount,
-            "reach max amount for whitelsit"  
+            "reach max amount for whitelsit"
         );
         require(_amount + totalSupply() <= maxTotalSupply, "Soldout");
         require(msg.value >= (_amount * mintCost), "Insufficient funds");
@@ -138,23 +130,16 @@ contract NFTAPlus is ERC721A, Ownable {
         _safeMint(msg.sender, _amount);
     }
 
-
     /// @notice Function for public to mint NFTs.
     /// @dev Used to mint NFTs during public sale.
     /// @param _amount The amount of NFTs to mint.
-    function publicMint(uint256 _amount) 
-        public 
-        payable
-        notPaused
-        isPublic
-    {
+    function publicMint(uint256 _amount) public payable notPaused isPublic {
         require(_amount + totalSupply() <= maxTotalSupply, "Soldout");
         require(_amount <= bulkBuyLimit, "reached max per Tx");
         require(msg.value >= (_amount * mintCost), "Insufficient funds");
-        
+
         _safeMint(msg.sender, _amount);
     }
-
 
     /// @notice Only Contract Owner can use this function to Mint NFTs.
     /// @param _amount The amount of NFTs to mint.
@@ -163,13 +148,16 @@ contract NFTAPlus is ERC721A, Ownable {
         require(_amount + totalSupply() <= maxTotalSupply, "Soldout");
         _safeMint(msg.sender, _amount);
     }
-  
 
-    function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+    function tokenURI(uint256 _tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
         require(_exists(_tokenId), "Token does not exist.");
-        return string(abi.encodePacked(baseURI, _toString(_tokenId),".json"));
+        return string(abi.encodePacked(baseURI, _toString(_tokenId), ".json"));
     }
-
 
     /// @notice Allows contract owner to change the contracts sale state.
     /// @dev Used to change the contract from presale to public sale.
@@ -191,10 +179,12 @@ contract NFTAPlus is ERC721A, Ownable {
 
     /// @notice Allows the owner to change the Base extension.
     /// @param _newBaseExtension The new baseExtension.
-    function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+    function setBaseExtension(string memory _newBaseExtension)
+        public
+        onlyOwner
+    {
         baseExtension = _newBaseExtension;
     }
-
 
     /// @notice Allows the owner to change the merkle root.
     /// @param _merkleRoot The new merkle root.
@@ -212,50 +202,44 @@ contract NFTAPlus is ERC721A, Ownable {
     /// @dev The bulkBuyLimit must be less than the maxTotalSupply.
     function setBulkBuyLimit(uint16 _newBulkBuyLimit) public onlyOwner {
         require(_newBulkBuyLimit != 0, "Bulk Buy Limit must be greater than 0");
-        require(_newBulkBuyLimit < maxTotalSupply, "Bulk Buy Limit must be less than Max Total Supply");
+        require(
+            _newBulkBuyLimit < maxTotalSupply,
+            "Bulk Buy Limit must be less than Max Total Supply"
+        );
         bulkBuyLimit = _newBulkBuyLimit;
     }
 
     /// @notice Allows the owner to change the max allow list amount.
     /// @param _newAllowListAmount The new max allow list amount.
-    function setMaxAllowListAmount(uint16 _newAllowListAmount) public onlyOwner {
-        require(_newAllowListAmount < bulkBuyLimit, "Max Allow List Amount must be less than Bulk Buy Limit");
+    function setMaxAllowListAmount(uint16 _newAllowListAmount)
+        public
+        onlyOwner
+    {
+        require(
+            _newAllowListAmount < bulkBuyLimit,
+            "Max Allow List Amount must be less than Bulk Buy Limit"
+        );
         maxAllowListAmount = _newAllowListAmount;
     }
-
 
     /// @notice Allows the owner to withdraw ether from contract.
     /// @dev The owner can only withdraw ether from the contract.
     function withdraw() public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Address: unable to send value");
     }
 
     /// @notice Allows owner to withdraw any ERC20 tokens sent to this contract.
     /// @param _tokenAddr The address of the ERC20 token.
     /// @dev Only Contract Owner can use this function.
     function withdrawErc20s(address _tokenAddr) public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(_tokenAddr).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(_tokenAddr).balance}("");
+        require(success, "Address: unable to send value");
     }
 
-    function _startTokenId() 
-        internal 
-        view 
-        virtual 
-        override 
-        returns(uint256)
-    {
+    function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
     }
 }

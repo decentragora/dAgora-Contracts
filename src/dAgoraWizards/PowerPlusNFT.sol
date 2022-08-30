@@ -15,18 +15,12 @@ import "ERC721A/ERC721A.sol";
 /// @title dAgora Power Plus NFT
 /// @author DadlessNsad || 0xOrphan
 /// @notice Used as a template for creating new NFT contracts.
-contract PowerPlusNFT is 
-    ERC721A,
-    ERC2981,
-    ReentrancyGuard,
-    Ownable
-{
-
+contract PowerPlusNFT is ERC721A, ERC2981, ReentrancyGuard, Ownable {
     /// @notice Where the NFTs metadata is stored.
     string public baseURI;
 
     /// @notice The file extension for the NFTs baseURI.
-    string public baseExtension= ".json";
+    string public baseExtension = ".json";
 
     /// @notice Used to store the allowed addresses for minting.
     /// @dev This is used to store the addresses that are allowed to mint NFTs during presale.
@@ -50,9 +44,8 @@ contract PowerPlusNFT is
     /// @notice The maximum amount of NFTs that can be minted.
     uint256 public maxTotalSupply;
 
-    /// @notice The address that the royalty % will go to.    
+    /// @notice The address that the royalty % will go to.
     address public royaltyReceiver;
-
 
     /// @notice Maps a address to the amount of NFTs they have minted.
     /// @dev This is used to keep track of the amount of NFTs a address has minted during presale.
@@ -82,7 +75,9 @@ contract PowerPlusNFT is
         address _newOwner,
         address _royaltyReceiver,
         bytes32 _merkleRoot
-    ) ERC721A(_name, _symbol) {
+    )
+        ERC721A(_name, _symbol)
+    {
         baseURI = _baseURI;
         royaltyReceiver = _royaltyReceiver;
         merkleRoot = _merkleRoot;
@@ -103,11 +98,7 @@ contract PowerPlusNFT is
 
     modifier isValidMerkleProof(bytes32[] calldata merkleProof, bytes32 root) {
         require(
-            MerkleProof.verify(
-                merkleProof,
-                root,
-                keccak256(abi.encodePacked(msg.sender))
-            ),
+            MerkleProof.verify(merkleProof, root, keccak256(abi.encodePacked(msg.sender))),
             "Address does not exist in list"
         );
         _;
@@ -151,7 +142,7 @@ contract PowerPlusNFT is
     /// @notice Function for public to mint NFTs.
     /// @dev Used to mint NFTs during public sale.
     /// @param _amount The amount of NFTs to mint.
-    function mintNFT(uint256 _amount) 
+    function mintNFT(uint256 _amount)
         public
         payable
         isPaused
@@ -162,31 +153,30 @@ contract PowerPlusNFT is
         require(_amount <= bulkBuyLimit, "reached max per Tx");
         require(msg.value >= (_amount * mintCost), "Insufficient funds");
 
-        for(uint256 i = 0; i < _amount; i++) {
+        for (uint256 i = 0; i < _amount; i++) {
             _safeMint(msg.sender, 1);
         }
-
     }
 
     /// @notice Only Contract Owner can use this function to Mint NFTs.
     /// @param _amount The amount of NFTs to mint.
     /// @dev The total supply of NFTs must be less than or equal to the maxTotalSupply.
-    function reserveTokens(uint256 _amount) 
-        public 
-        nonReentrant 
-        onlyOwner
-    {
+    function reserveTokens(uint256 _amount) public nonReentrant onlyOwner {
         require(_amount + totalSupply() <= maxTotalSupply, "Soldout");
         for (uint256 i = 0; i < _amount; i++) {
             _safeMint(msg.sender, 1);
         }
     }
 
-    function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+    function tokenURI(uint256 _tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
         require(_exists(_tokenId), "Token does not exist.");
         return string(abi.encodePacked(baseURI, _toString(_tokenId), baseExtension));
     }
-
 
     /// @notice Allows contract owner to change the contracts paused state.
     /// @dev Used to pause & unpause the contract.
@@ -208,8 +198,11 @@ contract PowerPlusNFT is
 
     /// @notice Allows the owner to change the Base extension.
     /// @param _newBaseExtension The new baseExtension.
-    function setBaseExtension(string memory _newBaseExtension)  public onlyOwner {
-        baseExtension =  _newBaseExtension;
+    function setBaseExtension(string memory _newBaseExtension)
+        public
+        onlyOwner
+    {
+        baseExtension = _newBaseExtension;
     }
 
     /// @notice Allows the owner to change the merkle root.
@@ -232,7 +225,10 @@ contract PowerPlusNFT is
 
     /// @notice Allows the owner to change the max allow list amount.
     /// @param _newMaxAllowListAmount The new max allow list amount.
-    function setMaxAllowListAmount(uint16 _newMaxAllowListAmount) public onlyOwner {
+    function setMaxAllowListAmount(uint16 _newMaxAllowListAmount)
+        public
+        onlyOwner
+    {
         maxAllowListAmount = _newMaxAllowListAmount;
     }
 
@@ -240,59 +236,39 @@ contract PowerPlusNFT is
     /// @param _receiver The address that the royalty % will go to.
     /// @param _value The amount of the royalty cut.
     /// @dev The value must be less than or equal to 10000. example (250 / 10000) * 100 = 2.5%.
-    function setRoyalties(address _receiver, uint96 _value) public onlyOwner{
+    function setRoyalties(address _receiver, uint96 _value) public onlyOwner {
         _setDefaultRoyalty(_receiver, _value);
     }
 
     /// @notice Allows the owner to withdraw ether from contract.
     /// @dev The owner can only withdraw ether from the contract.
     function withdraw() public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Address: unable to send value");
     }
 
     /// @notice Allows owner to withdraw any ERC20 tokens sent to this contract.
     /// @param _tokenAddr The address of the ERC20 token.
     /// @dev Only Contract Owner can use this function.
     function withdrawErc20s(address _tokenAddr) public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(_tokenAddr).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(_tokenAddr).balance}("");
+        require(success, "Address: unable to send value");
     }
 
     function supportsInterface(bytes4 interfaceId)
         public
         view
         virtual
-        override(ERC721A, ERC2981)
+        override (ERC721A, ERC2981)
         returns (bool)
     {
-    return 
-        ERC721A.supportsInterface(interfaceId) || 
-        ERC2981.supportsInterface(interfaceId);
+        return ERC721A.supportsInterface(interfaceId)
+            || ERC2981.supportsInterface(interfaceId);
     }
 
-
-    function _startTokenId() 
-        internal 
-        view 
-        virtual 
-        override 
-        returns(uint256)
-    {
+    function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
     }
-    
 }
-
-
-

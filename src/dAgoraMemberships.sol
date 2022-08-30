@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.15;
 
+import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "ERC721A/ERC721A.sol";
 import {RequestGuildRole} from "./RequestGuildRole.sol";
 import "./IdAgoraMemberships.sol";
+
 
 /// @title DecentrAgora Memberships
 /// @author DadlessNsad || 0xOrphan
@@ -18,9 +20,8 @@ contract dAgoraMemberships is
     Ownable,
     ReentrancyGuard
 {
-    
 
-    /// @notice Stores a tokenId's membership tier.    
+    /// @notice Stores a tokenId's membership tier.
     struct Membership {
         uint8 tier;
     }
@@ -40,19 +41,16 @@ contract dAgoraMemberships is
     bool public paused = true;
 
     /// @notice The address of DAI token.
-    address public DAI;
-
-    /// @notice The address of USDC token.
-    address public USDC;
+    address public immutable DAI;
 
     /// @notice DecentrAgora's multisig address.
     address public dAgoraTreasury;
 
+    uint96 public rewardedRole;
+
     /// @notice Adds a extra day to expiring memberships.
     uint256 public constant GRACE_PERIOD = 86400; // 1 days in seconds
 
-
-    uint96 public rewardedRole;
     /// @notice The price of periclesia tier.
     uint256 public periclesiaPrice = 1000 * 10 ** 18;
 
@@ -71,22 +69,21 @@ contract dAgoraMemberships is
     /// @notice Discount rate given to members who pay for a year in advance
     uint256 public discountRate = 5 * 10 ** 18;
 
-
     /// @notice Token tiers mapped to individual token Ids.
     mapping(uint256 => Membership) private tokenTier;
-
 
     /// @notice Token Ids mapped to their expiration date.
     mapping(uint256 => uint256) public expires;
 
-
     /// @notice Token Ids mapped to their Owner.
     mapping(uint256 => address) public tokenIndexedToOwner;
-
 
     /// @notice Tracks if a address has minted or not.
     mapping(address => bool) public claimed;
 
+    /// @notice Tracks delegated addresses for a tokenId.
+    /// @notice TokenId must be Percelisia tier.
+    mapping(uint256 => address[]) internal _tokenDelegates;
 
     /// @notice Event emitted when a membership is purchased.
     /// @param _to The address of the purchaser.
@@ -100,19 +97,16 @@ contract dAgoraMemberships is
         uint256 duration
     );
 
-
     /// @notice Event emitted when a membership is extended.
     /// @param tokenId The id of the extended membership.
     /// @param duration The duration of the extended membership.
     event MembershipRenewed(uint256 tokenId, uint256 duration);
-
 
     /// @notice Event emitted when a membership tier is upgraded
     /// @param tokenId The id of the upgraded membership.
     /// @param oldTier The old tier of the upgraded membership.
     /// @param tier The new tier of the upgraded membership.
     event MembershipUpgraded(uint256 tokenId, uint256 oldTier, Membership tier);
-
 
     /// @notice Event emitted when a membership is cancelled.
     /// @param tokenId The id of the cancelled membership.
@@ -121,11 +115,9 @@ contract dAgoraMemberships is
     /// @param tokenId The id of the expired membership.
     event MembershipExpired(uint256 tokenId);
 
-
     /// @notice Sets the contracts variables.
     /// @param _cid The storage location of the membership metadata.
     /// @param _DAI The address of DAI token.
-    /// @param _USDC The address of USDC token.
     /// @param _dAgoraTreasury DecentrAgora's multisig address.
     /// @param guildId The Id of the guild, the oracle interacts with.
     /// @param _rewardedRole The role that is checked by oracle for free membership.
@@ -136,7 +128,6 @@ contract dAgoraMemberships is
     constructor(
         string memory _cid,
         address _DAI,
-        address _USDC,
         address _dAgoraTreasury,
         string memory guildId,
         uint96 _rewardedRole,
@@ -150,7 +141,6 @@ contract dAgoraMemberships is
     {
         cid = _cid;
         DAI = _DAI;
-        USDC = _USDC;
         dAgoraTreasury = _dAgoraTreasury;
         rewardedRole = _rewardedRole;
     }
@@ -162,21 +152,18 @@ contract dAgoraMemberships is
         _;
     }
 
-
     /// @notice Checks if users address has already minted or not.
     modifier isNotMember() {
         require(!claimed[msg.sender], "You are already a member");
         _;
     }
 
-
     /// @notice checks the transfer amount of Stable coins for membership.
     /// @param _ERC20 The address of the stablecoin used to purchase membership.
-    modifier correctPayment(address _ERC20) {
-        require(_ERC20 == DAI || _ERC20 == USDC, "Payment must be DAI or USDC");
-        _;
-    }
-
+    // modifier correctPayment(address _ERC20) {
+    //     require(_ERC20 == DAI || _ERC20 == USDC, "Payment must be DAI or USDC");
+    //     _;
+    // }
 
     /// @notice Checks new duration amount is greater than 0 and less than 12.
     /// @param duration The duration of the membership in months.
@@ -188,12 +175,11 @@ contract dAgoraMemberships is
         _;
     }
 
-
     /// @notice Checks if the tokenId membership is expiring soon.
     /// @param tokenId The id of the membership.
     modifier isExpiredSoon(uint256 tokenId) {
         require(
-            block.timestamp + 30 days + GRACE_PERIOD >= expires[tokenId], 
+            block.timestamp + 30 days + GRACE_PERIOD >= expires[tokenId],
             "Token isn't expiring soon"
         );
         _;
@@ -205,28 +191,59 @@ contract dAgoraMemberships is
     /// @dev example being a token owner can renew a token but not a random user.
     modifier onlyController(uint256 _tokenId) {
         require(
-            msg.sender == tokenIndexedToOwner[_tokenId], "Not owner of token"
+            msg.sender == tokenIndexedToOwner[_tokenId],
+            "Not owner of token"
+        );
+        _;
+    }
+
+    /// @notice Checks that the tokens tier is Periclesia.
+    /// @param _tokenId The id of the membership.
+    modifier isPerclesia(uint256 _tokenId) {
+        require(
+            tokenTier[_tokenId].tier == 3,
+            "Token is not Periclesia"
+        );
+        _;
+    }
+
+    /// @notice Checks that the msg.sender is either the tokenId owner or a delegate.
+    /// @dev Modifier guard for delegate & owner functions
+    /// @param _tokenId The id of the membership.
+    modifier isDelegateOrOwner(uint256 _tokenId) {
+        require(
+            contains(_tokenId, msg.sender) == true ||
+            tokenIndexedToOwner[_tokenId] == msg.sender,
+            "Not a delegate or Owner"
         );
         _;
     }
 
     /*////////////////////////////////////// Public Mint Functions //////////////////////////////////////////////////*/
 
-    /// @notice Mints a DAgorian membership for the msg.sender.
+    /// @notice Mints a DAgorian membership for the msg.sender using ERC20Permit.
     /// @param _durationInMonths The duration of the membership in months.
-    /// @param _ERC20 The address of the stablecoin used to purchase membership.
-    function mintdAgoraianTier(uint96 _durationInMonths, address _ERC20)
+    /// @param _deadline The deadline for the transaction.
+    /// @param v The v value of the signature.
+    /// @param r The r value of the signature.
+    /// @param s The s value of the signature.
+    function mintdAgoraianTier(
+        uint96 _durationInMonths,
+        uint256 _deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    )
         public
         isPaused
         isNotMember
         durationCheck(_durationInMonths)
-        correctPayment(_ERC20)
         nonReentrant
     {
         uint256 _tokenId = totalSupply() + 1;
         uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
         uint256 price;
-
+    
         if (_durationInMonths == 12) {
             price =
                 ((monthlyPrice * _durationInMonths) + dAgorianPrice) - discountRate;
@@ -235,9 +252,22 @@ contract dAgoraMemberships is
         }
 
         require(
-            IERC20(_ERC20).balanceOf(msg.sender) >= price, "Not enough funds"
+            IERC20(DAI).balanceOf(msg.sender) >= price,
+            "Insufficient balance"
         );
-        require(IERC20(_ERC20).transferFrom(msg.sender, dAgoraTreasury, price));
+
+        IERC20Permit(DAI).permit(
+            msg.sender,
+            address(this),
+            price,
+            _deadline,
+            v,
+            r,
+            s
+        );
+        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+
+       
 
         tokenIndexedToOwner[_tokenId] = msg.sender;
         tokenTier[_tokenId] = Membership(1);
@@ -246,21 +276,29 @@ contract dAgoraMemberships is
         _safeMint(msg.sender, 1);
     }
 
-
-    /// @notice Mints a Hoptile Tier membership for the msg.sender.
+    /// @notice Mints a Hoptile Tier membership for the msg.sender using ERC20Permit.
     /// @param _durationInMonths The duration of the membership in months.
-    /// @param _ERC20 The address of the stablecoin used to purchase membership.
-    function mintHoptileTier(uint96 _durationInMonths, address _ERC20)
+    /// @param _deadline The deadline for the transaction.
+    /// @param v The v value of the signature.
+    /// @param r The r value of the signature.
+    /// @param s The s value of the signature.
+    function mintHoptileTier(
+        uint96 _durationInMonths,
+        uint256 _deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    )
         public
         isPaused
         isNotMember
         durationCheck(_durationInMonths)
-        correctPayment(_ERC20)
         nonReentrant
     {
         uint256 tokenId = totalSupply() + 1;
         uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
         uint256 price;
+
         if (_durationInMonths == 12) {
             price =
                 ((monthlyPrice * _durationInMonths) + hoplitePrice) - discountRate;
@@ -268,9 +306,21 @@ contract dAgoraMemberships is
             price = ((monthlyPrice * _durationInMonths) + hoplitePrice);
         }
         require(
-            IERC20(_ERC20).balanceOf(msg.sender) >= price, "Not enough funds"
+            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
         );
-        require(IERC20(_ERC20).transferFrom(msg.sender, dAgoraTreasury, price));
+        
+        IERC20Permit(DAI).permit(
+            msg.sender,
+            address(this),
+            price,
+            _deadline,
+            v,
+            r,
+            s
+        );
+
+        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+
         tokenIndexedToOwner[tokenId] = msg.sender;
         tokenTier[tokenId] = Membership(2);
         expires[tokenId] = _duration + GRACE_PERIOD;
@@ -278,16 +328,23 @@ contract dAgoraMemberships is
         _safeMint(msg.sender, 1);
     }
 
-
-    /// @notice Mints a Periclesia Tier membership for the msg.sender.
+    /// @notice Mints a Periclesia Tier membership for the msg.sender using ERC20Permit.
     /// @param _durationInMonths The duration of the membership in months.
-    /// @param _ERC20 The address of the stablecoin used to purchase membership.
-    function mintPericlesiaTier(uint96 _durationInMonths, address _ERC20)
+    /// @param _deadline The deadline for the transaction.
+    /// @param v The v value of the signature.
+    /// @param r The r value of the signature.
+    /// @param s The s value of the signature.
+    function mintPericlesiaTier(
+        uint96 _durationInMonths,
+        uint256 _deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    )
         public
         isPaused
         isNotMember
         durationCheck(_durationInMonths)
-        correctPayment(_ERC20)
         nonReentrant
     {
         uint256 tokenId = totalSupply() + 1;
@@ -300,9 +357,21 @@ contract dAgoraMemberships is
             price = ((monthlyPrice * _durationInMonths) + periclesiaPrice);
         }
         require(
-            IERC20(_ERC20).balanceOf(msg.sender) >= price, "Not enough funds"
+            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
         );
-        require(IERC20(_ERC20).transferFrom(msg.sender, dAgoraTreasury, price));
+
+        IERC20Permit(DAI).permit(
+            msg.sender,
+            address(this),
+            price,
+            _deadline,
+            v,
+            r,
+            s
+        );
+
+        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+
         tokenIndexedToOwner[tokenId] = msg.sender;
         tokenTier[tokenId] = Membership(3);
         expires[tokenId] = _duration + GRACE_PERIOD;
@@ -310,9 +379,8 @@ contract dAgoraMemberships is
         _safeMint(msg.sender, 1);
     }
 
-
     /// @notice Sends request to oracle to mint Ecclesia Tier membership for the msg.sender.
-    function freeClaim() public isPaused isNotMember nonReentrant override {
+    function freeClaim() public override isPaused isNotMember nonReentrant {
         uint256 tokenId = totalSupply() + 1;
         requestAccessCheck(
             msg.sender,
@@ -323,7 +391,6 @@ contract dAgoraMemberships is
         emit ClaimRequested(msg.sender);
     }
 
-
     /// @notice Mints a Ecclesia Tier membership for the msg.sender, if checks pass.
     /// @param requestId The address of the user.
     /// @param access The id of the membership.
@@ -333,34 +400,40 @@ contract dAgoraMemberships is
     {
         (address receiver, uint256 tokenId) =
             abi.decode(requests[requestId].args, (address, uint256));
+        // Free 3 month trial
+        uint256 _duration = block.timestamp + (3 * 30 days);
         // Add token as claimed
         claimed[receiver] = true;
         tokenTier[tokenId] = Membership(0);
-        expires[tokenId] = 0;
+        expires[tokenId] = _duration + GRACE_PERIOD;
         tokenIndexedToOwner[tokenId] = receiver;
         emit Claimed(receiver);
         _safeMint(receiver, 1);
     }
 
-    /*////////////////////////////////////// Public Renew Functions //////////////////////////////////////////////////*/ 
-    /// @notice Renews time of a membership for the msg.sender.
+    /*////////////////////////////////////// Public Renew Functions //////////////////////////////////////////////////*/
+    /// @notice Renews time of a membership for tokenId Using ERC20 Permit for Transaction.
     /// @param _tokenId The id of the membership.
     /// @param _newDuration The new added duration of the membership in months.
-    /// @param _ERC20 The address of the stablecoin used to purchase time for membership.
+    /// @param _deadline The deadline for the transaction.
+    /// @param v The v value of the signature.
+    /// @param r The r value of the signature.
+    /// @param s The s value of the signature.
     function renewMembership(
         uint256 _tokenId,
         uint256 _newDuration,
-        address _ERC20
+        uint256 _deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
     )
         public
         isPaused
-        onlyController(_tokenId)
+        isDelegateOrOwner(_tokenId)
         durationCheck(_newDuration)
-        correctPayment(_ERC20)
         isExpiredSoon(_tokenId)
         nonReentrant
     {
-        require(tokenTier[_tokenId].tier != 0, "Token is not a member");
         uint256 duration = (_newDuration * 30 days);
         uint256 price;
         if (_newDuration == 12) {
@@ -370,34 +443,48 @@ contract dAgoraMemberships is
         }
 
         require(
-            IERC20(_ERC20).balanceOf(msg.sender) >= price, "Not enough funds"
+            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
         );
-        require(IERC20(_ERC20).transferFrom(msg.sender, dAgoraTreasury, price));
 
+        IERC20Permit(DAI).permit(
+            msg.sender,
+            address(this),
+            price,
+            _deadline,
+            v,
+            r,
+            s
+        );
+
+        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+
+        expires[_tokenId] = expires[_tokenId] + (duration + GRACE_PERIOD);
         emit MembershipRenewed(_tokenId, expires[_tokenId]);
-        expires[_tokenId] = expires[_tokenId] + (duration + GRACE_PERIOD);    
     }
 
-    /// @notice Upgrades a membership tier if msg.sender is owner of the token.
+    /// @notice Upgrades a membership tier if tier isn't already fully upgraded to the highest tier.
+    /// @dev Only the owner of the membership can upgrade it.
     /// @param _tokenId The id of the membership.
     /// @param newTier The new tier of the membership.
-    /// @param _ERC20 The address of the stablecoin used to purchase time for membership.
+    /// @param _deadline The deadline for the transaction.
+    /// @param v The v value of the signature.
+    /// @param r The r value of the signature.
+    /// @param s The s value of the signature.
     function upgradeMemebership(
         uint256 _tokenId,
         Membership calldata newTier,
-        address _ERC20
+        uint256 _deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
     )
         public
         isPaused
         onlyController(_tokenId)
-        correctPayment(_ERC20)
         nonReentrant
     {
         uint8 oldTier = tokenTier[_tokenId].tier;
-        require(
-            newTier.tier > oldTier,
-            "New tier is the same as current tier"
-        );
+        require(newTier.tier > oldTier, "New tier is the same as current tier");
         require(newTier.tier != 0, "Cannot upgrade to tier 0");
         require(newTier.tier < 4, "Token is already a precisian member");
         uint256 price;
@@ -417,19 +504,33 @@ contract dAgoraMemberships is
             require(false, "Invalid tier");
         }
         require(
-            IERC20(_ERC20).balanceOf(msg.sender) >= price, "Not enough funds"
+            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
         );
-        require(
-            IERC20(_ERC20).transferFrom(msg.sender, dAgoraTreasury, price),
-            "Failed to transfer funds"
+        IERC20Permit(DAI).permit(
+            msg.sender,
+            address(this),
+            price,
+            _deadline,
+            v,
+            r,
+            s
         );
+
+        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+
         tokenTier[_tokenId] = newTier;
         emit MembershipUpgraded(_tokenId, oldTier, tokenTier[_tokenId]);
     }
 
     /// @notice Cancels a membership if msg.sender is owner of the token.
+    /// @dev Only the owner of the membership can cancel it.
     /// @param _tokenId The id of the membership to be cancelled.
-    function cancelMembership(uint256 _tokenId) public isPaused onlyController(_tokenId) nonReentrant {
+    function cancelMembership(uint256 _tokenId)
+        public
+        isPaused
+        onlyController(_tokenId)
+        nonReentrant
+    {
         expires[_tokenId] = block.timestamp + GRACE_PERIOD;
         emit MembershipCancelled(_tokenId);
     }
@@ -439,14 +540,20 @@ contract dAgoraMemberships is
     /// @param _to The address of the receiver.
     /// @param _durationInMonths The duration of the membership in months.
     /// @param tier The tier of the gifted membership.
-    function giftMembership(address _to, uint96 _durationInMonths, Membership calldata tier) 
-        public 
-        onlyOwner 
+    function giftMembership(
+        address _to,
+        uint96 _durationInMonths,
+        Membership calldata tier
+    )
+        public
+        onlyOwner
         durationCheck(_durationInMonths)
         nonReentrant
     {
         require(tier.tier < 4, "Cannot gift a precisian membership");
-        require(claimed[_to] != true, "Can't Gift user who already has membership");
+        require(
+            claimed[_to] != true, "Can't Gift user who already has membership"
+        );
         uint256 tokenId = totalSupply() + 1;
         uint256 duration = block.timestamp + (_durationInMonths * 30 days);
 
@@ -458,20 +565,22 @@ contract dAgoraMemberships is
         _safeMint(_to, 1);
     }
 
-
     /// @notice Allows contract owner to gift a upgrade for an existing membership.
     /// @param _tokenId The id of the membership to be upgraded.
     /// @param newTier The new tier of the membership.
-    function giftUpgrade(uint256 _tokenId, Membership calldata newTier) 
-        public 
+    function giftUpgrade(uint256 _tokenId, Membership calldata newTier)
+        public
         onlyOwner
         nonReentrant
     {
         require(newTier.tier < 4, "Cannot gift a precisian membership");
-        require(tokenTier[_tokenId].tier < newTier.tier, "Cannot upgrade to a tier that is less than current tier");
+        require(
+            tokenTier[_tokenId].tier < newTier.tier,
+            "Cannot upgrade to a tier that is less than current tier"
+        );
         uint256 oldTier = tokenTier[_tokenId].tier;
         tokenTier[_tokenId] = newTier;
-    
+
         emit MembershipUpgraded(_tokenId, oldTier, tokenTier[_tokenId]);
     }
 
@@ -484,25 +593,123 @@ contract dAgoraMemberships is
         durationCheck(_durationInMonths)
         nonReentrant
     {
-        uint256 duration =(_durationInMonths * 30 days);
+        uint256 duration = (_durationInMonths * 30 days);
         expires[_tokenId] = expires[_tokenId] + (duration + GRACE_PERIOD);
         emit MembershipRenewed(_tokenId, expires[_tokenId]);
     }
 
+    /// @notice Allows a membership owner to add delegates to their membership.
+    /// @dev Tokens Tier must be Precisian to add delegates.
+    /// @param _tokenId The id of the membership.
+    /// @param _delegatee The addresses of the delegatee.
+    function addDelegatee(
+        uint256 _tokenId, 
+        address _delegatee
+    )
+        public
+        isPaused
+        isPerclesia(_tokenId)
+        onlyController(_tokenId)
+        nonReentrant
+    {
+        uint256 currentLen = _tokenDelegates[_tokenId].length;
+        require(
+            1 + currentLen <= 10,
+            "Cannot delegate more than 10 addresses"
+        );
 
-    /// @notice Allows contract owner to set the USDC contract address.
-    /// @param _USDC The address of the USDC contract.
-    function setUSDCAddress(address _USDC) public onlyOwner {
-        USDC = _USDC;
+        require(
+            _delegatee != address(0),
+            "Cannot delegate to address 0"
+        );
+
+        require(
+            _delegatee != msg.sender,
+            "Cannot delegate to self"
+        );
+
+        require(
+            _delegatee != address(this),
+            "Cannot delegate to contract"
+        );
+        
+        _tokenDelegates[_tokenId].push(_delegatee);
     }
 
+    /// @notice Allows a membership owner to swap a delegatee for another delegatee.
+    /// @dev Tokens Tier must be Precisian to swap delegates.
+    /// @param _tokenId The id of the membership.
+    /// @param _oldDelegatee The addresses of the delegatee.
+    /// @param _newDelegatee The addresses of the new delegatee.
+    function swapDelegate(
+        uint256 _tokenId,
+        address _oldDelegatee,
+        address _newDelegatee
+    )
+        public 
+        isPaused
+        isPerclesia(_tokenId)
+        onlyController(_tokenId)
+        nonReentrant
+    {
+        require(
+            _oldDelegatee != _newDelegatee,
+            "Cannot swap to the same address"
+        );
 
-    /// @notice Allows contract owner to set the DAI contract address.
-    /// @param _DAI The address of the DAI contract.
-    function setDAIAddress(address _DAI) public onlyOwner {
-        DAI = _DAI;
+        require(
+            _newDelegatee != address(0),
+            "Cannot swap to address 0"
+        );
+
+        require(
+            _newDelegatee != msg.sender,
+            "Cannot swap to self"
+        );
+
+        require(
+            _newDelegatee != address(this),
+            "Cannot swap to contract"
+        );
+
+        for(uint i = 0; i < _tokenDelegates[_tokenId].length; i++) {
+            if(_tokenDelegates[_tokenId][i] == _oldDelegatee) {
+                _tokenDelegates[_tokenId][i] = _newDelegatee;
+                break;
+            }
+        }
     }
 
+    /// @notice Allows a membership owner to remove a delegatee from their membership.
+    /// @dev Tokens Tier must be Precisian to remove delegates.
+    /// @param _tokenId The id of the membership.
+    /// @param _delegatee The addresses of the delegatee.
+    /// @param _slot of the delegatee to be removed.
+    function removeDelegatee(
+        uint256 _tokenId,
+        address _delegatee,
+        uint8 _slot
+    ) 
+        public 
+        isPaused
+        isPerclesia(_tokenId)
+        onlyController(_tokenId)
+        nonReentrant 
+    {
+        require(
+            _slot <= _tokenDelegates[_tokenId].length,
+            "Cannot remove a delegatee that is not in the slot"
+        );
+
+        require(
+            _tokenDelegates[_tokenId][_slot] == _delegatee,
+            "Cannot remove a delegatee that is not in the slot"
+        );
+
+        delete _tokenDelegates[_tokenId][_slot];
+        _tokenDelegates[_tokenId][_slot] = _tokenDelegates[_tokenId][_tokenDelegates[_tokenId].length - 1];
+        _tokenDelegates[_tokenId].pop();
+    }
 
     /// @notice Allows contract owner to change contracts paused state.
     function togglePaused() external onlyOwner {
@@ -515,13 +722,11 @@ contract dAgoraMemberships is
         rewardedRole = _newRole;
     }
 
-
     /// @notice Allows contract owner to change the discountRate
     /// @param _discountRate The new discount rate.
     function setDiscountRate(uint256 _discountRate) public onlyOwner {
         discountRate = _discountRate;
     }
-
 
     /// @notice Allows contract owner to change the monthly price of membership.
     /// @param _monthlyPrice The new monthly price of membership.
@@ -529,13 +734,11 @@ contract dAgoraMemberships is
         monthlyPrice = _monthlyPrice;
     }
 
-
     /// @notice Allows contract owner to change the dAgorian tier price.
     /// @param _dAgorianPrice The new dAgorian tier price.
     function setdAgorianPrice(uint256 _dAgorianPrice) public onlyOwner {
         dAgorianPrice = _dAgorianPrice;
     }
-
 
     /// @notice Allows contract owner to change the hoplite tier price.
     /// @param _hoplitePrice The new hoplite tier price.
@@ -543,13 +746,11 @@ contract dAgoraMemberships is
         hoplitePrice = _hoplitePrice;
     }
 
-
     /// @notice Allows contract owner to change the periclesia tier price.
     /// @param _periclesiaPrice The new periclesia tier price.
     function setPericlesiaPrice(uint256 _periclesiaPrice) public onlyOwner {
         periclesiaPrice = _periclesiaPrice;
     }
-
 
     /// @notice Allows contract owner to set the dAgoraTreasury address.
     /// @param _dAgoraTreasury The address of the dAgoraTreasury.
@@ -557,41 +758,36 @@ contract dAgoraMemberships is
         dAgoraTreasury = _dAgoraTreasury;
     }
 
-
     /// @notice Allows contract owner to set the GuildId.
     /// @param _guildId The string of the GuildId.
     function setGuildId(string memory _guildId) public onlyOwner {
         guildId = _guildId;
     }
 
-
     /// @notice Allows contract owner to withdraw Ether sent to contract.
     function emergWithdrawal() public onlyOwner {
-        (bool success, ) = dAgoraTreasury.call{value: address(this).balance}("");
+        (bool success,) = dAgoraTreasury.call{value: address(this).balance}("");
         require(success, "Failed to send to lead.");
     }
-    
 
     /// @notice Allows contract owner to withdraw ERC20 tokens sent to contract.
     /// @param _ERC20 The address of the ERC20 token to withdraw.
     function emergERC20Withdrawal(address _ERC20) public onlyOwner {
-        uint balance = IERC20(_ERC20).balanceOf(address(this));
-        require(IERC20(_ERC20).transfer(dAgoraTreasury, balance), "Failed to transfer tokens");
+        uint256 balance = IERC20(_ERC20).balanceOf(address(this));
+        require(
+            IERC20(_ERC20).transfer(dAgoraTreasury, balance),
+            "Failed to transfer tokens"
+        );
     }
-
 
     /*////////////////////////////////////// Public View Functions //////////////////////////////////////////////////*/
     /// @notice Checks if a tokenId is a vaild member.
     /// @param _tokenId The id of the membership to check.
     /// @return Boolean based off membership expiry.
     function isValidMembership(uint256 _tokenId) public view returns (bool) {
-        if (tokenTier[_tokenId].tier == 0) {
-            return true;
-        } else {
-            return expires[_tokenId] > block.timestamp;
-        }
+        return expires[_tokenId] > block.timestamp;
+        
     }
-
 
     /// @notice Check when a tokenId expires.
     /// @param _tokenId The id of the membership to check.
@@ -608,7 +804,6 @@ contract dAgoraMemberships is
         }
     }
 
-
     /// @notice Check the tier of a tokenId.
     /// @param _tokenId The id of the membership to check.
     /// @return The tier of the membership.
@@ -616,29 +811,69 @@ contract dAgoraMemberships is
         return tokenTier[_tokenId].tier;
     }
 
-
     /// @notice Check the owner of a tokenId.
     /// @param _tokenId The id of the membership to check.
     /// @return The owner of the membership.
-    function checkTokenIndexedToOwner(uint256 _tokenId) external view returns (address) {
+    function checkTokenIndexedToOwner(uint256 _tokenId)
+        external
+        view
+        returns (address)
+    {
         return tokenIndexedToOwner[_tokenId];
     }
 
+    /// @notice Check all the delegatees of a tokenId.
+    /// @param _tokenId The id of the membership to check.
+    /// @return The delegatees addresses of the membership.
+    function checkTokenDelegates(uint256 _tokenId)
+        external
+        view
+        returns (address[] memory)
+    {
+        return _tokenDelegates[_tokenId];
+    }
 
-    function tokenURI(uint256 _tokenId) 
-        public 
-        view 
-        virtual 
-        override(ERC721A, IERC721A)
-        returns(string memory) 
+    /// @notice IERC20Permit tx count.
+    /// @param owner The address of the owner of the ERC20.
+    /// @return the current nonce.
+    function nonces(address owner) public view virtual returns (uint256) {
+        return IERC20Permit(DAI).nonces(owner);
+    }
+
+    /// @notice View function to see if a address is a delegatee or owner of a tokenId.
+    /// @param _tokenId The id of the membership to check.
+    /// @param _address The address to check.
+    /// @return Boolean based off if the address is a delegatee or owner of the tokenId.
+    function isOwnerOrDelegate(uint256 _tokenId, address _address)
+        public
+        view
+        returns (bool)
+    {
+        if (tokenIndexedToOwner[_tokenId] == _address) {
+            return true;
+        } else {
+            for (uint256 i = 0; i < _tokenDelegates[_tokenId].length; i++) {
+                if (_tokenDelegates[_tokenId][i] == _address) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function tokenURI(uint256 _tokenId)
+        public
+        view
+        virtual
+        override (ERC721A, IERC721A)
+        returns (string memory)
     {
         require(
-            _exists(_tokenId),
-            "ERC721Metadata: URI query for nonexistent token"
+            _exists(_tokenId), "ERC721Metadata: URI query for nonexistent token"
         );
 
         string memory tokenId = _toString(_tokenId);
-        string memory  generationPath = "/";
+        string memory generationPath = "/";
         uint256 _tokenTier = tokenTier[_tokenId].tier;
         if (_tokenTier == 0) {
             generationPath = "dagorian/";
@@ -648,18 +883,23 @@ contract dAgoraMemberships is
             generationPath = "periclesia/";
         }
 
-        return bytes(cid).length > 0
-        ? string(
-            abi.encodePacked(
-                cid, 
-                generationPath, 
-                tokenId, 
-                ".json"
-            )
-        ) : "";    
+        return
+            bytes(cid).length > 0
+            ? string(abi.encodePacked(cid, generationPath, tokenId, ".json"))
+            : "";
     }
 
     function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
+    }
+
+    function contains(uint256 _tokenId, address user) internal view returns (bool) {
+        for(uint256 i = 0; i < _tokenDelegates[_tokenId].length; i++) {
+            if(_tokenDelegates[_tokenId][i] == user) {
+                return true;
+            }   else {
+                return false;
+            }
+        }
     }
 }

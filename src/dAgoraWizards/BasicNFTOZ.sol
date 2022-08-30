@@ -13,6 +13,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
     using Strings for string;
     using Counters for Counters.Counter;
+
     Counters.Counter private _tokenIdCounter;
 
     /// @notice Where the NFTs metadata is stored.
@@ -33,7 +34,6 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
     /// @notice The maximum amount of NFTs that can be minted.
     uint256 public maxTotalSupply;
 
-
     /// @notice Event emitted when a membership is purchased.
     /// @param _name The name of the NFT.
     /// @param _symbol The symbol of the NFT.
@@ -50,8 +50,8 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
         uint16 _bulkBuyLimit,
         uint256 _maxTotalSupply,
         address _newOwner
-
-    )   ERC721(_name, _symbol)
+    )
+        ERC721(_name, _symbol)
     {
         setBaseURI(_baseURI);
         setMintCost(_mintCost);
@@ -88,10 +88,7 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
     /// @param _amount The amount of NFTs to mint.
     /// @dev The total supply of NFTs must be less than or equal to the maxTotalSupply.
     function reserveTokens(uint256 _amount) public onlyOwner {
-        require(
-            _amount + totalSupply() <= maxTotalSupply,
-            "Soldout"
-        );
+        require(_amount + totalSupply() <= maxTotalSupply, "Soldout");
 
         for (uint256 i = 1; i <= _amount; i++) {
             _tokenIdCounter.increment();
@@ -105,19 +102,19 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
         view
         virtual
         override
-    returns (string memory)
+        returns (string memory)
     {
         require(
-            _exists(_tokenId),
-            "ERC721Metadata: URI query for nonexistent token"
+            _exists(_tokenId), "ERC721Metadata: URI query for nonexistent token"
         );
         string memory tokenId = Strings.toString(_tokenId);
         string memory currentBaseURI = baseURI;
 
-        return bytes(currentBaseURI).length > 0
-        ? string(abi.encodePacked(currentBaseURI, tokenId, baseExtension)) : "";   
+        return
+            bytes(currentBaseURI).length > 0
+            ? string(abi.encodePacked(currentBaseURI, tokenId, baseExtension))
+            : "";
     }
-
 
     /// @notice Only Contract Owner can use this function to set the baseURI.
     /// @param _newBaseURI The new baseURI.
@@ -127,7 +124,7 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
 
     /// @notice Only Contract Owner can use this function to set the baseExtension.
     /// @param _newBaseExtension The new baseExtension.
-    function setBaseExtension(string memory _newBaseExtension) 
+    function setBaseExtension(string memory _newBaseExtension)
         public
         onlyOwner
     {
@@ -145,7 +142,10 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
     /// @dev The bulkBuyLimit must be less than the maxTotalSupply.
     function setBulkBuyLimit(uint16 _newBulkBuyLimit) public onlyOwner {
         require(_newBulkBuyLimit != 0, "Bulk Buy Limit must be greater than 0");
-        require(_newBulkBuyLimit < maxTotalSupply, "Bulk Buy Limit must be less than Max Total Supply");
+        require(
+            _newBulkBuyLimit < maxTotalSupply,
+            "Bulk Buy Limit must be less than Max Total Supply"
+        );
         bulkBuyLimit = _newBulkBuyLimit;
     }
 
@@ -155,10 +155,9 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
         paused = !paused;
     }
 
-
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
         internal
-        override(ERC721, ERC721Enumerable)
+        override (ERC721, ERC721Enumerable)
     {
         super._beforeTokenTransfer(from, to, tokenId);
     }
@@ -166,32 +165,29 @@ contract BasicNFTOZ is ERC721, ERC721Enumerable, Ownable {
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Enumerable)
+        override (ERC721, ERC721Enumerable)
         returns (bool)
-   {
-    return 
-        ERC721.supportsInterface(interfaceId) || 
-        ERC721Enumerable.supportsInterface(interfaceId);
+    {
+        return ERC721.supportsInterface(interfaceId)
+            || ERC721Enumerable.supportsInterface(interfaceId);
     }
 
     /// @notice Withdraws the funds from the contract to contract owner.
     /// @dev Only Contract Owner can use this function.
     function withdraw() public payable onlyOwner {
-        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
-        require(success, "Address: unable to send value, recipient may have reverted");
+        (bool success,) =
+            payable(msg.sender).call{value: address(this).balance}("");
+        require(
+            success, "Address: unable to send value, recipient may have reverted"
+        );
     }
-    
+
     /// @notice Allows owner to withdraw any ERC20 tokens sent to this contract.
     /// @param _tokenAddr The address of the ERC20 token.
     /// @dev Only Contract Owner can use this function.
     function withdrawErc20s(address _tokenAddr) public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(_tokenAddr).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(_tokenAddr).balance}("");
+        require(success, "Address: unable to send value");
     }
-
 }

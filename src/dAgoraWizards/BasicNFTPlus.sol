@@ -19,6 +19,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract BasicNFTPlus is ERC721, Ownable {
     using Strings for string;
     using Counters for Counters.Counter;
+
     Counters.Counter private _tokenIdCounter;
 
     /// @notice Where the NFTs metadata is stored.
@@ -53,7 +54,6 @@ contract BasicNFTPlus is ERC721, Ownable {
     /// @dev This is used to keep track of the amount of NFTs a address has minted during presale.
     mapping(address => uint256) public presaleMintBalance;
 
-
     /// @notice Event emitted when a membership is purchased.
     /// @param _name The name of the NFT.
     /// @param _symbol The symbol of the NFT.
@@ -74,8 +74,9 @@ contract BasicNFTPlus is ERC721, Ownable {
         uint256 _maxTotalSupply,
         address _newOwner,
         bytes32 _merkleRoot
-
-    ) ERC721(_name, _symbol) {
+    )
+        ERC721(_name, _symbol)
+    {
         baseURI = _baseURI;
         mintCost = _mintCost;
         bulkBuyLimit = _bulkBuyLimit;
@@ -95,12 +96,8 @@ contract BasicNFTPlus is ERC721, Ownable {
 
     modifier isValidMerkleProof(bytes32[] calldata merkleProof, bytes32 root) {
         require(
-            MerkleProof.verify(
-            merkleProof,
-            root,
-            keccak256(abi.encodePacked(msg.sender))
-        ),
-        "Address does not exist in list"
+            MerkleProof.verify(merkleProof, root, keccak256(abi.encodePacked(msg.sender))),
+            "Address does not exist in list"
         );
         _;
     }
@@ -118,15 +115,12 @@ contract BasicNFTPlus is ERC721, Ownable {
         _;
     }
 
-
     /// @notice Function for allowlisted addresses to mint NFTs.
     /// @dev Used to mint NFTs during presale.
     /// @param _proof The merkle proof of the msg.sender's address.
     /// @param _amount The amount of NFTs to mint.
-    function presaleMint(
-        bytes32[] calldata _proof, 
-        uint256 _amount
-    )   public 
+    function presaleMint(bytes32[] calldata _proof, uint256 _amount)
+        public
         payable
         isPaused
         isValidMerkleProof(_proof, merkleRoot)
@@ -134,9 +128,11 @@ contract BasicNFTPlus is ERC721, Ownable {
     {
         require(
             _amount + presaleMintBalance[msg.sender] <= maxAllowListAmount,
-            "Reached max amount for whitelist"  
+            "Reached max amount for whitelist"
         );
-        require((_tokenIdCounter.current() + _amount) <= maxTotalSupply, "Soldout");
+        require(
+            (_tokenIdCounter.current() + _amount) <= maxTotalSupply, "Soldout"
+        );
         require(msg.value >= (_amount * mintCost), "Insufficient funds");
 
         for (uint256 i = 1; i <= _amount; i++) {
@@ -147,18 +143,14 @@ contract BasicNFTPlus is ERC721, Ownable {
         }
     }
 
-
     /// @notice Function for public to mint NFTs.
     /// @dev Used to mint NFTs during public sale.
     /// @param _amount The amount of NFTs to mint.
-    function mintNFT(uint256 _amount) 
-        public 
-        payable 
-        isPaused
-        isPublic
-    {
+    function mintNFT(uint256 _amount) public payable isPaused isPublic {
         require(_amount <= bulkBuyLimit, "Over Max per Tx");
-        require((_tokenIdCounter.current() + _amount) <= maxTotalSupply, "Soldout");
+        require(
+            (_tokenIdCounter.current() + _amount) <= maxTotalSupply, "Soldout"
+        );
         require(msg.value >= (_amount * mintCost), "Insufficient funds");
 
         for (uint256 i = 1; i <= _amount; i++) {
@@ -166,9 +158,7 @@ contract BasicNFTPlus is ERC721, Ownable {
             uint256 tokenId = _tokenIdCounter.current();
             _safeMint(msg.sender, tokenId);
         }
-    
     }
-
 
     /// @notice Only Contract Owner can use this function to Mint NFTs.
     /// @param _amount The amount of NFTs to mint.
@@ -199,7 +189,6 @@ contract BasicNFTPlus is ERC721, Ownable {
         paused = !paused;
     }
 
-
     /// @notice Allows the owner to change the baseURI.
     /// @param _baseURI The new baseURI.
     function setBaseURI(string memory _baseURI) public onlyOwner {
@@ -208,7 +197,10 @@ contract BasicNFTPlus is ERC721, Ownable {
 
     /// @notice Allows the owner to change the Base extension.
     /// @param _newBaseExtension The new baseExtension.
-    function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+    function setBaseExtension(string memory _newBaseExtension)
+        public
+        onlyOwner
+    {
         baseExtension = _newBaseExtension;
     }
 
@@ -220,8 +212,14 @@ contract BasicNFTPlus is ERC721, Ownable {
 
     /// @notice Allows the owner to change the max allow list amount.
     /// @param _newMaxAllowListAmount The new max allow list amount.
-    function setMaxAllowListAmount(uint256 _newMaxAllowListAmount) public onlyOwner {
-        require(_newMaxAllowListAmount < bulkBuyLimit, "Max Allow List Amount must be less than Bulk Buy Limit");
+    function setMaxAllowListAmount(uint256 _newMaxAllowListAmount)
+        public
+        onlyOwner
+    {
+        require(
+            _newMaxAllowListAmount < bulkBuyLimit,
+            "Max Allow List Amount must be less than Bulk Buy Limit"
+        );
         maxAllowListAmount = _newMaxAllowListAmount;
     }
 
@@ -230,13 +228,16 @@ contract BasicNFTPlus is ERC721, Ownable {
     /// @dev The bulkBuyLimit must be less than the maxTotalSupply.
     function setBulkBuyLimit(uint256 _newBulkBuyLimit) public onlyOwner {
         require(_newBulkBuyLimit != 0, "Bulk Buy Limit must be greater than 0");
-        require(_newBulkBuyLimit < maxTotalSupply, "Bulk Buy Limit must be less than Max Total Supply");
+        require(
+            _newBulkBuyLimit < maxTotalSupply,
+            "Bulk Buy Limit must be less than Max Total Supply"
+        );
         bulkBuyLimit = _newBulkBuyLimit;
     }
 
     /// @notice Checks the current token supply of the contract.
     /// @return The current token supply.
-    function totalSupply() public view returns(uint256) {
+    function totalSupply() public view returns (uint256) {
         return _tokenIdCounter.current();
     }
 
@@ -248,33 +249,33 @@ contract BasicNFTPlus is ERC721, Ownable {
         returns (string memory)
     {
         require(
-            _exists(_tokenId),
-            "ERC721Metadata: URI query for nonexistent token"
+            _exists(_tokenId), "ERC721Metadata: URI query for nonexistent token"
         );
         string memory tokenId = Strings.toString(_tokenId);
         string memory currentBaseURI = baseURI;
 
-        return bytes(currentBaseURI).length > 0
-        ? string(abi.encodePacked(currentBaseURI, tokenId, baseExtension)) : "";   
+        return
+            bytes(currentBaseURI).length > 0
+            ? string(abi.encodePacked(currentBaseURI, tokenId, baseExtension))
+            : "";
     }
 
     /// @notice Withdraws the funds from the contract to contract owner.
     /// @dev Only Contract Owner can use this function.
     function withdraw() public payable onlyOwner {
-        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
-        require(success, "Address: unable to send value, recipient may have reverted");
+        (bool success,) =
+            payable(msg.sender).call{value: address(this).balance}("");
+        require(
+            success, "Address: unable to send value, recipient may have reverted"
+        );
     }
 
     /// @notice Allows owner to withdraw any ERC20 tokens sent to this contract.
     /// @param _tokenAddr The address of the ERC20 token.
     /// @dev Only Contract Owner can use this function.
     function withdrawErc20s(address _tokenAddr) public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(_tokenAddr).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(_tokenAddr).balance}("");
+        require(success, "Address: unable to send value");
     }
 }

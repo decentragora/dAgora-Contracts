@@ -3,8 +3,8 @@ pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import { BasicNFTOZ } from "../dAgoraWizards/BasicNFTOZ.sol";
-import '../IdAgoraMemberships.sol';
+import {BasicNFTOZ} from "../dAgoraWizards/BasicNFTOZ.sol";
+import "../IdAgoraMemberships.sol";
 
 /// @title dAgora Basic NFT OZ Factory
 /// @author DadlessNsad || 0xOrphan
@@ -40,19 +40,17 @@ contract dAgoraBasicNFTOZFactory is Ownable, ReentrancyGuard {
     /// @param _contractId Users total amount of deployed contracts.
     /// @param _basicNFTCount The total amount of NFTs created for members.
     event BasicNFTCreated(
-        address basicNFTContract, 
+        address basicNFTContract,
         address owner,
         uint256 _contractId,
         uint256 _basicNFTCount
     );
-
 
     /// @notice Sets the contracts variables.
     /// @param _dAgoraMembership The address of the dAgora Memberships contract.
     constructor(address _dAgoraMembership) {
         dAgoraMembership = _dAgoraMembership;
     }
-
 
     /// @notice Checks if the contract is paused.
     /// @dev This modifier is used to prevent users from deploying contracts while the contract is paused.
@@ -68,6 +66,7 @@ contract dAgoraBasicNFTOZFactory is Ownable, ReentrancyGuard {
     /// @param _mintCost The Mint cost of a NFT.
     /// @param _bulkBuyLimit the max amount of NFTs that can be minted at once.
     /// @param _maxTotalSupply The max supply of the NFT.
+    /// @param _id The tokenId of dAgora Membership.
     /// @param _newOwner The address of the new owner.
     function createBasicNFT(
         string memory _name,
@@ -76,25 +75,24 @@ contract dAgoraBasicNFTOZFactory is Ownable, ReentrancyGuard {
         uint256 _mintCost,
         uint16 _bulkBuyLimit,
         uint256 _maxTotalSupply,
+        uint256 _id,
         address _newOwner
-    )   public 
+    )
+        public
         isPaused
         nonReentrant
     {
-        require(_canCreate() == true, "Must be a valid membership");
+        require(_canCreate(_id) == true, "Must be a valid membership");
+
+        require(_maxTotalSupply > 0, "Max supply must be greater than 0");
 
         require(
-            _maxTotalSupply > 0, 
-            "Max supply must be greater than 0"
-        );
-
-        require(
-            _maxTotalSupply > _bulkBuyLimit, 
+            _maxTotalSupply > _bulkBuyLimit,
             "Max supply must be greater than bulk buy limit"
         );
 
         require(_newOwner != address(0), "Owner cannot be 0x0");
-        
+
         nft = new BasicNFTOZ(
             _name,
             _symbol,
@@ -111,10 +109,19 @@ contract dAgoraBasicNFTOZFactory is Ownable, ReentrancyGuard {
         _deployedContracts[msg.sender].Owner = msg.sender;
         _deployedContracts[msg.sender].contractId = basicNFTCount;
 
-        emit BasicNFTCreated(address(nft), msg.sender, _addressDeployCount[msg.sender], basicNFTCount);
+        emit BasicNFTCreated(
+            address(nft),
+            msg.sender,
+            _addressDeployCount[msg.sender],
+            basicNFTCount
+            );
     }
 
-    function deployedContracts(address _owner) public view returns (Deploys memory) {
+    function deployedContracts(address _owner)
+        public
+        view
+        returns (Deploys memory)
+    {
         return _deployedContracts[_owner];
     }
 
@@ -127,16 +134,15 @@ contract dAgoraBasicNFTOZFactory is Ownable, ReentrancyGuard {
     }
 
 
-    function _canCreate() internal view returns (bool) {
-        uint256 _currentSupply =  IdAgoraMembership(dAgoraMembership).totalSupply();
-        if(IdAgoraMembership(dAgoraMembership).balanceOf(msg.sender) > 0) {
-            for(uint256 i = 1; i <= _currentSupply; i++) {
-                if(IdAgoraMembership(dAgoraMembership).ownerOf(i) == msg.sender) {
-                    return IdAgoraMembership(dAgoraMembership).isValidMembership(i);
-                }
-            }
-        } else {
-            return false;
-        }
+    /// @notice Function to check if a user is a valid member & can create NFT contracts.
+    /// @param _id The tokenId of the NFT.
+    /// @return boolean
+    function _canCreate(uint256 _id) internal view returns (bool) {
+        require(
+            IdAgoraMembership(dAgoraMembership).isOwnerOrDelegate(_id, msg.sender) == true,
+            "Must be the owner of the NFT"
+        );
+        
+        return IdAgoraMembership(dAgoraMembership).isValidMembership(_id);
     }
 }

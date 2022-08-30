@@ -7,26 +7,34 @@ import "forge-std/Vm.sol";
 import {dAgoraMemberships} from "../src/dAgoraMemberships.sol";
 import {ChainLink} from "../src/mock/linkToken.sol";
 import {TestDAI} from "../src/mock/testDAI.sol";
-import {TestUSDC} from "../src/mock/testUSDC.sol";
-import {Token} from "../src/mock/token.sol";
+import {SigUtils} from "../src/mock/sigUtils.sol";
 import {MockOperator} from "../src/mock/mockOperator.sol";
 
 contract MembershipFuzzTests is Test {
     address dAgoraTreasury = address(0x1337);
-    address signer = address(0x133702);
+    // address signer = address(0x133702);
+    address public bob;
+    address public minter;
     address alice = address(0x133703);
-    address bob = address(0x133704);
-    address chrome = address(0xcb5c05B9916B49adf97cC31a0c7089F3B4Cfa8b1);
-    address user1 = address(0x133705);
-    address user2 = address(0x133706);
-    address user3 = address(0x133707);
+    address carol = address(0x133704);
+    address dave = address(0x133705);
+    address eve = address(0x133706);
+    address frank = address(0x133707);
+    address grace = address(0x133708);
+    address harry = address(0x133709);
+    address ida = address(0x133710);
+    address jake = address(0x133711);
+    address kate = address(0x133712);
+    address luke = address(0x133713);
+    address molly = address(0x133714);
+    address nancy = address(0x133715);
 
+
+    SigUtils sigUtils;
     dAgoraMemberships dAgora;
     ChainLink link;
     MockOperator operator;
     TestDAI dai;
-    TestUSDC usdc;
-    Token token;
 
     uint256 oracleFee = 1 * 10 ** 17;
     uint256 ecceliaePrice = 0;
@@ -34,16 +42,23 @@ contract MembershipFuzzTests is Test {
     uint256 hoplitePrice = 80 * 10 ** 18;
     uint256 periclesiaPrice = 1000 * 10 ** 18;
     uint256 monthlyPrice = 5 * 10 ** 18;
+    uint256 _deadline = block.timestamp + 600;
+
+    uint256 public bobKeys = 0xB0B;
+    uint256 public minterKeys = 0xB0BdA7;
+    uint256 public aliceKeys = 0xA1C3;
 
     bytes32 public jobId = "3950";
 
     function setUp() public {
+        bob = vm.addr(bobKeys);
+        minter = vm.addr(minterKeys);
+        alice = vm.addr(aliceKeys);
         link = new ChainLink();
         vm.startPrank(dAgoraTreasury);
         dai = new TestDAI();
-        token = new Token();
-        usdc = new TestUSDC();
 
+        sigUtils = new SigUtils(dai.DOMAIN_SEPARATOR());
         link._mint();
         operator = new MockOperator(address(link));
 
@@ -51,7 +66,6 @@ contract MembershipFuzzTests is Test {
         dAgora = new dAgoraMemberships(
                 'ipfs://BaseURIOrCID/',
                 address(dai),
-                address(usdc),
                 address(dAgoraTreasury),
                 '3433',
                 3950,
@@ -65,8 +79,7 @@ contract MembershipFuzzTests is Test {
         vm.stopPrank();
 
         vm.startPrank(bob);
-            dai._mint();
-            usdc._mint();
+        dai._mint();
         vm.stopPrank();
     }
 
@@ -79,23 +92,33 @@ contract MembershipFuzzTests is Test {
     function testMint_dAgorian_DAI(uint96 months) public {
         vm.startPrank(bob);
         vm.assume(months > 0 && months <= 12);
-            uint256 monthlyCost = ((5 ether) * months);
-            uint256 price = monthlyCost + dagorianPrice;
-            dai.approve(address(dAgora), price);
-            dAgora.mintdAgoraianTier(months, address(dai));
-        assertEq(dAgora.totalSupply(), 1);
-        assertEq(dAgora.balanceOf(address(bob)), 1);
-        assertEq(dAgora.checkTokenTier(1), 1);
-        vm.stopPrank();
-    }
+        uint96 amountOfMonths = months;
+        if(months == 12) {
+            amountOfMonths = 11;
+        }
+        uint256 monthlyCost = ((5 ether) * amountOfMonths);
+        uint256 price = monthlyCost + dagorianPrice;
 
-    function testMint_dAgorian_USDC(uint96 months) public {
-        vm.startPrank(bob);
-        vm.assume(months > 0 && months <= 12);
-            uint256 monthlyCost = ((5 ether) * months);
-            uint256 price = monthlyCost + dagorianPrice;
-            usdc.approve(address(dAgora), price);
-            dAgora.mintdAgoraianTier(months, address(usdc));
+        SigUtils.Permit memory permit = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: price,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: _deadline
+        });
+
+        bytes32 digest = sigUtils.getTypedDataHash(permit);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
+
+        dAgora.mintdAgoraianTier(
+            amountOfMonths, 
+            _deadline, 
+            v, 
+            r, 
+            s
+        );
+
         assertEq(dAgora.totalSupply(), 1);
         assertEq(dAgora.balanceOf(address(bob)), 1);
         assertEq(dAgora.checkTokenTier(1), 1);
@@ -106,23 +129,32 @@ contract MembershipFuzzTests is Test {
     function testMint_Hoptile_DAI(uint96 months) public {
         vm.startPrank(bob);
         vm.assume(months > 0 && months <= 12);
-            uint256 monthlyCost = ((5 ether) * months);
-            uint256 price = monthlyCost + hoplitePrice;
-            dai.approve(address(dAgora), price);
-            dAgora.mintHoptileTier(months, address(dai));
-        assertEq(dAgora.totalSupply(), 1);
-        assertEq(dAgora.balanceOf(address(bob)), 1);
-        assertEq(dAgora.checkTokenTier(1), 2);
-        vm.stopPrank();
-    }
+        uint96 amountOfMonths = months;
+        if(months == 12) {
+            amountOfMonths = 11;
+        }
+        uint256 monthlyCost = ((5 ether) * amountOfMonths);
+        uint256 price = monthlyCost + hoplitePrice;
 
-    function testMint_Hoptile_USDC(uint96 months) public {
-        vm.startPrank(bob);
-        vm.assume(months > 0 && months <= 12);
-            uint256 monthlyCost = ((5 ether) * months);
-            uint256 price = monthlyCost + hoplitePrice;
-            usdc.approve(address(dAgora), price);
-            dAgora.mintHoptileTier(months, address(usdc));
+        SigUtils.Permit memory permit = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: price,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: _deadline
+        });
+
+        bytes32 digest = sigUtils.getTypedDataHash(permit);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
+
+        dAgora.mintHoptileTier(
+            amountOfMonths,
+            _deadline, 
+            v, 
+            r, 
+            s
+        );
         assertEq(dAgora.totalSupply(), 1);
         assertEq(dAgora.balanceOf(address(bob)), 1);
         assertEq(dAgora.checkTokenTier(1), 2);
@@ -132,21 +164,35 @@ contract MembershipFuzzTests is Test {
     function testMint_Periclesia_DAI(uint96 months) public {
         vm.startPrank(bob);
         vm.assume(months > 0 && months <= 12);
-        uint256 monthlyCost = ((5 ether) * months);
+        uint96 amountOfMonths = months;
+        if(months == 12) {
+            amountOfMonths = 11;
+        }
+        uint256 monthlyCost = ((5 ether) * amountOfMonths);
         uint256 price = monthlyCost + periclesiaPrice;
-        dai.approve(address(dAgora), price);
-        dAgora.mintPericlesiaTier(months, address(dai));
+                
+        SigUtils.Permit memory permit = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: price,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: _deadline
+        });
 
-        vm.stopPrank();
-    }
+        bytes32 digest = sigUtils.getTypedDataHash(permit);
 
-    function testMint_Periclesia_USDC(uint96 months) public {
-        vm.startPrank(bob);
-        vm.assume(months > 0 && months <= 12);
-        uint256 monthlyCost = ((5 ether) * months);
-        uint256 price = monthlyCost + periclesiaPrice;
-        usdc.approve(address(dAgora), price);
-        dAgora.mintPericlesiaTier(months, address(usdc));
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
+
+        dAgora.mintPericlesiaTier(
+            amountOfMonths,
+            _deadline, 
+            v, 
+            r, 
+            s
+        );
+        assertEq(dAgora.totalSupply(), 1);
+        assertEq(dAgora.balanceOf(address(bob)), 1);
+        assertEq(dAgora.checkTokenTier(1), 3);
 
         vm.stopPrank();
     }
@@ -154,12 +200,54 @@ contract MembershipFuzzTests is Test {
     function testFailAlreadyMember(uint96 months) public {
         vm.startPrank(bob);
         vm.assume(months > 0 && months <= 12);
-        uint256 monthlyCost = ((5 ether) * months);
+        uint96 amountOfMonths = months;
+        if(months == 12) {
+            amountOfMonths = 11;
+        }
+        uint256 monthlyCost = ((5 ether) * amountOfMonths);
         uint256 price = monthlyCost + periclesiaPrice - 5 ether;
         dai.approve(address(dAgora), price);
-        dAgora.mintPericlesiaTier(months, address(dai));
 
-        dAgora.mintPericlesiaTier(months, address(dai));
+        SigUtils.Permit memory permit = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: price,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: _deadline
+        });
+
+        bytes32 digest = sigUtils.getTypedDataHash(permit);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
+
+        dAgora.mintPericlesiaTier(
+            amountOfMonths, 
+            _deadline, 
+            v, 
+            r, 
+            s
+        );
+
+        SigUtils.Permit memory permit2 = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: price,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: _deadline
+        });
+
+        bytes32 digest2 = sigUtils.getTypedDataHash(permit2);
+
+        (uint8 v2, bytes32 r2, bytes32 s2) = vm.sign(bobKeys, digest2);
+
+        dAgora.mintPericlesiaTier(
+            1, 
+            _deadline, 
+            v2, 
+            r2, 
+            s2
+        );
+
         vm.stopPrank();
     }
 
@@ -167,25 +255,95 @@ contract MembershipFuzzTests is Test {
         vm.startPrank(bob);
         uint256 monthlyCost = ((5 ether) * 1);
         uint256 price = monthlyCost + periclesiaPrice;
-        dai.approve(address(dAgora), price);
-        dAgora.mintPericlesiaTier(1, address(dai));
+       
+        SigUtils.Permit memory permit = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: price,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: _deadline
+        });
+
+        bytes32 digest = sigUtils.getTypedDataHash(permit);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
+
+        dAgora.mintPericlesiaTier(
+            1, 
+            _deadline, 
+            v, 
+            r, 
+            s
+        );
+
         vm.assume(renewMonths > 0 && renewMonths <= 12);
-        uint256 renewPrice = ((5 ether) * renewMonths);
-        dai.approve(address(dAgora), renewPrice);
-        dAgora.renewMembership(1, renewMonths, address(dai));
+        uint96 amountOfMonths = renewMonths;
+        if(renewMonths == 12) {
+            amountOfMonths = 11;
+        }
+        uint256 renewPrice = ((5 ether) * amountOfMonths);
+        uint256 renewDeadline = block.timestamp + 666;
+
+        SigUtils.Permit memory renewPermit = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: renewPrice,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: renewDeadline
+        });
+
+        bytes32 renewDigest = sigUtils.getTypedDataHash(renewPermit);
+
+        (uint8 renewV, bytes32 renewR, bytes32 renewS) = vm.sign(bobKeys, renewDigest);
+
+        dAgora.renewMembership(
+            1,
+            amountOfMonths,
+            renewDeadline, 
+            renewV,
+            renewR,
+            renewS
+        );
+
         vm.stopPrank();
     }
-    
-    function testRenewMembership_USDC(uint96 renewMonths) public {
+
+
+    function testUpgradeMembership(uint96 newTier) public {
+        uint256 upgradeCost;
+        vm.startPrank(dAgoraTreasury);
+        dAgora.giftMembership(address(bob), 1, dAgoraMemberships.Membership(0));
+        vm.stopPrank();
+        vm.assume(newTier > 0 && newTier <= 3);
         vm.startPrank(bob);
-        uint256 monthlyCost = ((5 ether) * 1);
-        uint256 price = monthlyCost + periclesiaPrice;
-        usdc.approve(address(dAgora), price);
-        dAgora.mintPericlesiaTier(1, address(usdc));
-        vm.assume(renewMonths > 0 && renewMonths <= 12);
-        uint256 renewPrice = ((5 ether) * renewMonths);
-        usdc.approve(address(dAgora), renewPrice);
-        dAgora.renewMembership(1, renewMonths, address(usdc));
+        if (newTier == 1) {
+            upgradeCost = dagorianPrice;
+        } else if (newTier == 2) {
+            upgradeCost = hoplitePrice + dagorianPrice;
+        } else if (newTier == 3) {
+            upgradeCost = periclesiaPrice + hoplitePrice + dagorianPrice;
+        }
+
+        SigUtils.Permit memory permit = SigUtils.Permit({
+            owner: address(bob),
+            spender: address(dAgora),
+            value: upgradeCost,
+            nonce: dAgora.nonces(address(bob)),
+            deadline: _deadline
+        });
+
+        bytes32 digest = sigUtils.getTypedDataHash(permit);
+
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
+
+        dAgora.upgradeMemebership(
+            1, 
+            dAgoraMemberships.Membership(uint8(newTier)), 
+            _deadline, 
+            v, 
+            r, 
+            s
+        );
         vm.stopPrank();
     }
 }

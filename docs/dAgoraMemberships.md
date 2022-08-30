@@ -30,14 +30,6 @@ address DAI
 
 The address of DAI token.
 
-### USDC
-
-```solidity
-address USDC
-```
-
-The address of USDC token.
-
 ### dAgoraTreasury
 
 ```solidity
@@ -46,6 +38,12 @@ address dAgoraTreasury
 
 DecentrAgora's multisig address.
 
+### rewardedRole
+
+```solidity
+uint96 rewardedRole
+```
+
 ### GRACE_PERIOD
 
 ```solidity
@@ -53,12 +51,6 @@ uint256 GRACE_PERIOD
 ```
 
 Adds a extra day to expiring memberships.
-
-### rewardedRole
-
-```solidity
-uint96 rewardedRole
-```
 
 ### periclesiaPrice
 
@@ -132,6 +124,15 @@ mapping(address => bool) claimed
 
 Tracks if a address has minted or not.
 
+### _tokenDelegates
+
+```solidity
+mapping(uint256 => address[]) _tokenDelegates
+```
+
+Tracks delegated addresses for a tokenId.
+TokenId must be Percelisia tier.
+
 ## Functions
 
 ### constructor
@@ -140,7 +141,6 @@ Tracks if a address has minted or not.
 constructor(
     string _cid,
     address _DAI,
-    address _USDC,
     address _dAgoraTreasury,
     string guildId,
     uint96 _rewardedRole,
@@ -159,7 +159,6 @@ Sets the contracts variables.
 | :--- | :--- | :---------- |
 | `_cid` | string | The storage location of the membership metadata. |
 | `_DAI` | address | The address of DAI token. |
-| `_USDC` | address | The address of USDC token. |
 | `_dAgoraTreasury` | address | DecentrAgora's multisig address. |
 | `guildId` | string | The Id of the guild, the oracle interacts with. |
 | `_rewardedRole` | uint96 | The role that is checked by oracle for free membership. |
@@ -173,54 +172,72 @@ Sets the contracts variables.
 ```solidity
 function mintdAgoraianTier(
     uint96 _durationInMonths,
-    address _ERC20
+    uint256 _deadline,
+    uint8 v,
+    bytes32 r,
+    bytes32 s
 ) public
 ```
 
-Mints a DAgorian membership for the msg.sender.
+Mints a DAgorian membership for the msg.sender using ERC20Permit.
 
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
 | `_durationInMonths` | uint96 | The duration of the membership in months. |
-| `_ERC20` | address | The address of the stablecoin used to purchase membership. |
+| `_deadline` | uint256 | The deadline for the transaction. |
+| `v` | uint8 | The v value of the signature. |
+| `r` | bytes32 | The r value of the signature. |
+| `s` | bytes32 | The s value of the signature. |
 
 ### mintHoptileTier
 
 ```solidity
 function mintHoptileTier(
     uint96 _durationInMonths,
-    address _ERC20
+    uint256 _deadline,
+    uint8 v,
+    bytes32 r,
+    bytes32 s
 ) public
 ```
 
-Mints a Hoptile Tier membership for the msg.sender.
+Mints a Hoptile Tier membership for the msg.sender using ERC20Permit.
 
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
 | `_durationInMonths` | uint96 | The duration of the membership in months. |
-| `_ERC20` | address | The address of the stablecoin used to purchase membership. |
+| `_deadline` | uint256 | The deadline for the transaction. |
+| `v` | uint8 | The v value of the signature. |
+| `r` | bytes32 | The r value of the signature. |
+| `s` | bytes32 | The s value of the signature. |
 
 ### mintPericlesiaTier
 
 ```solidity
 function mintPericlesiaTier(
     uint96 _durationInMonths,
-    address _ERC20
+    uint256 _deadline,
+    uint8 v,
+    bytes32 r,
+    bytes32 s
 ) public
 ```
 
-Mints a Periclesia Tier membership for the msg.sender.
+Mints a Periclesia Tier membership for the msg.sender using ERC20Permit.
 
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
 | `_durationInMonths` | uint96 | The duration of the membership in months. |
-| `_ERC20` | address | The address of the stablecoin used to purchase membership. |
+| `_deadline` | uint256 | The deadline for the transaction. |
+| `v` | uint8 | The v value of the signature. |
+| `r` | bytes32 | The r value of the signature. |
+| `s` | bytes32 | The s value of the signature. |
 
 ### freeClaim
 
@@ -254,11 +271,14 @@ Mints a Ecclesia Tier membership for the msg.sender, if checks pass.
 function renewMembership(
     uint256 _tokenId,
     uint256 _newDuration,
-    address _ERC20
+    uint256 _deadline,
+    uint8 v,
+    bytes32 r,
+    bytes32 s
 ) public
 ```
 
-Renews time of a membership for the msg.sender.
+Renews time of a membership for tokenId Using ERC20 Permit for Transaction.
 
 #### Parameters
 
@@ -266,7 +286,10 @@ Renews time of a membership for the msg.sender.
 | :--- | :--- | :---------- |
 | `_tokenId` | uint256 | The id of the membership. |
 | `_newDuration` | uint256 | The new added duration of the membership in months. |
-| `_ERC20` | address | The address of the stablecoin used to purchase time for membership. |
+| `_deadline` | uint256 | The deadline for the transaction. |
+| `v` | uint8 | The v value of the signature. |
+| `r` | bytes32 | The r value of the signature. |
+| `s` | bytes32 | The s value of the signature. |
 
 ### upgradeMemebership
 
@@ -274,11 +297,16 @@ Renews time of a membership for the msg.sender.
 function upgradeMemebership(
     uint256 _tokenId,
     struct dAgoraMemberships.Membership newTier,
-    address _ERC20
+    uint256 _deadline,
+    uint8 v,
+    bytes32 r,
+    bytes32 s
 ) public
 ```
 
-Upgrades a membership tier if msg.sender is owner of the token.
+Upgrades a membership tier if tier isn't already fully upgraded to the highest tier.
+
+Only the owner of the membership can upgrade it.
 
 #### Parameters
 
@@ -286,7 +314,10 @@ Upgrades a membership tier if msg.sender is owner of the token.
 | :--- | :--- | :---------- |
 | `_tokenId` | uint256 | The id of the membership. |
 | `newTier` | struct dAgoraMemberships.Membership | The new tier of the membership. |
-| `_ERC20` | address | The address of the stablecoin used to purchase time for membership. |
+| `_deadline` | uint256 | The deadline for the transaction. |
+| `v` | uint8 | The v value of the signature. |
+| `r` | bytes32 | The r value of the signature. |
+| `s` | bytes32 | The s value of the signature. |
 
 ### cancelMembership
 
@@ -297,6 +328,8 @@ function cancelMembership(
 ```
 
 Cancels a membership if msg.sender is owner of the token.
+
+Only the owner of the membership can cancel it.
 
 #### Parameters
 
@@ -360,37 +393,69 @@ Allows contract owner to gift a renewal for an existing membership.
 | `_tokenId` | uint256 | The id of the membership to be renewed. |
 | `_durationInMonths` | uint96 | The new added duration of the membership in months. |
 
-### setUSDCAddress
+### addDelegatee
 
 ```solidity
-function setUSDCAddress(
-    address _USDC
+function addDelegatee(
+    uint256 _tokenId,
+    address _delegatee
 ) public
 ```
 
-Allows contract owner to set the USDC contract address.
+Allows a membership owner to add delegates to their membership.
+
+Tokens Tier must be Precisian to add delegates.
 
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_USDC` | address | The address of the USDC contract. |
+| `_tokenId` | uint256 | The id of the membership. |
+| `_delegatee` | address | The addresses of the delegatee. |
 
-### setDAIAddress
+### swapDelegate
 
 ```solidity
-function setDAIAddress(
-    address _DAI
+function swapDelegate(
+    uint256 _tokenId,
+    address _oldDelegatee,
+    address _newDelegatee
 ) public
 ```
 
-Allows contract owner to set the DAI contract address.
+Allows a membership owner to swap a delegatee for another delegatee.
+
+Tokens Tier must be Precisian to swap delegates.
 
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
-| `_DAI` | address | The address of the DAI contract. |
+| `_tokenId` | uint256 | The id of the membership. |
+| `_oldDelegatee` | address | The addresses of the delegatee. |
+| `_newDelegatee` | address | The addresses of the new delegatee. |
+
+### removeDelegatee
+
+```solidity
+function removeDelegatee(
+    uint256 _tokenId,
+    address _delegatee,
+    uint8 _slot
+) public
+```
+
+Allows a membership owner to remove a delegatee from their membership.
+
+Tokens Tier must be Precisian to remove delegates.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_tokenId` | uint256 | The id of the membership. |
+| `_delegatee` | address | The addresses of the delegatee. |
+| `_slot` | uint8 | of the delegatee to be removed. |
 
 ### togglePaused
 
@@ -636,6 +701,71 @@ Check the owner of a tokenId.
 | Name | Type | Description |
 | :--- | :--- | :---------- |
 | `[0]` | address | The owner of the membership. |
+### checkTokenDelegates
+
+```solidity
+function checkTokenDelegates(
+    uint256 _tokenId
+) external returns (address[])
+```
+
+Check all the delegatees of a tokenId.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_tokenId` | uint256 | The id of the membership to check. |
+
+#### Return Values
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `[0]` | address[] | The delegatees addresses of the membership. |
+### nonces
+
+```solidity
+function nonces(
+    address owner
+) public returns (uint256)
+```
+
+IERC20Permit tx count.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `owner` | address | The address of the owner of the ERC20. |
+
+#### Return Values
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `[0]` | uint256 | the current nonce. |
+### isOwnerOrDelegate
+
+```solidity
+function isOwnerOrDelegate(
+    uint256 _tokenId,
+    address _address
+) public returns (bool)
+```
+
+View function to see if a address is a delegatee or owner of a tokenId.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_tokenId` | uint256 | The id of the membership to check. |
+| `_address` | address | The address to check. |
+
+#### Return Values
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `[0]` | bool | Boolean based off if the address is a delegatee or owner of the tokenId. |
 ### tokenURI
 
 ```solidity
@@ -659,6 +789,22 @@ function _startTokenId() internal returns (uint256)
 Returns the starting token ID.
 To change the starting token ID, please override this function.
 
+### contains
+
+```solidity
+function contains(
+    uint256 _tokenId,
+    address user
+) internal returns (bool)
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_tokenId` | uint256 |  |
+| `user` | address |  |
+
 ## Modifiers
 
 ### isPaused
@@ -676,18 +822,6 @@ modifier isNotMember()
 ```
 
 Checks if users address has already minted or not.
-
-### correctPayment
-
-```solidity
-modifier correctPayment(address _ERC20)
-```
-
-checks the transfer amount of Stable coins for membership.
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| _ERC20 | address | The address of the stablecoin used to purchase membership. |
 
 ### durationCheck
 
@@ -724,6 +858,32 @@ Checks that the msg.sender is the tokenId owner
 _Modifier for functions
 Used on funcs where we only want token owner to interact
 example being a token owner can renew a token but not a random user._
+
+### isPerclesia
+
+```solidity
+modifier isPerclesia(uint256 _tokenId)
+```
+
+Checks that the tokens tier is Periclesia.
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| _tokenId | uint256 | The id of the membership. |
+
+### isDelegateOrOwner
+
+```solidity
+modifier isDelegateOrOwner(uint256 _tokenId)
+```
+
+Checks that the msg.sender is either the tokenId owner or a delegate.
+
+_Modifier guard for delegate & owner functions_
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| _tokenId | uint256 | The id of the membership. |
 
 ## Events
 

@@ -13,34 +13,27 @@ import "@openzeppelin/contracts/token/common/ERC2981.sol";
 /// @title Power NFT Contract
 /// @author DadlessNsad || 0xOrphan
 /// @notice This is a template contract used to create new NFT contracts.
-contract PowerNFT is 
-    ERC721A,
-    ERC2981,
-    Ownable 
-{
-
+contract PowerNFT is ERC721A, ERC2981, Ownable {
     /// @notice Where the NFTs metadata is stored.
     string public baseURI;
 
     /// @notice The file extension for the NFTs baseURI.
     string public baseExtension = ".json";
 
-
     /// @notice Used to pause and unpause the contract.
-    bool public paused = true;          
+    bool public paused = true;
 
     /// @notice The address that the royalty % will go to.
     address public royaltyReceiver;
-    
+
     /// @notice The price to mint a new NFT.
     uint256 public mintCost;
 
     /// @notice The maximum amount of NFTs that can be minted in one transaction.
-    uint16 public bulkBuyLimit;  
+    uint16 public bulkBuyLimit;
 
     /// @notice The maximum amount of NFTs that can be minted.
     uint256 public maxTotalSupply;
-
 
     /// @notice Sets the contracts variables.
     /// @param _name The name of the NFT.
@@ -63,7 +56,7 @@ contract PowerNFT is
         address _newOwner,
         address _royaltyReceiver
     )
-    ERC721A(_name, _symbol) 
+        ERC721A(_name, _symbol)
     {
         baseURI = _baseURI;
         mintCost = _mintCost;
@@ -85,72 +78,42 @@ contract PowerNFT is
 
     /// @notice Main function used to mint NFTs.
     /// @param _amount The amount of NFTs to mint.
-    function mintNFT(uint256 _amount)                
-        public    
-        payable      
-        isPaused()
-    {
-        require(
-            _amount <= bulkBuyLimit,
-            "Max per tx"
-        );
-        require(
-            (_amount + totalSupply()) <= maxTotalSupply,
-            "Soldout"
-        );
-        require(
-            (_amount * mintCost) <= msg.value,
-            "Insufficient Eth sent"
-        );
+    function mintNFT(uint256 _amount) public payable isPaused {
+        require(_amount <= bulkBuyLimit, "Max per tx");
+        require((_amount + totalSupply()) <= maxTotalSupply, "Soldout");
+        require((_amount * mintCost) <= msg.value, "Insufficient Eth sent");
 
-    _safeMint(msg.sender, _amount);
+        _safeMint(msg.sender, _amount);
     }
 
     /// @notice Only Contract Owner can use this function to Mint NFTs.
     /// @param _amount The amount of NFTs to mint.
     /// @dev The total supply of NFTs must be less than or equal to the maxTotalSupply.
-    function reserveTokens(uint256 _amount)
-        public 
-        onlyOwner
-    { 
-        require(
-            _amount + totalSupply() <= maxTotalSupply,
-            "Soldout"
-        );  
+    function reserveTokens(uint256 _amount) public onlyOwner {
+        require(_amount + totalSupply() <= maxTotalSupply, "Soldout");
         _safeMint(msg.sender, _amount);
     }
 
     function tokenURI(uint256 _tokenId)
         public
-        view 
-        override 
-        returns(string memory) 
+        view
+        override
+        returns (string memory)
     {
-        require(
-            _exists(_tokenId), 
-            "Token does not exist."
-    );
-        return string(
-            abi.encodePacked(
-                baseURI,
-                _toString(_tokenId),
-                baseExtension
-            )
-        );
+        require(_exists(_tokenId), "Token does not exist.");
+        return string(abi.encodePacked(baseURI, _toString(_tokenId), baseExtension));
     }
 
     function supportsInterface(bytes4 interfaceId)
         public
         view
         virtual
-        override(ERC721A, ERC2981)
+        override (ERC721A, ERC2981)
         returns (bool)
     {
-    return 
-        ERC721A.supportsInterface(interfaceId) || 
-        ERC2981.supportsInterface(interfaceId);
+        return ERC721A.supportsInterface(interfaceId)
+            || ERC2981.supportsInterface(interfaceId);
     }
-
 
     /// @notice Used to set the royalty receiver & amount.
     /// @param _receiver The address that the royalty % will go to.
@@ -162,10 +125,7 @@ contract PowerNFT is
 
     /// @notice Allows the owner to change the baseURI.
     /// @param _newBaseURI The new baseURI.
-    function setBaseURI(string memory _newBaseURI)
-        public 
-        onlyOwner 
-    {
+    function setBaseURI(string memory _newBaseURI) public onlyOwner {
         baseURI = _newBaseURI;
     }
 
@@ -180,64 +140,40 @@ contract PowerNFT is
 
     /// @notice Allows the owner to change the mint cost.
     /// @param _newMintCost The new mint cost.
-    function setMintCost(uint256 _newMintCost) 
-        public 
-        onlyOwner 
-    {
+    function setMintCost(uint256 _newMintCost) public onlyOwner {
         mintCost = _newMintCost;
     }
 
     /// @param _newBulkBuyLimit The new bulkBuyLimit.
     /// @dev The bulkBuyLimit must be less than the maxTotalSupply.
-    function setBulkBuyLimit(uint16 _newBulkBuyLimit) 
-        public 
-        onlyOwner 
-    {
+    function setBulkBuyLimit(uint16 _newBulkBuyLimit) public onlyOwner {
         bulkBuyLimit = _newBulkBuyLimit;
     }
 
-
     /// @notice Allows contract owner to change the contracts paused state.
     /// @dev Used to pause & unpause the contract.
-    function togglePaused()
-        public
-        onlyOwner 
-    {
+    function togglePaused() public onlyOwner {
         paused = !paused;
     }
 
     /// @notice Allows the owner to withdraw ether from contract.
     /// @dev The owner can only withdraw ether from the contract.
     function withdraw() public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(this).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "Address: unable to send value");
     }
 
     /// @notice Allows owner to withdraw any ERC20 tokens sent to this contract.
     /// @param _tokenAddr The address of the ERC20 token.
     /// @dev Only Contract Owner can use this function.
     function withdrawErc20s(address _tokenAddr) public onlyOwner {
-        (bool success, ) = payable(msg.sender).call{
-            value: address(_tokenAddr).balance
-        }("");
-        require(
-            success, 
-            "Address: unable to send value"
-        );
+        (bool success,) =
+            payable(msg.sender).call{value: address(_tokenAddr).balance}("");
+        require(success, "Address: unable to send value");
     }
 
-    function _startTokenId() 
-        internal 
-        view 
-        virtual 
-        override 
-        returns(uint256)
-    {
+    function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
     }
 }

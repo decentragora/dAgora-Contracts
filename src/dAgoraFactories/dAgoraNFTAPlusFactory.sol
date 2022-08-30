@@ -3,8 +3,8 @@ pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import { NFTAPlus } from "../dAgoraWizards/NFTAPlus.sol";
-import '../IdAgoraMemberships.sol';
+import {NFTAPlus} from "../dAgoraWizards/NFTAPlus.sol";
+import "../IdAgoraMemberships.sol";
 
 /// @title dAgora NFT A Plus Factory
 /// @author DadlessNsad || 0xOrphan
@@ -39,12 +39,11 @@ contract dAgoraNFTAPlusFactory is Ownable, ReentrancyGuard {
     /// @param _contractId Users total amount of deployed contracts.
     /// @param _NFTAPlusCount The total amount of NFTs created for members.
     event NFTAPlusCreated(
-        address _NFTAPlusContract, 
+        address _NFTAPlusContract,
         address _owner,
-        uint256 _contractId, 
+        uint256 _contractId,
         uint256 _NFTAPlusCount
     );
-
 
     /// @notice Sets the contracts variables.
     /// @param _dAgoraMembership The address of the dAgora Memberships contract.
@@ -67,6 +66,7 @@ contract dAgoraNFTAPlusFactory is Ownable, ReentrancyGuard {
     /// @param _bulkBuyLimit the max amount of NFTs that can be minted at once.
     /// @param _maxWhiteListAmount The max amount of NFTs that can be minted by allow listed addresses.
     /// @param _maxTotalSupply The max supply of the NFT.
+    /// @param _id The tokenId of dAgora Memberships.
     /// @param _newOwner The address of the new owner.
     /// @param _merkleRoot The merkle root of the allowed list addresses.
     function createNFTAPlus(
@@ -77,26 +77,25 @@ contract dAgoraNFTAPlusFactory is Ownable, ReentrancyGuard {
         uint16 _bulkBuyLimit,
         uint16 _maxWhiteListAmount,
         uint256 _maxTotalSupply,
+        uint256 _id,
         address _newOwner,
         bytes32 _merkleRoot
-    )   public 
+    )
+        public
         isPaused
         nonReentrant
     {
-        require(_canCreate() == true, "Must be a valid membership");
+        require(_canCreate(_id) == true, "Must be a valid membership");
+
+        require(_maxTotalSupply > 0, "Max supply must be greater than 0");
 
         require(
-            _maxTotalSupply > 0, 
-            "Max supply must be greater than 0"
-        );
-
-        require(
-            _maxTotalSupply > _bulkBuyLimit, 
+            _maxTotalSupply > _bulkBuyLimit,
             "Max supply must be greater than bulk buy limit"
         );
 
         require(_newOwner != address(0), "Owner cannot be 0x0");
-        
+
         nft = new NFTAPlus(
             _name,
             _symbol,
@@ -116,41 +115,42 @@ contract dAgoraNFTAPlusFactory is Ownable, ReentrancyGuard {
         _deployedContracts[msg.sender].contractId = NFTAPlusCount;
 
         emit NFTAPlusCreated(
-            address(nft), 
+            address(nft),
             msg.sender,
             _addressDeployCount[msg.sender],
             NFTAPlusCount
-        );
+            );
     }
-
 
     /// @notice Function to check users deployed contract addresses.
     /// @param _owner The address of the user we want to check.
-    function deployedContracts(address _owner) public view returns (Deploys memory) {
+    function deployedContracts(address _owner)
+        public
+        view
+        returns (Deploys memory)
+    {
         return _deployedContracts[_owner];
     }
 
     /// @notice Function allows owner to pause/unPause the contract.
-    function togglePaused () public onlyOwner {
+    function togglePaused() public onlyOwner {
         paused = !paused;
     }
 
     /// @notice Function to check if a user is a valid member & can create NFT contracts.
+    /// @param _id The tokenId of dAgora Memberships.
     /// @return boolean
-    function _canCreate() internal view returns (bool) {
-        uint256 _currentSupply =  IdAgoraMembership(dAgoraMembership).totalSupply();
-        if(IdAgoraMembership(dAgoraMembership).balanceOf(msg.sender) > 0) {
-            for(uint256 i = 1; i <= _currentSupply; i++) {
-                if(IdAgoraMembership(dAgoraMembership).ownerOf(i) == msg.sender) {
-                    require(
-                        IdAgoraMembership(dAgoraMembership).checkTokenTier(i) > 0,
-                        "Must be tier 1 or higher"
-                    );
-                    return IdAgoraMembership(dAgoraMembership).isValidMembership(i);
-                }
-            }
-        } else {
-            return false;
-        }
+    function _canCreate(uint256 _id) internal view returns (bool) {
+        require(
+            IdAgoraMembership(dAgoraMembership).checkTokenTier(_id) > 0,
+            "Must be dAgoraian tier or higher"
+        );
+
+        require(
+            IdAgoraMembership(dAgoraMembership).isOwnerOrDelegate(_id, msg.sender) == true,
+            "Must be owner or delegate"
+        );
+
+        return IdAgoraMembership(dAgoraMembership).isValidMembership(_id);
     }
 }
