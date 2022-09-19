@@ -167,11 +167,12 @@ Sets the contracts variables.
 | `jobId` | bytes32 | The Id of the job, the oracle interacts with. |
 | `oracleFee` | uint256 | The fee the oracle charges for a request. |
 
-### mintdAgoraianTier
+### mintdAgoraMembership
 
 ```solidity
-function mintdAgoraianTier(
+function mintdAgoraMembership(
     uint96 _durationInMonths,
+    struct dAgoraMemberships.Membership tier,
     uint256 _deadline,
     uint8 v,
     bytes32 r,
@@ -179,61 +180,14 @@ function mintdAgoraianTier(
 ) public
 ```
 
-Mints a DAgorian membership for the msg.sender using ERC20Permit.
+Mints a membership for the msg.sender using ERC20Permit.
 
 #### Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
 | `_durationInMonths` | uint96 | The duration of the membership in months. |
-| `_deadline` | uint256 | The deadline for the transaction. |
-| `v` | uint8 | The v value of the signature. |
-| `r` | bytes32 | The r value of the signature. |
-| `s` | bytes32 | The s value of the signature. |
-
-### mintHoptileTier
-
-```solidity
-function mintHoptileTier(
-    uint96 _durationInMonths,
-    uint256 _deadline,
-    uint8 v,
-    bytes32 r,
-    bytes32 s
-) public
-```
-
-Mints a Hoptile Tier membership for the msg.sender using ERC20Permit.
-
-#### Parameters
-
-| Name | Type | Description |
-| :--- | :--- | :---------- |
-| `_durationInMonths` | uint96 | The duration of the membership in months. |
-| `_deadline` | uint256 | The deadline for the transaction. |
-| `v` | uint8 | The v value of the signature. |
-| `r` | bytes32 | The r value of the signature. |
-| `s` | bytes32 | The s value of the signature. |
-
-### mintPericlesiaTier
-
-```solidity
-function mintPericlesiaTier(
-    uint96 _durationInMonths,
-    uint256 _deadline,
-    uint8 v,
-    bytes32 r,
-    bytes32 s
-) public
-```
-
-Mints a Periclesia Tier membership for the msg.sender using ERC20Permit.
-
-#### Parameters
-
-| Name | Type | Description |
-| :--- | :--- | :---------- |
-| `_durationInMonths` | uint96 | The duration of the membership in months. |
+| `tier` | struct dAgoraMemberships.Membership | The tier of the membership. |
 | `_deadline` | uint256 | The deadline for the transaction. |
 | `v` | uint8 | The v value of the signature. |
 | `r` | bytes32 | The r value of the signature. |
@@ -789,10 +743,10 @@ function _startTokenId() internal returns (uint256)
 Returns the starting token ID.
 To change the starting token ID, please override this function.
 
-### contains
+### _contains
 
 ```solidity
-function contains(
+function _contains(
     uint256 _tokenId,
     address user
 ) internal returns (bool)

@@ -72,6 +72,7 @@ function createBasicNFT(
     uint256 _mintCost,
     uint16 _bulkBuyLimit,
     uint256 _maxTotalSupply,
+    uint256 _id,
     address _newOwner
 ) public
 ```
@@ -88,6 +89,7 @@ Deploys a new Basic NFT contract for the user.
 | `_mintCost` | uint256 | The Mint cost of a NFT. |
 | `_bulkBuyLimit` | uint16 | the max amount of NFTs that can be minted at once. |
 | `_maxTotalSupply` | uint256 | The max supply of the NFT. |
+| `_id` | uint256 | The tokenId of dAgora Membership. |
 | `_newOwner` | address | The address of the new owner. |
 
 ### deployedContracts
@@ -119,8 +121,24 @@ function unpause() public
 ### _canCreate
 
 ```solidity
-function _canCreate() internal returns (bool)
+function _canCreate(
+    uint256 _id
+) internal returns (bool)
 ```
+
+Function to check if a user is a valid member & can create NFT contracts.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_id` | uint256 | The tokenId of the NFT. |
+
+#### Return Values
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `[0]` | bool | boolean |
 
 ## Modifiers
 

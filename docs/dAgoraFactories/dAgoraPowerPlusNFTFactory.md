@@ -74,6 +74,7 @@ function createPowerPlusNFT(
     uint16 _maxWhiteListAmount,
     uint256 _maxTotalSupply,
     uint96 _royaltyCut,
+    uint256 _id,
     address _newOwner,
     address _royaltyReceiver,
     bytes32 _merkleRoot
@@ -94,6 +95,7 @@ Function to create contracts for members.
 | `_maxWhiteListAmount` | uint16 | The max amount of NFTs that can be minted by allow listed addresses. |
 | `_maxTotalSupply` | uint256 |  |
 | `_royaltyCut` | uint96 | The % of royalties to be paid to the creator. |
+| `_id` | uint256 | The TokenId of the dAgora Membership NFT. |
 | `_newOwner` | address | The address of the new owner. |
 | `_royaltyReceiver` | address | The address to receive royalties. |
 | `_merkleRoot` | bytes32 | The merkle root of the allowed list addresses. |
@@ -125,10 +127,18 @@ Function allows owner to pause/unPause the contract.
 ### _canCreate
 
 ```solidity
-function _canCreate() internal returns (bool)
+function _canCreate(
+    uint256 _id
+) internal returns (bool)
 ```
 
 Function to check if a user is a valid member & can create NFT contracts.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_id` | uint256 | The TokenId of the dAgora Membership NFT. |
 
 #### Return Values
 

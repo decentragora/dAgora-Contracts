@@ -73,6 +73,7 @@ function createNFTAPlus(
     uint16 _bulkBuyLimit,
     uint16 _maxWhiteListAmount,
     uint256 _maxTotalSupply,
+    uint256 _id,
     address _newOwner,
     bytes32 _merkleRoot
 ) public
@@ -91,6 +92,7 @@ Function to create contracts for members.
 | `_bulkBuyLimit` | uint16 | the max amount of NFTs that can be minted at once. |
 | `_maxWhiteListAmount` | uint16 | The max amount of NFTs that can be minted by allow listed addresses. |
 | `_maxTotalSupply` | uint256 | The max supply of the NFT. |
+| `_id` | uint256 | The tokenId of dAgora Memberships. |
 | `_newOwner` | address | The address of the new owner. |
 | `_merkleRoot` | bytes32 | The merkle root of the allowed list addresses. |
 
@@ -121,10 +123,18 @@ Function allows owner to pause/unPause the contract.
 ### _canCreate
 
 ```solidity
-function _canCreate() internal returns (bool)
+function _canCreate(
+    uint256 _id
+) internal returns (bool)
 ```
 
 Function to check if a user is a valid member & can create NFT contracts.
+
+#### Parameters
+
+| Name | Type | Description |
+| :--- | :--- | :---------- |
+| `_id` | uint256 | The tokenId of dAgora Memberships. |
 
 #### Return Values
 
