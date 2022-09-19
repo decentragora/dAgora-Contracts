@@ -154,34 +154,21 @@ contract dAgoraMemberships is
 
     /// @notice Checks if users address has already minted or not.
     modifier isNotMember() {
-        require(!claimed[msg.sender], "You are already a member");
+        _isNotMember();
         _;
     }
-
-    /// @notice checks the transfer amount of Stable coins for membership.
-    /// @param _ERC20 The address of the stablecoin used to purchase membership.
-    // modifier correctPayment(address _ERC20) {
-    //     require(_ERC20 == DAI || _ERC20 == USDC, "Payment must be DAI or USDC");
-    //     _;
-    // }
 
     /// @notice Checks new duration amount is greater than 0 and less than 12.
     /// @param duration The duration of the membership in months.
     modifier durationCheck(uint256 duration) {
-        require(
-            duration > 0 && duration <= 12,
-            "Membership duration must be between 1 and 12 months"
-        );
+        _durationCheck(duration);
         _;
     }
 
     /// @notice Checks if the tokenId membership is expiring soon.
     /// @param tokenId The id of the membership.
     modifier isExpiredSoon(uint256 tokenId) {
-        require(
-            block.timestamp + 30 days + GRACE_PERIOD >= expires[tokenId],
-            "Token isn't expiring soon"
-        );
+        _isExpiredSoon(tokenId);
         _;
     }
 
@@ -190,20 +177,14 @@ contract dAgoraMemberships is
     /// @dev Used on funcs where we only want token owner to interact
     /// @dev example being a token owner can renew a token but not a random user.
     modifier onlyController(uint256 _tokenId) {
-        require(
-            msg.sender == tokenIndexedToOwner[_tokenId],
-            "Not owner of token"
-        );
+        _onlyController(_tokenId);
         _;
     }
 
     /// @notice Checks that the tokens tier is Periclesia.
     /// @param _tokenId The id of the membership.
     modifier isPerclesia(uint256 _tokenId) {
-        require(
-            tokenTier[_tokenId].tier == 3,
-            "Token is not Periclesia"
-        );
+        _isPerclesia(_tokenId);
         _;
     }
 
@@ -211,15 +192,75 @@ contract dAgoraMemberships is
     /// @dev Modifier guard for delegate & owner functions
     /// @param _tokenId The id of the membership.
     modifier isDelegateOrOwner(uint256 _tokenId) {
-        require(
-            contains(_tokenId, msg.sender) == true ||
-            tokenIndexedToOwner[_tokenId] == msg.sender,
-            "Not a delegate or Owner"
-        );
+        _isDelegateOrOwner(_tokenId);
         _;
     }
 
     /*////////////////////////////////////// Public Mint Functions //////////////////////////////////////////////////*/
+
+    function mintdAgoraMembership(
+        uint96 _durationInMonths,
+        Membership calldata tier,
+        uint256 _deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) 
+        public
+        isPaused
+        isNotMember
+        durationCheck(_durationInMonths)
+        nonReentrant
+    {
+        require(tier.tier != 0, "Cannot mint Ecclesiae tier");
+        require(tier.tier < 4, "Cannot mint Periclesia tier");
+        uint256 _tokenId = totalSupply() + 1;
+        uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
+        uint256 price = _getPrice(_durationInMonths, tier);
+
+        IERC20Permit(DAI).permit(
+            msg.sender,
+            address(this),
+            price,
+            _deadline,
+            v,
+            r,
+            s
+        );
+
+        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+       
+
+        tokenIndexedToOwner[_tokenId] = msg.sender;
+        tokenTier[_tokenId] = tier;
+        expires[_tokenId] = _duration + GRACE_PERIOD;
+        claimed[msg.sender] = true;
+        _safeMint(msg.sender, 1);
+
+    }
+
+    function _getPrice(uint96 duration, Membership calldata tier) internal view returns (uint256) {
+        uint256 price;
+        uint256 monthlyCost = duration * monthlyPrice;
+        if(duration == 12) {
+            if(tier.tier == 1) {
+                price = (monthlyCost + dAgorianPrice) - discountRate;
+            } else if(tier.tier == 2) {
+                price = (monthlyCost + hoplitePrice) - discountRate;
+            } else if(tier.tier == 3) {
+                price = (monthlyCost + periclesiaPrice) - discountRate;
+            }
+        } else {
+            if(tier.tier == 1) {
+                price = (monthlyCost + dAgorianPrice);
+            } else if(tier.tier == 2) {
+                price = (monthlyCost + hoplitePrice);
+            } else if(tier.tier == 3) {
+                price = (monthlyCost + periclesiaPrice);
+            }
+        }
+        return price;
+    }
 
     /// @notice Mints a DAgorian membership for the msg.sender using ERC20Permit.
     /// @param _durationInMonths The duration of the membership in months.
@@ -227,157 +268,156 @@ contract dAgoraMemberships is
     /// @param v The v value of the signature.
     /// @param r The r value of the signature.
     /// @param s The s value of the signature.
-    function mintdAgoraianTier(
-        uint96 _durationInMonths,
-        uint256 _deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    )
-        public
-        isPaused
-        isNotMember
-        durationCheck(_durationInMonths)
-        nonReentrant
-    {
-        uint256 _tokenId = totalSupply() + 1;
-        uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
-        uint256 price;
+    // function mintdAgoraianTier(
+    //     uint96 _durationInMonths,
+    //     uint256 _deadline,
+    //     uint8 v,
+    //     bytes32 r,
+    //     bytes32 s
+    // )
+    //     public
+    //     isPaused
+    //     isNotMember
+    //     durationCheck(_durationInMonths)
+    //     nonReentrant
+    // {
+    //     uint256 _tokenId = totalSupply() + 1;
+    //     uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
+    //     uint256 price;
     
-        if (_durationInMonths == 12) {
-            price =
-                ((monthlyPrice * _durationInMonths) + dAgorianPrice) - discountRate;
-        } else {
-            price = ((monthlyPrice * _durationInMonths) + dAgorianPrice);
-        }
+    //     if (_durationInMonths == 12) {
+    //         price =
+    //             ((monthlyPrice * _durationInMonths) + dAgorianPrice) - discountRate;
+    //     } else {
+    //         price = ((monthlyPrice * _durationInMonths) + dAgorianPrice);
+    //     }
 
-        require(
-            IERC20(DAI).balanceOf(msg.sender) >= price,
-            "Insufficient balance"
-        );
+    //         if(IERC20(DAI).balanceOf(msg.sender) < price) {
+    //         revert();
+    //     } 
 
-        IERC20Permit(DAI).permit(
-            msg.sender,
-            address(this),
-            price,
-            _deadline,
-            v,
-            r,
-            s
-        );
-        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+    //     IERC20Permit(DAI).permit(
+    //         msg.sender,
+    //         address(this),
+    //         price,
+    //         _deadline,
+    //         v,
+    //         r,
+    //         s
+    //     );
+    //     IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
 
        
 
-        tokenIndexedToOwner[_tokenId] = msg.sender;
-        tokenTier[_tokenId] = Membership(1);
-        expires[_tokenId] = _duration + GRACE_PERIOD;
-        claimed[msg.sender] = true;
-        _safeMint(msg.sender, 1);
-    }
+    //     tokenIndexedToOwner[_tokenId] = msg.sender;
+    //     tokenTier[_tokenId] = Membership(1);
+    //     expires[_tokenId] = _duration + GRACE_PERIOD;
+    //     claimed[msg.sender] = true;
+    //     _safeMint(msg.sender, 1);
+    // }
 
-    /// @notice Mints a Hoptile Tier membership for the msg.sender using ERC20Permit.
-    /// @param _durationInMonths The duration of the membership in months.
-    /// @param _deadline The deadline for the transaction.
-    /// @param v The v value of the signature.
-    /// @param r The r value of the signature.
-    /// @param s The s value of the signature.
-    function mintHoptileTier(
-        uint96 _durationInMonths,
-        uint256 _deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    )
-        public
-        isPaused
-        isNotMember
-        durationCheck(_durationInMonths)
-        nonReentrant
-    {
-        uint256 tokenId = totalSupply() + 1;
-        uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
-        uint256 price;
+    // /// @notice Mints a Hoptile Tier membership for the msg.sender using ERC20Permit.
+    // /// @param _durationInMonths The duration of the membership in months.
+    // /// @param _deadline The deadline for the transaction.
+    // /// @param v The v value of the signature.
+    // /// @param r The r value of the signature.
+    // /// @param s The s value of the signature.
+    // function mintHoptileTier(
+    //     uint96 _durationInMonths,
+    //     uint256 _deadline,
+    //     uint8 v,
+    //     bytes32 r,
+    //     bytes32 s
+    // )
+    //     public
+    //     isPaused
+    //     isNotMember
+    //     durationCheck(_durationInMonths)
+    //     nonReentrant
+    // {
+    //     uint256 tokenId = totalSupply() + 1;
+    //     uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
+    //     uint256 price;
 
-        if (_durationInMonths == 12) {
-            price =
-                ((monthlyPrice * _durationInMonths) + hoplitePrice) - discountRate;
-        } else {
-            price = ((monthlyPrice * _durationInMonths) + hoplitePrice);
-        }
-        require(
-            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
-        );
+    //     if (_durationInMonths == 12) {
+    //         price =
+    //             ((monthlyPrice * _durationInMonths) + hoplitePrice) - discountRate;
+    //     } else {
+    //         price = ((monthlyPrice * _durationInMonths) + hoplitePrice);
+    //     }
+    //    if(IERC20(DAI).balanceOf(msg.sender) < price) {
+    //         revert();
+    //     } 
         
-        IERC20Permit(DAI).permit(
-            msg.sender,
-            address(this),
-            price,
-            _deadline,
-            v,
-            r,
-            s
-        );
+    //     IERC20Permit(DAI).permit(
+    //         msg.sender,
+    //         address(this),
+    //         price,
+    //         _deadline,
+    //         v,
+    //         r,
+    //         s
+    //     );
 
-        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+    //     IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
 
-        tokenIndexedToOwner[tokenId] = msg.sender;
-        tokenTier[tokenId] = Membership(2);
-        expires[tokenId] = _duration + GRACE_PERIOD;
-        claimed[msg.sender] = true;
-        _safeMint(msg.sender, 1);
-    }
+    //     tokenIndexedToOwner[tokenId] = msg.sender;
+    //     tokenTier[tokenId] = Membership(2);
+    //     expires[tokenId] = _duration + GRACE_PERIOD;
+    //     claimed[msg.sender] = true;
+    //     _safeMint(msg.sender, 1);
+    // }
 
-    /// @notice Mints a Periclesia Tier membership for the msg.sender using ERC20Permit.
-    /// @param _durationInMonths The duration of the membership in months.
-    /// @param _deadline The deadline for the transaction.
-    /// @param v The v value of the signature.
-    /// @param r The r value of the signature.
-    /// @param s The s value of the signature.
-    function mintPericlesiaTier(
-        uint96 _durationInMonths,
-        uint256 _deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    )
-        public
-        isPaused
-        isNotMember
-        durationCheck(_durationInMonths)
-        nonReentrant
-    {
-        uint256 tokenId = totalSupply() + 1;
-        uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
-        uint256 price;
-        if (_durationInMonths == 12) {
-            price = ((monthlyPrice * _durationInMonths) + periclesiaPrice)
-                - discountRate;
-        } else {
-            price = ((monthlyPrice * _durationInMonths) + periclesiaPrice);
-        }
-        require(
-            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
-        );
+    // /// @notice Mints a Periclesia Tier membership for the msg.sender using ERC20Permit.
+    // /// @param _durationInMonths The duration of the membership in months.
+    // /// @param _deadline The deadline for the transaction.
+    // /// @param v The v value of the signature.
+    // /// @param r The r value of the signature.
+    // /// @param s The s value of the signature.
+    // function mintPericlesiaTier(
+    //     uint96 _durationInMonths,
+    //     uint256 _deadline,
+    //     uint8 v,
+    //     bytes32 r,
+    //     bytes32 s
+    // )
+    //     public
+    //     isPaused
+    //     isNotMember
+    //     durationCheck(_durationInMonths)
+    //     nonReentrant
+    // {
+    //     uint256 tokenId = totalSupply() + 1;
+    //     uint256 _duration = block.timestamp + (_durationInMonths * 30 days);
+    //     uint256 price;
+    //     if (_durationInMonths == 12) {
+    //         price = ((monthlyPrice * _durationInMonths) + periclesiaPrice)
+    //             - discountRate;
+    //     } else {
+    //         price = ((monthlyPrice * _durationInMonths) + periclesiaPrice);
+    //     }
+    //    if(IERC20(DAI).balanceOf(msg.sender) < price) {
+    //         revert();
+    //     } 
 
-        IERC20Permit(DAI).permit(
-            msg.sender,
-            address(this),
-            price,
-            _deadline,
-            v,
-            r,
-            s
-        );
+    //     IERC20Permit(DAI).permit(
+    //         msg.sender,
+    //         address(this),
+    //         price,
+    //         _deadline,
+    //         v,
+    //         r,
+    //         s
+    //     );
 
-        IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
+    //     IERC20(DAI).transferFrom(msg.sender, dAgoraTreasury, price);
 
-        tokenIndexedToOwner[tokenId] = msg.sender;
-        tokenTier[tokenId] = Membership(3);
-        expires[tokenId] = _duration + GRACE_PERIOD;
-        claimed[msg.sender] = true;
-        _safeMint(msg.sender, 1);
-    }
+    //     tokenIndexedToOwner[tokenId] = msg.sender;
+    //     tokenTier[tokenId] = Membership(3);
+    //     expires[tokenId] = _duration + GRACE_PERIOD;
+    //     claimed[msg.sender] = true;
+    //     _safeMint(msg.sender, 1);
+    // }
 
     /// @notice Sends request to oracle to mint Ecclesia Tier membership for the msg.sender.
     function freeClaim() public override isPaused isNotMember nonReentrant {
@@ -442,9 +482,9 @@ contract dAgoraMemberships is
             price = (monthlyPrice * _newDuration);
         }
 
-        require(
-            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
-        );
+       if(IERC20(DAI).balanceOf(msg.sender) < price) {
+            revert();
+        } 
 
         IERC20Permit(DAI).permit(
             msg.sender,
@@ -485,7 +525,6 @@ contract dAgoraMemberships is
     {
         uint8 oldTier = tokenTier[_tokenId].tier;
         require(newTier.tier > oldTier, "New tier is the same as current tier");
-        require(newTier.tier != 0, "Cannot upgrade to tier 0");
         require(newTier.tier < 4, "Token is already a precisian member");
         uint256 price;
         if (newTier.tier == 1 && oldTier == 0) {
@@ -503,9 +542,11 @@ contract dAgoraMemberships is
         } else {
             require(false, "Invalid tier");
         }
-        require(
-            IERC20(DAI).balanceOf(msg.sender) >= price, "Not enough funds"
-        );
+        
+        if(IERC20(DAI).balanceOf(msg.sender) < price) {
+            revert();
+        } 
+
         IERC20Permit(DAI).permit(
             msg.sender,
             address(this),
@@ -893,7 +934,52 @@ contract dAgoraMemberships is
         return 1;
     }
 
-    function contains(uint256 _tokenId, address user) internal view returns (bool) {
+    function _durationCheck(uint256 duration) private pure {
+        require(
+            duration > 0 && duration <= 12,
+            "Membership duration must be between 1 and 12 months"
+        );
+    }
+
+    function _isPaused() private view {
+        require(!paused, "Contract is paused");
+    }
+
+    function _isNotMember() private view {
+        require(!claimed[msg.sender], "You are already a member");
+    }
+
+    function _isExpiredSoon(uint256 tokenId) private view {
+        require(
+            block.timestamp + 30 days + GRACE_PERIOD >= expires[tokenId],
+            "Token isn't expiring soon"
+        );
+    }
+
+    function _onlyController(uint256 _tokenId) private view {
+        require(
+            msg.sender == tokenIndexedToOwner[_tokenId],
+            "Not owner of token"
+        );
+    }
+
+    function _isPerclesia(uint256 _tokenId) private view {
+        require(
+            tokenTier[_tokenId].tier == 3,
+            "Token is not Periclesia"
+        );
+    }
+
+    function _isDelegateOrOwner(uint256 _tokenId) private view {
+        require(
+            _contains(_tokenId, msg.sender) == true ||
+            tokenIndexedToOwner[_tokenId] == msg.sender,
+            "Not a delegate or Owner"
+        );
+    }
+
+
+    function _contains(uint256 _tokenId, address user) internal view returns (bool) {
         for(uint256 i = 0; i < _tokenDelegates[_tokenId].length; i++) {
             if(_tokenDelegates[_tokenId][i] == user) {
                 return true;

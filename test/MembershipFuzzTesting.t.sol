@@ -89,7 +89,7 @@ contract MembershipFuzzTests is Test {
     //     vm.stopPrank();
     // }
 
-    function testMint_dAgorian_DAI(uint96 months) public {
+    function testMint_dAgorian(uint96 months) public {
         vm.startPrank(bob);
         vm.assume(months > 0 && months <= 12);
         uint96 amountOfMonths = months;
@@ -111,8 +111,9 @@ contract MembershipFuzzTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
+        dAgora.mintdAgoraMembership(
             amountOfMonths, 
+            dAgoraMemberships.Membership(1), 
             _deadline, 
             v, 
             r, 
@@ -126,7 +127,7 @@ contract MembershipFuzzTests is Test {
     }
 
 
-    function testMint_Hoptile_DAI(uint96 months) public {
+    function testMint_Hoptile(uint96 months) public {
         vm.startPrank(bob);
         vm.assume(months > 0 && months <= 12);
         uint96 amountOfMonths = months;
@@ -148,20 +149,22 @@ contract MembershipFuzzTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintHoptileTier(
+        dAgora.mintdAgoraMembership(
             amountOfMonths,
+            dAgoraMemberships.Membership(2), 
             _deadline, 
             v, 
             r, 
             s
         );
+
         assertEq(dAgora.totalSupply(), 1);
         assertEq(dAgora.balanceOf(address(bob)), 1);
         assertEq(dAgora.checkTokenTier(1), 2);
         vm.stopPrank();
     }
 
-    function testMint_Periclesia_DAI(uint96 months) public {
+    function testMint_Periclesia(uint96 months) public {
         vm.startPrank(bob);
         vm.assume(months > 0 && months <= 12);
         uint96 amountOfMonths = months;
@@ -183,13 +186,15 @@ contract MembershipFuzzTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            amountOfMonths,
+        dAgora.mintdAgoraMembership(
+            amountOfMonths, 
+            dAgoraMemberships.Membership(3), 
             _deadline, 
             v, 
             r, 
             s
         );
+
         assertEq(dAgora.totalSupply(), 1);
         assertEq(dAgora.balanceOf(address(bob)), 1);
         assertEq(dAgora.checkTokenTier(1), 3);
@@ -220,8 +225,9 @@ contract MembershipFuzzTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            amountOfMonths, 
+        dAgora.mintdAgoraMembership(
+            amountOfMonths,
+            dAgoraMemberships.Membership(3), 
             _deadline, 
             v, 
             r, 
@@ -240,18 +246,19 @@ contract MembershipFuzzTests is Test {
 
         (uint8 v2, bytes32 r2, bytes32 s2) = vm.sign(bobKeys, digest2);
 
-        dAgora.mintPericlesiaTier(
+        dAgora.mintdAgoraMembership(
             1, 
+            dAgoraMemberships.Membership(3), 
             _deadline, 
-            v2, 
-            r2, 
-            s2
+            v, 
+            r, 
+            s
         );
 
         vm.stopPrank();
     }
 
-    function testRenewMembership_DAI(uint96 renewMonths) public {
+    function testRenewMembership(uint96 renewMonths) public {
         vm.startPrank(bob);
         uint256 monthlyCost = ((5 ether) * 1);
         uint256 price = monthlyCost + periclesiaPrice;
@@ -268,8 +275,9 @@ contract MembershipFuzzTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
+        dAgora.mintdAgoraMembership(
             1, 
+            dAgoraMemberships.Membership(3), 
             _deadline, 
             v, 
             r, 

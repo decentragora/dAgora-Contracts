@@ -99,11 +99,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1, // month
-            _deadline, // deadline for Tx
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -134,11 +135,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintHoptileTier(
-            1, // month
-            _deadline, // deadline for Tx
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(2), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -166,11 +168,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            1, // month
-            _deadline, // deadline for Tx
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -198,11 +201,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1, // month
-            _deadline, // deadline for Tx
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -314,11 +318,12 @@ contract MintMembershipsTest is Test {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
 
-        dAgora.mintPericlesiaTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -334,11 +339,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v2, bytes32 r2, bytes32 s2) = vm.sign(bobKeys, digest2);
 
-        dAgora.mintPericlesiaTier(
-            1,
-            _deadline,
-            v2,
-            r2,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v2, 
+            r2, 
             s2
         );
 
@@ -362,13 +368,16 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(2), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
+
+        vm.stopPrank();
     }
 
     function testFailMintdAgoraianNotENoughBalance() public {
@@ -388,11 +397,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -416,11 +426,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintHoptileTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(2), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -444,11 +455,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -472,11 +484,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -506,11 +519,12 @@ contract MintMembershipsTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
         vm.stopPrank();

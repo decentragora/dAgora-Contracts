@@ -103,8 +103,9 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
+        dAgora.mintdAgoraMembership(
             1, 
+            dAgoraMemberships.Membership(1), 
             _deadline, 
             v, 
             r, 
@@ -157,8 +158,9 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
+        dAgora.mintdAgoraMembership(
             1, 
+            dAgoraMemberships.Membership(1), 
             _deadline, 
             v, 
             r, 
@@ -210,13 +212,15 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintHoptileTier(
+        dAgora.mintdAgoraMembership(
             1, 
+            dAgoraMemberships.Membership(2), 
             _deadline, 
             v, 
             r, 
             s
         );
+
         assertEq(dAgora.checkTokenTier(2), 2);
         uint256 upgradeCost = (periclesiaPrice - (dagorianPrice + hoplitePrice));
        
@@ -397,11 +401,12 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -450,11 +455,12 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintHoptileTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 

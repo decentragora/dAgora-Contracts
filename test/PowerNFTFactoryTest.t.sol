@@ -105,11 +105,12 @@ contract dAgoraPowerNFTFactoryTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintHoptileTier(
-            1, // month
-            _deadline, // deadline for Tx
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(2), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -163,11 +164,12 @@ contract dAgoraPowerNFTFactoryTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintHoptileTier(
-            1, // month
-            _deadline, // deadline for Tx
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(2), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 

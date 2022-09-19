@@ -102,13 +102,15 @@ contract RenewMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
+        dAgora.mintdAgoraMembership(
             1, 
+            dAgoraMemberships.Membership(1), 
             _deadline, 
             v, 
             r, 
             s
         );
+
 
         dAgora.membershipExpiresIn(1);
         dAgora.isValidMembership(1);
@@ -161,11 +163,12 @@ contract RenewMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
         
-        dAgora.mintHoptileTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(2), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -218,11 +221,12 @@ contract RenewMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -276,11 +280,12 @@ contract RenewMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -335,11 +340,12 @@ contract RenewMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintPericlesiaTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(3), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -433,11 +439,12 @@ contract RenewMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            4,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -490,11 +497,12 @@ contract RenewMembershipTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 

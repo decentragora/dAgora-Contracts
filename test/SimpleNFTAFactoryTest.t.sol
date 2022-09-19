@@ -107,11 +107,12 @@ contract SimpleNFTAFactoryTest is Test {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
 
-        dAgora.mintdAgoraianTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
@@ -171,11 +172,12 @@ contract SimpleNFTAFactoryTest is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.mintdAgoraianTier(
-            1,
-            _deadline,
-            v,
-            r,
+        dAgora.mintdAgoraMembership(
+            1, 
+            dAgoraMemberships.Membership(1), 
+            _deadline, 
+            v, 
+            r, 
             s
         );
 
