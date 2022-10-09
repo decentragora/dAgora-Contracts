@@ -6,7 +6,7 @@ import "forge-std/console.sol";
 import "forge-std/Vm.sol";
 import {dAgoraMemberships} from "../src/dAgoraMemberships.sol";
 import {ChainLink} from "../src/mock/linkToken.sol";
-import {TestDAI} from "../src/mock/testDAI.sol";
+import {DAI} from "../src/mock/DAI.sol";
 import {SigUtils} from "../src/mock/sigUtils.sol";
 import {MockOperator} from "../src/mock/mockOperator.sol";
 
@@ -34,7 +34,7 @@ contract MembershipFuzzTests is Test {
     dAgoraMemberships dAgora;
     ChainLink link;
     MockOperator operator;
-    TestDAI dai;
+    DAI dai;
 
     uint256 oracleFee = 1 * 10 ** 17;
     uint256 ecceliaePrice = 0;
@@ -56,7 +56,7 @@ contract MembershipFuzzTests is Test {
         alice = vm.addr(aliceKeys);
         link = new ChainLink();
         vm.startPrank(dAgoraTreasury);
-        dai = new TestDAI();
+        dai = new DAI();
 
         sigUtils = new SigUtils(dai.DOMAIN_SEPARATOR());
         link._mint();
@@ -344,7 +344,7 @@ contract MembershipFuzzTests is Test {
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(bobKeys, digest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             1, 
             dAgoraMemberships.Membership(uint8(newTier)), 
             _deadline, 

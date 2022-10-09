@@ -147,7 +147,7 @@ contract dAgoraMemberships is
 
     /*////////////////////////////////////// Modifiers //////////////////////////////////////////////////*/
     /// @notice Checks if the contract is paused.
-    modifier isPaused() {
+    modifier isNotPaused() {
         require(!paused);
         _;
     }
@@ -214,7 +214,7 @@ contract dAgoraMemberships is
         bytes32 s
     ) 
         public
-        isPaused
+        isNotPaused
         isNotMember
         durationCheck(_durationInMonths)
         nonReentrant
@@ -247,7 +247,7 @@ contract dAgoraMemberships is
     }
 
     /// @notice Sends request to oracle to mint Ecclesia Tier membership for the msg.sender.
-    function freeClaim() public override isPaused isNotMember nonReentrant {
+    function freeClaim() public override isNotPaused isNotMember nonReentrant {
         uint256 tokenId = totalSupply() + 1;
         requestAccessCheck(
             msg.sender,
@@ -295,7 +295,7 @@ contract dAgoraMemberships is
         bytes32 s
     )
         public
-        isPaused
+        isNotPaused
         isDelegateOrOwner(_tokenId)
         durationCheck(_newDuration)
         isExpiredSoon(_tokenId)
@@ -308,10 +308,6 @@ contract dAgoraMemberships is
         } else {
             price = (monthlyPrice * _newDuration);
         }
-
-       if(IERC20(DAI).balanceOf(msg.sender) < price) {
-            revert();
-        } 
 
         IERC20Permit(DAI).permit(
             msg.sender,
@@ -337,7 +333,7 @@ contract dAgoraMemberships is
     /// @param v The v value of the signature.
     /// @param r The r value of the signature.
     /// @param s The s value of the signature.
-    function upgradeMemebership(
+    function upgradeMembership(
         uint256 _tokenId,
         Membership calldata newTier,
         uint256 _deadline,
@@ -346,7 +342,7 @@ contract dAgoraMemberships is
         bytes32 s
     )
         public
-        isPaused
+        isNotPaused
         onlyController(_tokenId)
         nonReentrant
     {
@@ -370,10 +366,6 @@ contract dAgoraMemberships is
             require(false, "Invalid tier");
         }
         
-        if(IERC20(DAI).balanceOf(msg.sender) < price) {
-            revert();
-        } 
-
         IERC20Permit(DAI).permit(
             msg.sender,
             address(this),
@@ -395,7 +387,7 @@ contract dAgoraMemberships is
     /// @param _tokenId The id of the membership to be cancelled.
     function cancelMembership(uint256 _tokenId)
         public
-        isPaused
+        isNotPaused
         onlyController(_tokenId)
         nonReentrant
     {
@@ -475,7 +467,7 @@ contract dAgoraMemberships is
         address _delegatee
     )
         public
-        isPaused
+        isNotPaused
         isPerclesia(_tokenId)
         onlyController(_tokenId)
         nonReentrant
@@ -515,7 +507,7 @@ contract dAgoraMemberships is
         address _newDelegatee
     )
         public 
-        isPaused
+        isNotPaused
         isPerclesia(_tokenId)
         onlyController(_tokenId)
         nonReentrant
@@ -559,7 +551,7 @@ contract dAgoraMemberships is
         uint8 _slot
     ) 
         public 
-        isPaused
+        isNotPaused
         isPerclesia(_tokenId)
         onlyController(_tokenId)
         nonReentrant 
@@ -634,8 +626,15 @@ contract dAgoraMemberships is
 
     /// @notice Allows contract owner to withdraw Ether sent to contract.
     function emergWithdrawal() public onlyOwner {
-        (bool success,) = dAgoraTreasury.call{value: address(this).balance}("");
-        require(success, "Failed to send to lead.");
+        uint256 balance = address(this).balance;
+        require(
+            balance > 0,
+            "Contract has no Ether to withdraw"
+        );
+        require(
+            payable(msg.sender).send(balance),
+            "Withdrawal failed"
+        );
     }
 
     /// @notice Allows contract owner to withdraw ERC20 tokens sent to contract.
@@ -768,7 +767,7 @@ contract dAgoraMemberships is
         );
     }
 
-    function _isPaused() private view {
+    function _isNotPaused() private view {
         require(!paused, "Contract is paused");
     }
 

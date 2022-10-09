@@ -6,7 +6,7 @@ import "forge-std/console.sol";
 import "forge-std/Vm.sol";
 import {dAgoraMemberships} from "../src/dAgoraMemberships.sol";
 import {ChainLink} from "../src/mock/linkToken.sol";
-import {TestDAI} from "../src/mock/testDAI.sol";
+import {DAI} from "../src/mock/DAI.sol";
 import {SigUtils} from "../src/mock/sigUtils.sol";
 import {MockOperator} from "../src/mock/mockOperator.sol";
 import {dAgoraBasicNFTOZFactory} from "../src/dAgoraFactories/dAgoraBasicNFTOZFactory.sol";
@@ -32,7 +32,7 @@ contract BasicNFTOZFactoryTest is Test {
     dAgoraMemberships dAgora;
     ChainLink link;
     MockOperator operator;
-    TestDAI dai;
+    DAI dai;
     SigUtils sigUtils;
     dAgoraBasicNFTOZFactory factory;
 
@@ -56,7 +56,7 @@ contract BasicNFTOZFactoryTest is Test {
         minter = vm.addr(minterKeys);
         alice = vm.addr(aliceKeys);
         vm.startPrank(dAgoraTreasury);
-        dai = new TestDAI();
+        dai = new DAI();
         
         sigUtils = new SigUtils(dai.DOMAIN_SEPARATOR());
         link._mint();

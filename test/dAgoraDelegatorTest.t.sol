@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import "forge-std/Vm.sol";
 import {dAgoraMemberships} from "../src/dAgoraMemberships.sol";
-import {TestDAI} from "../src/mock/testDAI.sol";
+import {DAI} from "../src/mock/DAI.sol";
 import {Token} from "../src/mock/token.sol";
 import {ChainLink} from "../src/mock/linkToken.sol";
 import {MockOperator} from "../src/mock/mockOperator.sol";
@@ -37,7 +37,7 @@ contract MintMembershipsTest is Test {
     dAgoraMemberships dAgora;
     ChainLink link;
     MockOperator operator;
-    TestDAI dai;
+    DAI dai;
     Token token;
     SigUtils sigUtils;
 
@@ -57,7 +57,7 @@ contract MintMembershipsTest is Test {
     function setUp() public {
         link = new ChainLink();
         vm.startPrank(dAgoraTreasury);
-        dai = new TestDAI();
+        dai = new DAI();
         token = new Token();
         bob = vm.addr(bobKeys);
         minter = vm.addr(minterKeys);

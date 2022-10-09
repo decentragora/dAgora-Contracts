@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import "forge-std/Vm.sol";
 import {dAgoraMemberships} from "../src/dAgoraMemberships.sol";
-import {TestDAI} from "../src/mock/testDAI.sol";
+import {DAI} from "../src/mock/DAI.sol";
 import {Token} from "../src/mock/token.sol";
 import {ChainLink} from "../src/mock/linkToken.sol";
 import {MockOperator} from "../src/mock/mockOperator.sol";
@@ -33,7 +33,7 @@ contract RenewMembershipTests is Test {
     dAgoraMemberships dAgora;
     ChainLink link;
     MockOperator operator;
-    TestDAI dai;
+    DAI dai;
     SigUtils sigUtils;
 
     uint256 oracleFee = 1 * 10 ** 17;
@@ -56,7 +56,7 @@ contract RenewMembershipTests is Test {
         alice = vm.addr(aliceKeys);
         link = new ChainLink();
         vm.startPrank(dAgoraTreasury);
-        dai = new TestDAI();
+        dai = new DAI();
 
         sigUtils = new SigUtils(dai.DOMAIN_SEPARATOR());
 

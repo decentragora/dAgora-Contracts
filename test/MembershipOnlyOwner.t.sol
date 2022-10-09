@@ -6,7 +6,7 @@ import "forge-std/console.sol";
 import "forge-std/Vm.sol";
 import {dAgoraMemberships} from "../src/dAgoraMemberships.sol";
 import {ChainLink} from "../src/mock/linkToken.sol";
-import {TestDAI} from "../src/mock/testDAI.sol";
+import {DAI} from "../src/mock/DAI.sol";
 import {MockOperator} from "../src/mock/mockOperator.sol";
 import {SigUtils} from "../src/mock/sigUtils.sol";
 
@@ -24,7 +24,7 @@ contract OnlyOwnerFunctionsTest is Test {
     dAgoraMemberships dAgora;
     ChainLink link;
     MockOperator operator;
-    TestDAI dai;
+    DAI dai;
     SigUtils sigUtils;
     
 
@@ -42,7 +42,7 @@ contract OnlyOwnerFunctionsTest is Test {
     function setUp() public {
         link = new ChainLink();
         vm.startPrank(dAgoraTreasury);
-        dai = new TestDAI();
+        dai = new DAI();
         bob = vm.addr(bobKeys);
 
         link._mint();

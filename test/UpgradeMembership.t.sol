@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import "forge-std/Vm.sol";
 import {dAgoraMemberships} from "../src/dAgoraMemberships.sol";
-import {TestDAI} from "../src/mock/testDAI.sol";
+import {DAI} from "../src/mock/DAI.sol";
 import {Token} from "../src/mock/token.sol";
 import {ChainLink} from "../src/mock/linkToken.sol";
 import {MockOperator} from "../src/mock/mockOperator.sol";
@@ -33,7 +33,7 @@ contract UpgradeMembershipTests is Test {
     dAgoraMemberships dAgora;
     ChainLink link;
     MockOperator operator;
-    TestDAI dai;
+    DAI dai;
     SigUtils sigUtils;
 
     uint256 oracleFee = 1 * 10 ** 17;
@@ -56,7 +56,7 @@ contract UpgradeMembershipTests is Test {
         alice = vm.addr(aliceKeys);
         link = new ChainLink();
         vm.startPrank(dAgoraTreasury);
-        dai = new TestDAI();
+        dai = new DAI();
 
         sigUtils = new SigUtils(dai.DOMAIN_SEPARATOR());
         link._mint();
@@ -128,7 +128,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(bobKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             2,
             dAgoraMemberships.Membership(2),
             _deadline,
@@ -182,7 +182,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(bobKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             2,
             dAgoraMemberships.Membership(3),
             _deadline,
@@ -236,7 +236,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(bobKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             2,
             dAgoraMemberships.Membership(3),
             _deadline,
@@ -266,7 +266,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(aliceKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             1,
             dAgoraMemberships.Membership(1),
             _deadline,
@@ -293,7 +293,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(aliceKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             1,
             dAgoraMemberships.Membership(2),
             _deadline,
@@ -320,7 +320,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(aliceKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             1,
             dAgoraMemberships.Membership(3),
             _deadline,
@@ -346,7 +346,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(aliceKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             1,
             dAgoraMemberships.Membership(2),
             _deadline,
@@ -373,7 +373,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(aliceKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             1,
             dAgoraMemberships.Membership(2),
             _deadline,
@@ -425,7 +425,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(bobKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             2,
             dAgoraMemberships.Membership(3),
             _deadline,
@@ -479,7 +479,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(bobKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             2,
             dAgoraMemberships.Membership(1),
             _deadline,
@@ -508,7 +508,7 @@ contract UpgradeMembershipTests is Test {
 
         (uint8 upgradeV, bytes32 upgradeR, bytes32 upgradeS) = vm.sign(bobKeys, upgradeDigest);
 
-        dAgora.upgradeMemebership(
+        dAgora.upgradeMembership(
             1,
             dAgoraMemberships.Membership(1),
             _deadline,
