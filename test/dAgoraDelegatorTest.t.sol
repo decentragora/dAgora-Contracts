@@ -369,4 +369,16 @@ contract MintMembershipsTest is Test {
 
         address[] memory delegates = dAgora.checkTokenDelegates(1);
     }
+
+    function testFailAlreadyDelegateed() public {
+        vm.startPrank(bob);
+        dAgora.addDelegatee(
+            1,
+            address(alice)
+        );
+        dAgora.addDelegatee(
+            1,
+            address(alice)
+        );
+    }
 }

@@ -492,6 +492,10 @@ contract dAgoraMemberships is
             _delegatee != address(this),
             "Cannot delegate to contract"
         );
+        require(
+            !_contains(_tokenId, _delegatee),
+            "Already delegated"
+        );
         
         _tokenDelegates[_tokenId].push(_delegatee);
     }
