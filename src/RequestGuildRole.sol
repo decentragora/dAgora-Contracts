@@ -102,7 +102,7 @@ abstract contract RequestGuildRole is ChainlinkClient {
             )
         );
         req.add("path", roleId.toString());
-        req.addInt("multiply", 1);
+        req.addInt("times", 1);
         bytes32 requestId = sendChainlinkRequest(req, oracleFee);
 
         RequestParams storage lastRequest = requests[requestId];
