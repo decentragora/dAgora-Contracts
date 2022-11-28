@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.17;
 
-import "ERC721A/IERC721A.sol";
+import {IERC721A} from "ERC721A/IERC721A.sol";
 
 /// @title dAgora Memberships NFT Interface
 /// @author DadlessNSad || 0xOrphan

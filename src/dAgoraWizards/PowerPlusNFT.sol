@@ -1,20 +1,15 @@
-/// @title A title that should describe the contract/interface
-/// @author The name of the author
-/// @notice Explain to an end user what this does
-/// @dev Explain to a developer any extra details
-
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import "@openzeppelin/contracts/token/common/ERC2981.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "ERC721A/ERC721A.sol";
-
 /// @title dAgora Power Plus NFT
 /// @author DadlessNsad || 0xOrphan
 /// @notice Used as a template for creating new NFT contracts.
+pragma solidity ^0.8.17;
+
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {ERC2981} from "@openzeppelin/contracts/token/common/ERC2981.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {ERC721A} from "ERC721A/ERC721A.sol";
+
 contract PowerPlusNFT is ERC721A, ERC2981, ReentrancyGuard, Ownable {
     /// @notice Where the NFTs metadata is stored.
     string public baseURI;

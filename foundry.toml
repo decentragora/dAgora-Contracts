@@ -3,6 +3,8 @@ src = 'src'
 out = 'out'
 libs = ['lib']
 
+solc = "0.8.17"
+
 fuzz_runs = 5000
 gas_reports = ["*"]
 optimizer = true

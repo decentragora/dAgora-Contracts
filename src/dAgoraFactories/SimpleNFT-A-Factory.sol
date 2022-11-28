@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {SimpleNFTA} from "../dAgoraWizards/Simple-NFT-A.sol";
-import "../IdAgoraMemberships.sol";
-
 /// @title dAgora Simple NFT A Factory
 /// @author DadlessNsad || 0xOrphan
 /// @notice Used to create new Simple NFT A contracts for dAgora members.
+pragma solidity ^0.8.17;
+
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {SimpleNFTA} from "../dAgoraWizards/Simple-NFT-A.sol";
+import {IdAgoraMembership} from "../IdAgoraMemberships.sol";
+
 contract dAgoraSimpleNFTAFactory is Ownable, ReentrancyGuard {
     SimpleNFTA nfta;
 

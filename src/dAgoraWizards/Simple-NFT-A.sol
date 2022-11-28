@@ -1,19 +1,14 @@
-/// @title Simple ERC721A Minting Contract
-/// @author Made By DecentrAgora
-/// @notice use this contract to enhance you understand of the ERC721 Standard
-/// @dev 0xOrphan || DadlessNsad
-
 //SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "ERC721A/ERC721A.sol";
-
 /// @title Simple NFT A
 /// @author 0xOrphan || DadlessNsad
 /// @notice This is a template contract used to create new NFT contracts.
 /// @dev This contract is a simple ERC721A contract that can be used to mint NFTs. and is apart of DecentrAgoras tools.
+
+pragma solidity ^0.8.17;
+
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ERC721A} from "ERC721A/ERC721A.sol";
+
 
 contract SimpleNFTA is ERC721A, Ownable {
     /// @notice Where the NFTs metadata is stored.

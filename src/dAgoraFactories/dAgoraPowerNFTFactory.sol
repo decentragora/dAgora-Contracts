@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {PowerNFT} from "../dAgoraWizards/PowerNFT.sol";
-import "../IdAgoraMemberships.sol";
-
-/// @title PowerNFT Factory
+/// @title dAgora PowerNFT Factory
 /// @author DadlessNsad || 0xOrphan
 /// @notice Allows dAgora members to create new PowerNFT contracts.
+pragma solidity ^0.8.17;
+
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {PowerNFT} from "../dAgoraWizards/PowerNFT.sol";
+import {IdAgoraMembership} from "../IdAgoraMemberships.sol";
+
 
 contract dAgoraPowerNFTFactory is Ownable, ReentrancyGuard {
     PowerNFT nft;

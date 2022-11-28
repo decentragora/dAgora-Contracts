@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.17;
 
 import {IERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import "ERC721A/ERC721A.sol";
 import {RequestGuildRole} from "./RequestGuildRole.sol";
-import "./IdAgoraMemberships.sol";
+import {IdAgoraMembership} from "./IdAgoraMemberships.sol";
 
 
 /// @title DecentrAgora Memberships
@@ -119,24 +119,24 @@ contract dAgoraMemberships is
     /// @param _cid The storage location of the membership metadata.
     /// @param _DAI The address of DAI token.
     /// @param _dAgoraTreasury DecentrAgora's multisig address.
-    /// @param guildId The Id of the guild, the oracle interacts with.
+    /// @param _guildId The Id of the guild, the oracle interacts with.
     /// @param _rewardedRole The role that is checked by oracle for free membership.
     /// @param linkToken The address of the LINK token.
     /// @param oracleAddress The address of the oracle.
-    /// @param jobId The Id of the job, the oracle interacts with.
-    /// @param oracleFee The fee the oracle charges for a request.
+    /// @param _jobId The Id of the job, the oracle interacts with.
+    /// @param _oracleFee The fee the oracle charges for a request.
     constructor(
         string memory _cid,
         address _DAI,
         address _dAgoraTreasury,
-        string memory guildId,
+        string memory _guildId,
         uint96 _rewardedRole,
         address linkToken,
         address oracleAddress,
-        bytes32 jobId,
-        uint256 oracleFee
+        bytes32 _jobId,
+        uint256 _oracleFee
     )
-        RequestGuildRole(linkToken, oracleAddress, jobId, oracleFee, guildId)
+        RequestGuildRole(linkToken, oracleAddress, _jobId, _oracleFee, _guildId)
         ERC721A("dAgora Memberships", "DAMS")
     {
         cid = _cid;

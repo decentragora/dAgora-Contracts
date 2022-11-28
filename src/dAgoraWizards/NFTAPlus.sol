@@ -1,19 +1,16 @@
-/// @title Simple ERC721A Minting Contract
+//SPDX-License-Identifier: MIT
+/// @title NFTA Plus
 /// @author Made By DecentrAgora
 /// @notice use this contract to enhance you understand of the ERC721 Standard
 /// @dev 0xOrphan || DadlessNsad
 
-//SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "ERC721A/ERC721A.sol";
+import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ERC721A} from "ERC721A/ERC721A.sol";
 
-/// @title NFT A Plus
-/// @author 0xOrphan || DadlessNsad
-/// @notice This contract is used as a template for creating new NFT contracts.
 contract NFTAPlus is ERC721A, Ownable {
     /// @notice Where the NFTs metadata is stored.
     string public baseURI;

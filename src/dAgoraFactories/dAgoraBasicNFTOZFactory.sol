@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {BasicNFTOZ} from "../dAgoraWizards/BasicNFTOZ.sol";
-import "../IdAgoraMemberships.sol";
-
 /// @title dAgora Basic NFT OZ Factory
 /// @author DadlessNsad || 0xOrphan
 /// @notice Used to create new Basic NFT OZ contracts for dAgora members.
+pragma solidity ^0.8.17;
+
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {BasicNFTOZ} from "../dAgoraWizards/BasicNFTOZ.sol";
+import {IdAgoraMembership} from "../IdAgoraMemberships.sol";
+
 
 contract dAgoraBasicNFTOZFactory is Ownable, ReentrancyGuard {
     BasicNFTOZ nft;

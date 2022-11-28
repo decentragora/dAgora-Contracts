@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
-
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {NFTAPlus} from "../dAgoraWizards/NFTAPlus.sol";
-import "../IdAgoraMemberships.sol";
-
 /// @title dAgora NFT A Plus Factory
 /// @author DadlessNsad || 0xOrphan
 /// @notice Used to create new NFT A Plus contracts for dAgora members.
+pragma solidity ^0.8.17;
+
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {NFTAPlus} from "../dAgoraWizards/NFTAPlus.sol";
+import {IdAgoraMembership} from "../IdAgoraMemberships.sol";
+
 contract dAgoraNFTAPlusFactory is Ownable, ReentrancyGuard {
     NFTAPlus nft;
 

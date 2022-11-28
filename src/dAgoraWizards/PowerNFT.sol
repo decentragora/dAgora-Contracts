@@ -4,11 +4,11 @@
 /// @dev 0xOrphan || DadlessNsad
 
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "ERC721A/ERC721A.sol";
-import "@openzeppelin/contracts/token/common/ERC2981.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ERC721A} from "ERC721A/ERC721A.sol";
+import {ERC2981} from "@openzeppelin/contracts/token/common/ERC2981.sol";
 
 /// @title Power NFT Contract
 /// @author DadlessNsad || 0xOrphan
