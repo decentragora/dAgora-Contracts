@@ -59,6 +59,19 @@ contract DagoraNFTAPlusFactory is Initializable, OwnableUpgradeable, ReentrancyG
         _;
     }
 
+    /// @notice Function to create a NFTAPlus contract.
+    /// @dev Creates a NFTAPlus contract using the Create2Upgradeable library.
+    /// @param name_ The name of the NFTAPlus contract.
+    /// @param symbol_ The symbol of the NFTAPlus contract.
+    /// @param baseURI_ The baseURI of the NFTAPlus contract.
+    /// @param _bulkBuyLimit The bulk buy limit of the NFTAPlus contract.
+    /// @param _maxAllowListAmount The max allow list amount of the NFTAPlus contract.
+    /// @param _mintCost The mint cost of the NFTAPlus contract.
+    /// @param _presaleMintCost The presale mint cost of the NFTAPlus contract.
+    /// @param _maxTotalSupply The max total supply of the NFTAPlus contract.
+    /// @param _newOwner The new owner of the NFTAPlus contract.
+    /// @param _merkleRoot The merkle root of the NFTAPlus contract.
+    /// @param _id The id of the users membership tokenId.
     function createNFTAPlus(
         string memory name_,
         string memory symbol_,
@@ -72,6 +85,14 @@ contract DagoraNFTAPlusFactory is Initializable, OwnableUpgradeable, ReentrancyG
         bytes32 _merkleRoot,
         uint256 _id
     )   public isNotPaused canCreate(_id, minNFTAPlusTier) nonReentrant {
+        require(_newOwner != address(0), "New owner cannot be 0 address");
+        require(_newOwner != address(this), "New owner cannot be factory address");
+        require(_maxTotalSupply > 0, "Max total supply cannot be 0");
+        require(_bulkBuyLimit > 0 && _maxAllowListAmount > 0, "Bulk buy limit and max allow list amount cannot be 0");
+        require(_bulkBuyLimit < _maxTotalSupply, "Bulk buy limit cannot be greater than max total supply");
+        require(_maxAllowListAmount < _maxTotalSupply, "Max allow list amount cannot be greater than max total supply");
+        require(_merkleRoot != bytes32(0), "Merkle root cannot be 0");
+
         bytes32 salt = keccak256(abi.encodePacked(name_, msg.sender, block.timestamp));
         bytes memory bytecode = abi.encodePacked(
             type(NFTAPlus).creationCode,

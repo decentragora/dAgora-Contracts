@@ -163,6 +163,34 @@ describe("Test  Create Dagora ERC20  Factory", function () {
         
     });
 
+    it("Should revert create if inital supply is greater than max supply", async function () {
+        await expect(factoryProxy.connect(addr1).createDagoraERC20(
+            'Test ERC20 Token',
+            'Test',
+            addr1.address,
+            10000,
+            1000,
+            1
+        )).to.be.revertedWith("dAgoraERC20Factory: Initial supply cannot be higher than max supply");
+    });
 
-    
+    it("Should not allow newOwner to be the zero address or proxy", async function () {
+        await expect(factoryProxy.connect(addr1).createDagoraERC20(
+            'Test ERC20 Token',
+            'Test',
+            ethers.constants.AddressZero,
+            1000,
+            10000,
+            1
+        )).to.be.revertedWith("dAgoraERC20Factory: New owner cannot be zero address");
+
+        await expect(factoryProxy.connect(addr1).createDagoraERC20(
+            'Test ERC20 Token',
+            'Test',
+            factoryProxy.address,
+            1000,
+            10000,
+            1
+        )).to.be.revertedWith("dAgoraERC20Factory: New owner cannot be the factory address");
+    });
 });

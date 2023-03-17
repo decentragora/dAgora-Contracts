@@ -62,6 +62,18 @@ contract DagoraPowerNFTFactory is Initializable, OwnableUpgradeable, ReentrancyG
         _;
     }
 
+    /// @notice Function to create a PowerNFTA contract.
+    /// @dev Creates a PowerNFTA contract, and emits an event.
+    /// @param _name The name of the contract.
+    /// @param _symbol The symbol of the contract.
+    /// @param __baseURI The baseURI of the contract.
+    /// @param _bulkBuyLimit The bulk buy limit of the contract.
+    /// @param _royaltyBps The royalty bps of the contract.
+    /// @param _mintCost The mint cost of the contract.
+    /// @param _maxTotalSupply The max total supply of the contract.
+    /// @param _royaltyRecipient The royalty recipient of the contract.
+    /// @param _newOwner The new owner of the contract.
+    /// @param _id The id of the users membership tokenId.
     function createPowerNFT(
         string memory _name,
         string memory _symbol,
@@ -74,6 +86,13 @@ contract DagoraPowerNFTFactory is Initializable, OwnableUpgradeable, ReentrancyG
         address _newOwner,
         uint256 _id
     )   public isNotPaused canCreate(_id, minPowerNFTATier) nonReentrant {
+        require(_newOwner != address(0), "New owner cannot be 0 address");
+        require(_newOwner != address(this), "New owner cannot be factory address");
+        require(_royaltyRecipient != address(0), "Royalty recipient cannot be 0 address");
+        require(_maxTotalSupply > 0, "Max total supply cannot be 0");
+        require(_bulkBuyLimit > 0 , "Bulk buy limit t cannot be 0");
+        require(_bulkBuyLimit < _maxTotalSupply, "Bulk buy limit cannot be greater than max total supply");
+
         bytes32 salt = keccak256(abi.encodePacked(_name, msg.sender, block.timestamp));
         bytes memory bytecode = abi.encodePacked(
             type(PowerNFT).creationCode,

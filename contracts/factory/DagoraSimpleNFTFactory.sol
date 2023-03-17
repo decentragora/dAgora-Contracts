@@ -62,6 +62,16 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
     }
 
 
+    /// @notice Function to create a SimpleNFTA contract.
+    /// @dev Creates a SimpleNFTA contract, and adds the address to the users contracts array.
+    /// @param _name The name of the SimpleNFTA contract.
+    /// @param _symbol The symbol of the SimpleNFTA contract.
+    /// @param _baseURI The baseURI of the SimpleNFTA contract.
+    /// @param _bulkBuyLimit The bulk buy limit of the SimpleNFTA contract.
+    /// @param _mintCost The mint cost of the SimpleNFTA contract.
+    /// @param _maxSupply The max supply of the SimpleNFTA contract.
+    /// @param _newOwner The address of the new owner of the SimpleNFTA contract.
+    /// @param _id The id of the users membership tokenId.
     function createSimpleNFTA(
         string memory _name,
         string memory _symbol,
@@ -72,6 +82,12 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
         address _newOwner,
         uint256 _id
     ) public isNotPaused canCreate(_id, minSimpleNFTATier) nonReentrant {
+        require(_newOwner != address(0), "Cannot create token with address 0 as owner");
+        require(_newOwner != address(this), "Cannot create token with address of factory as owner");
+        require(_maxSupply > 0, "Cannot create token with max supply of 0");
+        require(_bulkBuyLimit > 0, "Cannot create token with bulk buy limit of 0");
+        require(_bulkBuyLimit < _maxSupply, "Cannot create token with bulk buy limit greater than max supply");
+
         bytes32 salt = keccak256(abi.encodePacked(_name, msg.sender, block.timestamp));
         bytes memory bytecode = abi.encodePacked(
             type(SimpleNFTA).creationCode,

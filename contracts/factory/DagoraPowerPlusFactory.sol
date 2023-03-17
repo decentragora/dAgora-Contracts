@@ -64,6 +64,10 @@ contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, Reentra
         _;
     }
 
+    /// @notice Function to create a PowerNFTA contract.
+    /// @dev Reverts if the new owner is 0 address, if the royalty recipient is 0 address, if the max total supply is 0, if the bulk buy limit is 0, if the max allow list amount is 0, if the bulk buy limit is greater than the max total supply, if the max allow list amount is greater than the max total supply, and if the merkle root is 0.
+    /// @param params The struct containing the parameters for the PowerNFTA contract.
+    /// @param _id The id of the users membership tokenId.
     function createPowerPlusNFT(
         PowerPlusNFT.Params memory params,
         uint256 _id
@@ -72,6 +76,16 @@ contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, Reentra
         canCreate(_id, minPowerNFTATier)
         nonReentrant
     {
+        require(params._newOwner != address(0), "New owner cannot be 0 address");
+        require(params._newOwner != address(this), "New owner cannot be factory address");
+        require(params._royaltyRecipient != address(0), "Royalty recipient cannot be 0 address");
+        require(params._royaltyRecipient != address(this), "Royalty recipient cannot be factory address");        
+        require(params._maxTotalSupply > 0, "Max total supply cannot be 0");
+        require(params._bulkBuyLimit > 0 && params._maxAllowListAmount > 0, "Bulk buy limit and max allow list amount cannot be 0");
+        require(params._bulkBuyLimit < params._maxTotalSupply, "Bulk buy limit cannot be greater than max total supply");
+        require(params._maxAllowListAmount < params._maxTotalSupply, "Max allow list amount cannot be greater than max total supply");
+        require(params._merkleRoot != bytes32(0), "Merkle root cannot be 0");
+
         bytes32 salt = keccak256(abi.encodePacked(params._name, msg.sender, block.timestamp));
         bytes memory bytecode = abi.encodePacked(
             type(PowerPlusNFT).creationCode,
