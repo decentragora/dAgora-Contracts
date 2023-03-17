@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for wizards/PowerPlusNFT.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">wizards/</a> PowerPlusNFT.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>39/39</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">94.29% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>66/70</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>24/24</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>64/64</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-yes">46×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-yes">16×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">77×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//SPDX-License-Identifier: MIT
+/// @title dAgora Power Plus NFT
+/// @author DadlessNsad || 0xOrphan
+/// @notice Used as a template for creating new NFT contracts.
+pragma solidity ^0.8.17;
+&nbsp;
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {ERC2981} from "@openzeppelin/contracts/token/common/ERC2981.sol";
+import {ERC721A} from "erc721a/contracts/ERC721A.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+&nbsp;
+&nbsp;
+/// @title dAgora Power Plus NFT
+/// @author Made By DecentrAgora
+/// @notice PowerPlusNFT is ERC721A contract that is ownable, has royalties, and a pre-sale.
+/// @dev This contract is used as a template for creating new NFT contracts.
+contract PowerPlusNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
+&nbsp;
+    struct Params {
+        string _name;
+        string _symbol;
+        string _baseURI;
+        uint16 _bulkBuyLimit;
+        uint16 _maxAllowListAmount;
+        uint96 _royaltyBps;
+        uint256 _mintPrice;
+        uint256 _presaleMintPrice;
+        uint256 _maxTotalSupply;
+        address _royaltyRecipient;
+        address _newOwner;
+        bytes32 _merkleRoot;
+    }
+&nbsp;
+    /// @notice The base URI for all tokens.
+    string public baseURI;
+&nbsp;
+    /// @notice The file extension of the metadata can be set to nothing.
+    /// @dev default value is json
+    string public baseExtension;
+&nbsp;
+    /// @notice The address that will receive the royalties.
+    address public royaltyRecipient;
+&nbsp;
+    /// @notice Boolean to determine if the contract is paused.
+    /// @dev default value is true, contract is paused on deployment.
+    bool public isPaused;
+&nbsp;
+    /// @notice Boolean to determine if the contract is in the pre-sale period.
+    /// @dev default value is true, contract is in presale state on deployment.
+    bool public preSaleActive;
+&nbsp;
+    /// @notice The merkle root for the allowList.
+    bytes32 public merkleRoot;
+&nbsp;
+    /// @notice The maximum number of tokens that can be minted in a single transaction.
+    uint16 public bulkBuyLimit;
+&nbsp;
+    /// @notice The maximum number of tokens that can be minted in a single transaction for a whitelist address.
+    /// @dev this is used during the whitelist period.
+    uint16 public maxAllowListAmount;
+&nbsp;
+    /// @notice The cost to mint a token.
+    uint256 public mintPrice;
+&nbsp;
+    /// @notice The cost to mint a token during the presale period.
+    uint256 public presaleMintPrice;
+&nbsp;
+    /// @notice The maximum number of tokens that can be minted.
+    uint256 public maxSupply;
+&nbsp;
+&nbsp;
+    event Minted(address indexed to, uint256 indexed tokenId);
+    event AllowListMinted(address indexed to, uint256 indexed tokenId);
+    event BaseURIChanged(string baseURI);
+    event BaseExtensionChanged(string baseExtension);
+    event MintCostChanged(uint256 mintPrice);
+    event presaleMintPriceChanged(uint256 presaleMintPrice);
+    event BulkBuyLimitChanged(uint16 bulkBuyLimit);
+    event MaxAllowListAmountChanged(uint16 maxAllowListAmount);
+    event PausedToggled(bool paused);
+    event PreSaleToggled(bool preSaleActive);
+    event RoyaltysChanged(address indexed royaltyRecipient, uint96 indexed royaltyBps);
+&nbsp;
+    /// @notice Mapping to track the number of tokens minted for each address during presale.
+    mapping(address =&gt; uint256) public allowListMintCount;
+&nbsp;
+    /// @notice The constructor for the contract.
+    /// @param _params The struct containing the parameters for the contract.
+    constructor(
+        Params memory _params
+    ) ERC721A(_params._name, _params._symbol) {
+        baseURI = _params._baseURI;
+        bulkBuyLimit = _params._bulkBuyLimit;
+        maxAllowListAmount = _params._maxAllowListAmount;
+        mintPrice = _params._mintPrice;
+        presaleMintPrice = _params._presaleMintPrice;
+        maxSupply = _params._maxTotalSupply;
+        royaltyRecipient = _params._royaltyRecipient;
+        merkleRoot = _params._merkleRoot;
+        isPaused = true;
+        preSaleActive = true;
+        baseExtension = ".json";
+        transferOwnership(_params._newOwner);
+        _setDefaultRoyalty(_params._royaltyRecipient, _params._royaltyBps);
+    }
+&nbsp;
+    /// @notice Modifier to check if the contract is paused.
+    modifier isNotPaused() {
+        require(!isPaused, "Contract is paused");
+        _;
+    }
+&nbsp;
+    /// @notice Modifier to check the address is allowed to mint during the presale period.
+    /// @param merkleProof The merkle proof for the address.
+    /// @param root The merkle root for the allowList.
+    /// @dev check the proof provided against the root stored in the contract.
+    modifier isValidMerkleProof(bytes32[] calldata merkleProof, bytes32 root) {
+        require(
+            MerkleProof.verify(merkleProof, root, keccak256(abi.encodePacked(msg.sender))),
+            "Invalid merkle proof"
+        );
+        _;
+    }
+&nbsp;
+    /// @notice a modifier to check if the contract is in the public sale period.
+    modifier isPublicSale() {
+        require(!preSaleActive, "Presale is active");
+        _;
+    }
+&nbsp;
+&nbsp;
+    /// @notice a modifier to check if the contract is in the presale period.
+    modifier isPreSale() {
+        require(preSaleActive, "Presale is not active");
+        _;
+    }
+&nbsp;
+    /// @notice Fcuntion to mint nfts.
+    /// @param amount The number of tokens to mint.
+    /// @dev this function is used during the public sale period.
+    function mintNFT(uint256 amount) public payable isNotPaused isPublicSale <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+        require(amount &lt;= bulkBuyLimit, "Exceeds bulk buy limit");
+        require(totalSupply() + amount &lt;= maxSupply, "Amount exceeds max supply");
+        require(msg.value == mintPrice * amount, "Incorrect amount of ETH sent");
+        _safeMint(msg.sender, amount);
+        emit Minted(msg.sender, amount);
+    }
+&nbsp;
+    /// @notice Function to mint nfts during the presale period.
+    /// @param _proof The merkle proof for the address.
+    /// @param amount The number of tokens to mint.
+    function presaleMintNFT(
+        bytes32[] calldata _proof,
+        uint256 amount
+    )   public
+        payable
+        isNotPaused
+        isPreSale
+        isValidMerkleProof(_proof, merkleRoot)
+        <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant
+    {
+        require(amount + allowListMintCount[msg.sender] &lt;= maxAllowListAmount, "Amount exceeds max allowList amount");
+        require(totalSupply() + amount &lt;= maxSupply, "Amount exceeds max supply");
+        require(msg.value == presaleMintPrice * amount, "Incorrect amount of ETH sent");
+&nbsp;
+        allowListMintCount[msg.sender] += amount;
+        _safeMint(msg.sender, amount);
+        emit AllowListMinted(msg.sender, amount);
+    }
+&nbsp;
+    /// @notice Function to mint nfts during the presale period.
+    /// @param amount The number of tokens to mint.
+    /// @dev this function is used to mint tokens for the team.
+    function reserveTokens(uint256 amount) public onlyOwner <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+        require(totalSupply() + amount &lt;= maxSupply, "Amount exceeds max supply");
+        _safeMint(msg.sender, amount);
+    }
+&nbsp;
+    /// @notice returns the token URI for a given token.
+    /// @param tokenId The token ID.
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_exists(tokenId), "Token does not exist");
+        return string(abi.encodePacked(baseURI, _toString(tokenId), baseExtension));
+    }
+&nbsp;
+    /// @notice Function to toggle the paused state of the contract.
+    function togglePaused() public onlyOwner {
+        isPaused = !isPaused;
+        emit PausedToggled(isPaused);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to toggle the presale state of the contract.
+    function togglePresale() public onlyOwner {
+        preSaleActive = !preSaleActive;
+        emit PreSaleToggled(preSaleActive);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to set the base URI for the token URIs.
+    /// @param _base_URI The new base URI.
+    function setBaseURI(string memory _base_URI) public onlyOwner {
+        baseURI = _base_URI;
+        emit BaseURIChanged(baseURI);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to set the base extension for the token URIs.
+    /// @param _baseExtension The new base extension.
+    function setBaseExtension(string memory _baseExtension) public onlyOwner {
+        baseExtension = _baseExtension;
+        emit BaseExtensionChanged(baseExtension);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to set the mint cost during the public sale period.
+    /// @param _mintPrice The new mint cost during the public sale period.
+    /// @dev this function is used to set the mint cost during the public sale period.
+    function setMintPrice(uint256 _mintPrice) public onlyOwner {
+        mintPrice = _mintPrice;
+        emit MintCostChanged(mintPrice);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to set the mint cost during the presale period.
+    /// @param _presaleMintPrice The new mint cost during the presale period.
+    function setPresaleMintPrice(uint256 _presaleMintPrice) public onlyOwner {
+        presaleMintPrice = _presaleMintPrice;
+        emit presaleMintPriceChanged(_presaleMintPrice);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to set the bulk buy limit per transaction, during the public sale period.
+    /// @param _bulkBuyLimit The new bulk buy limit.
+    function setBulkBuyLimit(uint16 _bulkBuyLimit) public onlyOwner {
+        bulkBuyLimit = _bulkBuyLimit;
+        emit BulkBuyLimitChanged(_bulkBuyLimit);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to set the max allow list amount per address, during the presale period.
+    /// @param _amount The new max allow list amount per address.
+   function setMaxAllowListAmount(uint16 _amount) public onlyOwner {
+        maxAllowListAmount = _amount;
+        emit MaxAllowListAmountChanged(_amount);
+    }
+&nbsp;
+&nbsp;
+    /// @notice OnlyOwner Function to set the merkle root for the presale.
+    /// @param _merkleRoot The new merkle root.
+    /// @dev this function is used to set the merkle root for the presale, this is used to verify the merkle proof and check if a address is included.
+    function setMerkleRoot(bytes32 _merkleRoot) public onlyOwner {
+        merkleRoot = _merkleRoot;
+    }
+&nbsp;
+    /// @notice Function to set the royalties for the contract.
+    /// @param _royaltyRecipient The new royalty recipient.
+    /// @param _royaltyBps The new royalty bps, denominated by 10000.
+    function setRoyalties(address _royaltyRecipient, uint96 _royaltyBps) public onlyOwner {
+        _setDefaultRoyalty(_royaltyRecipient, _royaltyBps);
+        emit RoyaltysChanged(_royaltyRecipient, _royaltyBps);
+    }
+&nbsp;
+    /// @notice OnlyOwner Function to withdraw ETH from the contract.
+    function withdrawETH() public onlyOwner {
+        uint256 balance = address(this).balance;
+        payable(msg.sender).transfer(balance);
+    }
+&nbsp;
+    /// @notice OnlyOwner function to withdraw ERC20 tokens from the contract.
+    /// @param _tokenAddr The address of the ERC20 token to withdraw.
+    function withdrawERC20(address _tokenAddr) public onlyOwner {
+        IERC20 erc20 = IERC20(_tokenAddr);
+        uint256 balance = erc20.balanceOf(address(this));
+        require(balance &gt; 0, "No tokens to withdraw");
+        erc20.transfer(owner(), balance);
+    }
+&nbsp;
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override (ERC721A, ERC2981)
+        returns (bool)
+    {
+        return ERC721A.supportsInterface(interfaceId)
+            || ERC2981.supportsInterface(interfaceId);
+    }
+&nbsp;
+    function typeOf() public pure virtual returns (string memory) {
+        return "dAgora PowerPlusNFT";
+    }
+&nbsp;
+    /// @notice Internal Function to set the starting tokenId of the contract.
+    function _startTokenId() internal view virtual override returns (uint256) {
+        return 1;
+    }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 16 2023 02:51:48 GMT-0600 (Mountain Daylight Saving Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+node_modules
+.env
+coverage.json
+typechain
+typechain-types
+artifacts
+
+# Hardhat files
+cache
+.vscode
+
