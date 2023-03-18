@@ -119,6 +119,25 @@ _Reverts if the user membership tier is not high enough, if the membership is ex
 function createPowerNFT(string _name, string _symbol, string __baseURI, uint16 _bulkBuyLimit, uint96 _royaltyBps, uint256 _mintCost, uint256 _maxTotalSupply, address _royaltyRecipient, address _newOwner, uint256 _id) public
 ```
 
+Function to create a PowerNFTA contract.
+
+_Creates a PowerNFTA contract, and emits an event._
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| _name | string | The name of the contract. |
+| _symbol | string | The symbol of the contract. |
+| __baseURI | string | The baseURI of the contract. |
+| _bulkBuyLimit | uint16 | The bulk buy limit of the contract. |
+| _royaltyBps | uint96 | The royalty bps of the contract. |
+| _mintCost | uint256 | The mint cost of the contract. |
+| _maxTotalSupply | uint256 | The max total supply of the contract. |
+| _royaltyRecipient | address | The royalty recipient of the contract. |
+| _newOwner | address | The new owner of the contract. |
+| _id | uint256 | The id of the users membership tokenId. |
+
 ### getUserContracts
 
 ```solidity

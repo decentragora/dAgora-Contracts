@@ -113,6 +113,23 @@ _Reverts if the user membership tier is not high enough, if the membership is ex
 function createSimpleNFTA(string _name, string _symbol, string _baseURI, uint16 _bulkBuyLimit, uint256 _mintCost, uint256 _maxSupply, address _newOwner, uint256 _id) public
 ```
 
+Function to create a SimpleNFTA contract.
+
+_Creates a SimpleNFTA contract, and adds the address to the users contracts array._
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| _name | string | The name of the SimpleNFTA contract. |
+| _symbol | string | The symbol of the SimpleNFTA contract. |
+| _baseURI | string | The baseURI of the SimpleNFTA contract. |
+| _bulkBuyLimit | uint16 | The bulk buy limit of the SimpleNFTA contract. |
+| _mintCost | uint256 | The mint cost of the SimpleNFTA contract. |
+| _maxSupply | uint256 | The max supply of the SimpleNFTA contract. |
+| _newOwner | address | The address of the new owner of the SimpleNFTA contract. |
+| _id | uint256 | The id of the users membership tokenId. |
+
 ### getUserContracts
 
 ```solidity

@@ -113,6 +113,26 @@ _Reverts if the user membership tier is not high enough, if the membership is ex
 function createNFTAPlus(string name_, string symbol_, string baseURI_, uint16 _bulkBuyLimit, uint16 _maxAllowListAmount, uint256 _mintCost, uint256 _presaleMintCost, uint256 _maxTotalSupply, address _newOwner, bytes32 _merkleRoot, uint256 _id) public
 ```
 
+Function to create a NFTAPlus contract.
+
+_Creates a NFTAPlus contract using the Create2Upgradeable library._
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name_ | string | The name of the NFTAPlus contract. |
+| symbol_ | string | The symbol of the NFTAPlus contract. |
+| baseURI_ | string | The baseURI of the NFTAPlus contract. |
+| _bulkBuyLimit | uint16 | The bulk buy limit of the NFTAPlus contract. |
+| _maxAllowListAmount | uint16 | The max allow list amount of the NFTAPlus contract. |
+| _mintCost | uint256 | The mint cost of the NFTAPlus contract. |
+| _presaleMintCost | uint256 | The presale mint cost of the NFTAPlus contract. |
+| _maxTotalSupply | uint256 | The max total supply of the NFTAPlus contract. |
+| _newOwner | address | The new owner of the NFTAPlus contract. |
+| _merkleRoot | bytes32 | The merkle root of the NFTAPlus contract. |
+| _id | uint256 | The id of the users membership tokenId. |
+
 ### getUserContracts
 
 ```solidity

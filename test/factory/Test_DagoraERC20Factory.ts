@@ -182,7 +182,7 @@ describe("Test  Create Dagora ERC20  Factory", function () {
             1000,
             10000,
             1
-        )).to.be.revertedWith("dAgoraERC20Factory: New owner cannot be zero address");
+        )).to.be.revertedWith("dAgoraERC20Factory: New owner cannot be the zero address");
 
         await expect(factoryProxy.connect(addr1).createDagoraERC20(
             'Test ERC20 Token',

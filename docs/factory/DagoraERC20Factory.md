@@ -113,6 +113,21 @@ _Reverts if the user membership tier is not high enough, if the membership is ex
 function createDagoraERC20(string name_, string symbol_, address _newOwner, uint256 initialSupply, uint256 _maxSupply, uint256 _id) public
 ```
 
+Function to create a new DagoraERC20 contract.
+
+_Creates a new DagoraERC20 contract, and emits a DagoraERC20Created event._
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| name_ | string | The name of the new DagoraERC20 contract. |
+| symbol_ | string | The symbol of the new DagoraERC20 contract. |
+| _newOwner | address | The address of the new owner of the new DagoraERC20 contract. |
+| initialSupply | uint256 | The initial supply of the new DagoraERC20 contract. |
+| _maxSupply | uint256 | The max supply of the new DagoraERC20 contract. |
+| _id | uint256 | The id of the users membership tokenId. |
+
 ### getUserContracts
 
 ```solidity

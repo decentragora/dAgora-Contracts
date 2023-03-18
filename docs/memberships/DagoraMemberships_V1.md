@@ -62,6 +62,14 @@ address DAI
 
 Address of the DAI token.
 
+### proxyImplementation
+
+```solidity
+address proxyImplementation
+```
+
+Address of the Proxy contract.
+
 ### ecclesiaPrice
 
 ```solidity
@@ -678,6 +686,22 @@ Function to set the price of a Ecclesia tier membership renewal.
 
 _Only owner can call this function._
 
+### setProxyAddress
+
+```solidity
+function setProxyAddress(address _proxyAddress) external
+```
+
+Function to set the address of the proxy contract.
+
+_Only owner can call this function._
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| _proxyAddress | address | The address of the proxy contract. |
+
 ### withdrawERC20
 
 ```solidity
@@ -777,6 +801,12 @@ Function to get a tokenId membership expiration.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | [0] | bool | bool isValid. |
+
+### addressTokenIds
+
+```solidity
+function addressTokenIds(address _owner) external view returns (uint256 _tokenId)
+```
 
 ### getTokenDelegates
 

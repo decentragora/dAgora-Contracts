@@ -119,6 +119,17 @@ _Reverts if the user membership tier is not high enough, if the membership is ex
 function createPowerPlusNFT(struct PowerPlusNFT.Params params, uint256 _id) public
 ```
 
+Function to create a PowerNFTA contract.
+
+_Reverts if the new owner is 0 address, if the royalty recipient is 0 address, if the max total supply is 0, if the bulk buy limit is 0, if the max allow list amount is 0, if the bulk buy limit is greater than the max total supply, if the max allow list amount is greater than the max total supply, and if the merkle root is 0._
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| params | struct PowerPlusNFT.Params | The struct containing the parameters for the PowerNFTA contract. |
+| _id | uint256 | The id of the users membership tokenId. |
+
 ### getUserContracts
 
 ```solidity
