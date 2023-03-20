@@ -96,6 +96,13 @@ contract DagoraMembershipsV1 is
     /// @param expiration the expiration of the membership
     event MembershipPurchased(address indexed member, uint256 indexed tokenId, uint8 tier, uint256 expiration);
 
+    /// @notice The event emitted when a free membership is claimed.
+    /// @param member the address of the member
+    /// @param tokenId the tokenId of the membership
+    /// @param tier the tier of the membership
+    /// @param expiration the expiration of the membership
+    event FreeMembershipClaimed(address indexed member, uint256 indexed tokenId, uint8 tier, uint256 expiration);
+
     /// @notice The event emitted when a membership is upgraded.
     /// @param member the address of the member
     /// @param tokenId the tokenId of the membership
@@ -114,7 +121,7 @@ contract DagoraMembershipsV1 is
     /// @param tokenId the tokenId of the membership
     /// @param tier the tier of the membership
     /// @param expiration the expiration of the membership
-    event MembershipClaimed(address indexed member, uint256 indexed tokenId, uint8 tier, uint256 expiration);
+    event MembershipGifted(address indexed member, uint256 indexed tokenId, uint8 tier, uint256 expiration);
 
     /// @notice The event emitted when a membership is canceled.
     /// @param member the address of the member
@@ -140,6 +147,7 @@ contract DagoraMembershipsV1 is
     /// @param oldDelegatee the address of the old delegatee
     /// @param newDelegatee the address of the new delegatee
     event DelegateSwapped(address indexed member, uint256 indexed tokenId, address oldDelegatee, address newDelegatee);
+
 
     /// @notice mapping that stores the membership details.
     mapping (uint256 => Membership) public memberships;
@@ -278,6 +286,7 @@ contract DagoraMembershipsV1 is
         memberships[_tokenId] = Membership(_tier, msg.sender, _tokenId,  experation[_tokenId]);
         claimed[msg.sender] = true;
         _mint(msg.sender, 1);
+        emit MembershipPurchased(msg.sender, _tokenId, _tier, experation[_tokenId]);
     }
 
 
@@ -290,6 +299,7 @@ contract DagoraMembershipsV1 is
         memberships[_tokenId] = Membership(0, msg.sender, _tokenId, experation[_tokenId]);
         claimed[msg.sender] = true;
         _mint(msg.sender, 1);
+        emit FreeMembershipClaimed(msg.sender, _tokenId, 0, experation[_tokenId]);
     }
 
 
@@ -362,7 +372,6 @@ contract DagoraMembershipsV1 is
         IERC20PermitUpgradeable(DAI).permit(msg.sender, _proxy, _price, deadline, v, r, s);
         bool success = IERC20Upgradeable(DAI).transferFrom(msg.sender, dagoraTreasury, _price);
         require(success, "dAgoraMemberships: Transfer failed");
-
         memberships[tokenId].tier = newTier;
     }
 
@@ -394,6 +403,7 @@ contract DagoraMembershipsV1 is
         require(_delegatee != address(this), "dAgoraMemberships: Cannot delegate to address(this)");
         require(tokenDelegates[_tokenId].length <= 10, "dAgoraMemberships: Too many delegates");
         tokenDelegates[_tokenId].push(_delegatee);
+        emit DelegateAdded(msg.sender, _tokenId, _delegatee);
     }
 
     /// @notice Function to remove a delegate from a membership.
@@ -416,6 +426,7 @@ contract DagoraMembershipsV1 is
         delete tokenDelegates[_tokenId][slot];
         tokenDelegates[_tokenId][slot] = tokenDelegates[_tokenId][tokenDelegates[_tokenId].length - 1];
         tokenDelegates[_tokenId].pop();
+        emit DelegateRemoved(msg.sender, _tokenId, _delegatee);
     }
 
     /// @notice Function to swap a delegate from a membership.
@@ -441,6 +452,7 @@ contract DagoraMembershipsV1 is
                 tokenDelegates[_tokenId][i] = newDelegate;
             }
         }
+        emit DelegateSwapped(msg.sender, _tokenId, oldDelegate, newDelegate);
     }
 
     /// @notice only owner function to gift membership to an address, that address must not already have a membership.
@@ -465,6 +477,7 @@ contract DagoraMembershipsV1 is
         memberships[_tokenId] = Membership(tier, to, _tokenId, _duration);
         claimed[to] = true;
         _mint(to, 1);
+        emit MembershipGifted(to, _tokenId, tier, experation[_tokenId]);
     }
 
     /// @notice only owner function to gift a upgrade to an existing membership.

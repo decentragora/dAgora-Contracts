@@ -167,6 +167,23 @@ The event emitted when a membership is purchased.
 | tier | uint8 | the tier of the membership |
 | expiration | uint256 | the expiration of the membership |
 
+### FreeMembershipClaimed
+
+```solidity
+event FreeMembershipClaimed(address member, uint256 tokenId, uint8 tier, uint256 expiration)
+```
+
+The event emitted when a free membership is claimed.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| member | address | the address of the member |
+| tokenId | uint256 | the tokenId of the membership |
+| tier | uint8 | the tier of the membership |
+| expiration | uint256 | the expiration of the membership |
+
 ### MembershipUpgraded
 
 ```solidity
@@ -200,10 +217,10 @@ The event emitted when a membership is renewed.
 | tokenId | uint256 | the tokenId of the membership |
 | expiration | uint256 | the expiration of the membership |
 
-### MembershipClaimed
+### MembershipGifted
 
 ```solidity
-event MembershipClaimed(address member, uint256 tokenId, uint8 tier, uint256 expiration)
+event MembershipGifted(address member, uint256 tokenId, uint8 tier, uint256 expiration)
 ```
 
 The event emitted when a membership is claimed.
