@@ -19,6 +19,11 @@
       "address": "0x2866eedf82B941CeE9a7a17eF14b28112272633d",
       "txHash": "0xdbf7f2c62a61ee5012bc40301422c84df52d4ccd671f065a8dd020b4f423e23e",
       "kind": "transparent"
+    },
+    {
+      "address": "0xb7009DF09936B7692B6d31aFcB34AF9Ce2ea1cd9",
+      "txHash": "0x10179b8e1ab526d0922cc1d48f6d863fbea3193ddb8fa78824fbb490180bac99",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -996,6 +1001,146 @@
               }
             ],
             "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "42e7b208d337e77a0d9eb74d1470c6ec7bf7bb6bf10af4b06e91a688f31c195b": {
+      "address": "0xb72C91AFDB40E5Da8642BB9Da5446210A4229eD9",
+      "txHash": "0xbfa7219d63b9c49a754b9627bdfe4b7b19100a7da359f7bc58673571f9a2180c",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "isPaused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "DagoraERC20Factory",
+            "src": "contracts/factory/DagoraERC20Factory.sol:20"
+          },
+          {
+            "label": "dAgoraMembershipsAddress",
+            "offset": 1,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "DagoraERC20Factory",
+            "src": "contracts/factory/DagoraERC20Factory.sol:23"
+          },
+          {
+            "label": "minERC20Tier",
+            "offset": 21,
+            "slot": "151",
+            "type": "t_uint8",
+            "contract": "DagoraERC20Factory",
+            "src": "contracts/factory/DagoraERC20Factory.sol:26"
+          },
+          {
+            "label": "contractsDeployed",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "DagoraERC20Factory",
+            "src": "contracts/factory/DagoraERC20Factory.sol:29"
+          },
+          {
+            "label": "userContracts",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "DagoraERC20Factory",
+            "src": "contracts/factory/DagoraERC20Factory.sol:34"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
           },
           "t_uint256": {
             "label": "uint256",

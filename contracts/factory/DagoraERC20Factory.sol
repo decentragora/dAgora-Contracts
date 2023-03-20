@@ -64,20 +64,20 @@ contract DagoraERC20Factory is Initializable, OwnableUpgradeable, ReentrancyGuar
     /// @param name_ The name of the new DagoraERC20 contract.
     /// @param symbol_ The symbol of the new DagoraERC20 contract.
     /// @param _newOwner The address of the new owner of the new DagoraERC20 contract.
-    /// @param initialSupply The initial supply of the new DagoraERC20 contract.
+    /// @param _initialSupply The initial supply of the new DagoraERC20 contract.
     /// @param _maxSupply The max supply of the new DagoraERC20 contract.
     /// @param _id The id of the users membership tokenId.
     function createDagoraERC20(
         string memory name_,
         string memory symbol_,
         address _newOwner,
-        uint256 initialSupply,
+        uint256 _initialSupply,
         uint256 _maxSupply,
         uint256 _id
     )   public isNotPaused canCreate(_id, minERC20Tier) nonReentrant {
         require(_newOwner != address(0), "dAgoraERC20Factory: New owner cannot be the zero address");
         require(_newOwner != address(this), "dAgoraERC20Factory: New owner cannot be the factory address");
-        require(initialSupply <= _maxSupply, "dAgoraERC20Factory: Initial supply cannot be higher than max supply");
+        require(_initialSupply <= _maxSupply, "dAgoraERC20Factory: Initial supply cannot be higher than max supply");
         require(_maxSupply > 0, "dAgoraERC20Factory: Max supply cannot be zero");
 
         bytes32 salt = keccak256(abi.encodePacked(name_, msg.sender, block.timestamp));
@@ -87,7 +87,7 @@ contract DagoraERC20Factory is Initializable, OwnableUpgradeable, ReentrancyGuar
                 name_,
                 symbol_,
                 _newOwner,
-                initialSupply,
+                _initialSupply,
                 _maxSupply
             )
         );

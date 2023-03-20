@@ -80,13 +80,13 @@ contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, Reentra
         require(params._newOwner != address(this), "New owner cannot be factory address");
         require(params._royaltyRecipient != address(0), "Royalty recipient cannot be 0 address");
         require(params._royaltyRecipient != address(this), "Royalty recipient cannot be factory address");        
-        require(params._maxTotalSupply > 0, "Max total supply cannot be 0");
+        require(params._maxSupply > 0, "Max total supply cannot be 0");
         require(params._bulkBuyLimit > 0 && params._maxAllowListAmount > 0, "Bulk buy limit and max allow list amount cannot be 0");
-        require(params._bulkBuyLimit < params._maxTotalSupply, "Bulk buy limit cannot be greater than max total supply");
-        require(params._maxAllowListAmount < params._maxTotalSupply, "Max allow list amount cannot be greater than max total supply");
+        require(params._bulkBuyLimit < params._maxSupply, "Bulk buy limit cannot be greater than max total supply");
+        require(params._maxAllowListAmount < params._maxSupply, "Max allow list amount cannot be greater than max total supply");
         require(params._merkleRoot != bytes32(0), "Merkle root cannot be 0");
 
-        bytes32 salt = keccak256(abi.encodePacked(params._name, msg.sender, block.timestamp));
+        bytes32 salt = keccak256(abi.encodePacked(params.name_, msg.sender, block.timestamp));
         bytes memory bytecode = abi.encodePacked(
             type(PowerPlusNFT).creationCode,
             abi.encode(

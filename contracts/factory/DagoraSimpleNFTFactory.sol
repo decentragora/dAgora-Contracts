@@ -64,18 +64,18 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
 
     /// @notice Function to create a SimpleNFTA contract.
     /// @dev Creates a SimpleNFTA contract, and adds the address to the users contracts array.
-    /// @param _name The name of the SimpleNFTA contract.
-    /// @param _symbol The symbol of the SimpleNFTA contract.
-    /// @param _baseURI The baseURI of the SimpleNFTA contract.
+    /// @param name_ The name of the SimpleNFTA contract.
+    /// @param symbol_ The symbol of the SimpleNFTA contract.
+    /// @param baseURI_ The baseURI of the SimpleNFTA contract.
     /// @param _bulkBuyLimit The bulk buy limit of the SimpleNFTA contract.
     /// @param _mintCost The mint cost of the SimpleNFTA contract.
     /// @param _maxSupply The max supply of the SimpleNFTA contract.
     /// @param _newOwner The address of the new owner of the SimpleNFTA contract.
     /// @param _id The id of the users membership tokenId.
     function createSimpleNFTA(
-        string memory _name,
-        string memory _symbol,
-        string memory _baseURI,
+        string memory name_,
+        string memory symbol_,
+        string memory baseURI_,
         uint16 _bulkBuyLimit,
         uint256 _mintCost,
         uint256 _maxSupply,
@@ -88,13 +88,13 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
         require(_bulkBuyLimit > 0, "Cannot create token with bulk buy limit of 0");
         require(_bulkBuyLimit < _maxSupply, "Cannot create token with bulk buy limit greater than max supply");
 
-        bytes32 salt = keccak256(abi.encodePacked(_name, msg.sender, block.timestamp));
+        bytes32 salt = keccak256(abi.encodePacked(name_, msg.sender, block.timestamp));
         bytes memory bytecode = abi.encodePacked(
             type(SimpleNFTA).creationCode,
             abi.encode(
-                _name,
-                _symbol,
-                _baseURI,
+                name_,
+                symbol_,
+                baseURI_,
                 _bulkBuyLimit,
                 _mintCost,
                 _maxSupply,
