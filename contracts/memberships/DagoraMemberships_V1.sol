@@ -629,9 +629,8 @@ contract DagoraMembershipsV1 is
         for (uint256 i = 1; i < totalMemberships; i++) {
             if (memberships[i].member == _owner) {
                 return i;
-            }
+            } 
         }
-        revert("dAgoraMemberships: No membership found");
     }
 
     /// @notice Function to get a tokenIds delegates.
