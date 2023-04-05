@@ -10,15 +10,15 @@ _This contract is used as a template for creating new NFT contracts._
 
 ```solidity
 struct Params {
-  string _name;
-  string _symbol;
-  string _baseURI;
+  string name_;
+  string symbol_;
+  string baseURI_;
   uint16 _bulkBuyLimit;
   uint16 _maxAllowListAmount;
   uint96 _royaltyBps;
   uint256 _mintPrice;
-  uint256 _presaleMintPrice;
-  uint256 _maxTotalSupply;
+  uint256 _presaleMintCost;
+  uint256 _maxSupply;
   address _royaltyRecipient;
   address _newOwner;
   bytes32 _merkleRoot;

@@ -96,3 +96,15 @@ _This function overrides the _beforeTokenTransfer function from the ERC20 contra
 | to | address | The address that will receive the tokens. |
 | amount | uint256 | The amount of tokens to be transferred. |
 
+### typeOf
+
+```solidity
+function typeOf() public pure returns (string)
+```
+
+### version
+
+```solidity
+function version() public pure returns (string)
+```
+
