@@ -61,10 +61,14 @@ contract DagoraERC20 is ERC20, Ownable {
         super._beforeTokenTransfer(from, to, amount);
     }
 
+    /// @notice Function to get the type of the contract.
+    /// @return string The type of the contract.
     function typeOf() public pure returns (string memory) {
         return "dAgora ERC20";
     }
 
+    /// @notice Function to get the version of the contract.
+    /// @return string The version of the contract.
     function version() public pure returns (string memory) {
         return "1.0.0";
     }

@@ -102,9 +102,25 @@ _This function overrides the _beforeTokenTransfer function from the ERC20 contra
 function typeOf() public pure returns (string)
 ```
 
+Function to get the type of the contract.
+
+#### Return Values
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| [0] | string | string The type of the contract. |
+
 ### version
 
 ```solidity
 function version() public pure returns (string)
 ```
+
+Function to get the version of the contract.
+
+#### Return Values
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| [0] | string | string The version of the contract. |
 
