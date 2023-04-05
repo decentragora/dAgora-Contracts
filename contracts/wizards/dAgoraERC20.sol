@@ -60,4 +60,12 @@ contract DagoraERC20 is ERC20, Ownable {
         require(!isPaused, "dAgoraERC20: token transfer paused");
         super._beforeTokenTransfer(from, to, amount);
     }
+
+    function typeOf() public pure returns (string memory) {
+        return "dAgora ERC20";
+    }
+
+    function version() public pure returns (string memory) {
+        return "1.0.0";
+    }
 }

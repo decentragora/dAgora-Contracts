@@ -1,0 +1,464 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x39572055a56A19FA8c68C2D3C8ff40429D8A8869",
+    "txHash": "0xa41fee9b1c062a289538d6f2bd48d417fd62279badd0c84a7b2b4d490fa05357"
+  },
+  "proxies": [
+    {
+      "address": "0xb6F93C1d129B74DA99a5CAD5532E01894C154a8c",
+      "txHash": "0xcccb4b1160a1fc7b57e4ed7e0ec1278d0277e3505422ffef06518a3ee06b43ac",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x10e07a73449E872398C13C5E18951DaAE31D8b9a",
+      "txHash": "0xf83c8535b6d6de9b71d3a3523c71b19ddaf653b4f4c89a21627bf243c198a8c7",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x660eAef439e36cb312EA5D119Db1903a20d2aCE2",
+      "txHash": "0x538065b87e9410a1febc7664fbc5cdc09b1d306f6a1f9e3ad407562056b4ef9e",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "996c6482f06c187478e664bc5410793256859999717071d4381b95d1e8533d1c": {
+      "address": "0x8B87f09f90551c82fC48A78c0b74D749Dc6399c1",
+      "txHash": "0xedd4c574eee5c2e30809d9014d861e4ab1715f17b3f8fadb50d22b8a04608d3e",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "baseURI",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_string_storage",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:45"
+          },
+          {
+            "label": "isPaused",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_bool",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:48"
+          },
+          {
+            "label": "_isInitialized",
+            "offset": 1,
+            "slot": "152",
+            "type": "t_bool",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:51"
+          },
+          {
+            "label": "dagoraTreasury",
+            "offset": 2,
+            "slot": "152",
+            "type": "t_address",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:54"
+          },
+          {
+            "label": "DAI",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_address",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:57"
+          },
+          {
+            "label": "proxyImplementation",
+            "offset": 0,
+            "slot": "154",
+            "type": "t_address",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:60"
+          },
+          {
+            "label": "ecclesiaPrice",
+            "offset": 0,
+            "slot": "155",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:63"
+          },
+          {
+            "label": "ecclesiaRenewPrice",
+            "offset": 0,
+            "slot": "156",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:66"
+          },
+          {
+            "label": "dagorianPrice",
+            "offset": 0,
+            "slot": "157",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:69"
+          },
+          {
+            "label": "dagoraRenewPrice",
+            "offset": 0,
+            "slot": "158",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:72"
+          },
+          {
+            "label": "hoplitePrice",
+            "offset": 0,
+            "slot": "159",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:75"
+          },
+          {
+            "label": "hopliteRenewPrice",
+            "offset": 0,
+            "slot": "160",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:78"
+          },
+          {
+            "label": "percelsiaPrice",
+            "offset": 0,
+            "slot": "161",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:81"
+          },
+          {
+            "label": "percelsiaRenewPrice",
+            "offset": 0,
+            "slot": "162",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:84"
+          },
+          {
+            "label": "discount",
+            "offset": 0,
+            "slot": "163",
+            "type": "t_uint256",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:90"
+          },
+          {
+            "label": "memberships",
+            "offset": 0,
+            "slot": "164",
+            "type": "t_mapping(t_uint256,t_struct(Membership)845_storage)",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:153"
+          },
+          {
+            "label": "experation",
+            "offset": 0,
+            "slot": "165",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:156"
+          },
+          {
+            "label": "claimed",
+            "offset": 0,
+            "slot": "166",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:159"
+          },
+          {
+            "label": "tokenDelegates",
+            "offset": 0,
+            "slot": "167",
+            "type": "t_mapping(t_uint256,t_array(t_address)dyn_storage)",
+            "contract": "DagoraMembershipsV1",
+            "src": "contracts/memberships/DagoraMemberships_V1.sol:162"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_array(t_address)dyn_storage)": {
+            "label": "mapping(uint256 => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(Membership)845_storage)": {
+            "label": "mapping(uint256 => struct DagoraMembershipsV1.Membership)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Membership)845_storage": {
+            "label": "struct DagoraMembershipsV1.Membership",
+            "members": [
+              {
+                "label": "tier",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "member",
+                "type": "t_address",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "expiration",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "a1db5dcaf30c68f735777f7281feba7bad817d7ca17d765f45d6deef1eba4a6d": {
+      "address": "0x2e43fc46F22A6810c5F542e4029AB6A9C7F54864",
+      "txHash": "0x70c7dfeb45f21dfb300ad6f9481d89763d281420186a2926e98fd0d1cf14ae0a",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "isPaused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "DagoraSimpleNFTFactory",
+            "src": "contracts/factory/DagoraSimpleNFTFactory.sol:22"
+          },
+          {
+            "label": "dAgoraMembershipsAddress",
+            "offset": 1,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "DagoraSimpleNFTFactory",
+            "src": "contracts/factory/DagoraSimpleNFTFactory.sol:25"
+          },
+          {
+            "label": "minSimpleNFTATier",
+            "offset": 21,
+            "slot": "151",
+            "type": "t_uint8",
+            "contract": "DagoraSimpleNFTFactory",
+            "src": "contracts/factory/DagoraSimpleNFTFactory.sol:28"
+          },
+          {
+            "label": "contractsDeployed",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "DagoraSimpleNFTFactory",
+            "src": "contracts/factory/DagoraSimpleNFTFactory.sol:31"
+          },
+          {
+            "label": "userContracts",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "DagoraSimpleNFTFactory",
+            "src": "contracts/factory/DagoraSimpleNFTFactory.sol:36"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

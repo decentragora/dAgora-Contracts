@@ -24,8 +24,6 @@ contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, Reentra
     /// @notice The address of the dAgoraMemberships contract.
     address public dAgoraMembershipsAddress;
 
-    address public powerNFtAddress;
-
     /// @notice The minimum tier required to create a Power NFT contract.
     uint8 public minPowerNFTATier;
 

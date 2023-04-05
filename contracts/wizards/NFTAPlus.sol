@@ -119,7 +119,7 @@ contract NFTAPlus is ERC721A, Ownable, ReentrancyGuard {
         require(amount <= bulkBuyLimit, "Exceeds bulk buy limit");
         require(totalSupply() + amount <= maxSupply, "Amount exceeds max supply");
         require(msg.value == mintPrice * amount, "Incorrect amount of ETH sent");
-        _safeMint(msg.sender, amount);
+        _mint(msg.sender, amount);
         emit Minted(msg.sender, amount);
     }
 
@@ -140,8 +140,8 @@ contract NFTAPlus is ERC721A, Ownable, ReentrancyGuard {
         require(amount + allowListMintCount[msg.sender] <= maxAllowListAmount, "Amount exceeds max allowList amount");
         require(totalSupply() + amount <= maxSupply, "Amount exceeds max supply");
         require(msg.value == presaleMintPrice * amount, "Incorrect amount of ETH sent");
-        _safeMint(msg.sender, amount);
         allowListMintCount[msg.sender] += amount;
+        _mint(msg.sender, amount);
         emit PresaleMinted(msg.sender, amount);
     }
 
