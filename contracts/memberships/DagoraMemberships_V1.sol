@@ -815,11 +815,10 @@ contract DagoraMembershipsV1 is
     /// @dev This function is used in the isOwnerOrDelegate function.
     /// @return True if the address is a delegate of the tokenId. False if not.
     function _contains(uint256 _tokenId, address user) internal view returns (bool) {
-        for (uint256 i = 0; i < tokenDelegates[_tokenId].length; i++) {
+        uint256 len = tokenDelegates[_tokenId].length;
+        for (uint256 i = 0; i < len; i++) {
             if (tokenDelegates[_tokenId][i] == user) {
                 return true;
-            } else {
-                return false;
             }
         }
         return false;

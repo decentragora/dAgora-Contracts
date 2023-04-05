@@ -3,7 +3,7 @@ require("@nomiclabs/hardhat-etherscan");
 const hre = require("hardhat");
 
 //npx hardhat run scripts/Upgrade_Membership..ts --network opGoerli
-//npx hardhat verify --network opGoerli 0xAcad08550039581513B6d21420A32782031A1fe3 
+//npx hardhat verify --network opGoerli 0x14E0FEBadCd3d41255671803cBF38B408dB3a46a 
 async function main() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);
@@ -11,7 +11,7 @@ async function main() {
 
     //deploy MembershipProxy contract
     const upgrade = await ethers.getContractFactory("DagoraMembershipsV1");
-    const membershipProxy = await upgrades.upgradeProxy('0xc552c5956C972d29fde1bACe3BB82591b62D36FD', upgrade);
+    const membershipProxy = await upgrades.upgradeProxy('0x2866eedf82b941cee9a7a17ef14b28112272633d', upgrade);
     await membershipProxy.deployed();
 
     console.log("The Tx receipt is:", membershipProxy.deployTransaction);
