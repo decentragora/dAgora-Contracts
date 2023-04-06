@@ -183,14 +183,25 @@ contract PowerNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
         IERC20 erc20 = IERC20(_tokenAddr);
         uint256 balance = erc20.balanceOf(address(this));
         require(balance > 0, "PowerNFT: no tokens to withdraw");
-        erc20.transfer(owner(), balance);    }
+        erc20.transfer(owner(), balance);    
+    }
 
+
+    /// @notice function that returns the dagora contract type
+    /// @return the dagora contract type
     function typeOf() public pure virtual returns (string memory) {
         return "dAgora PowerNFT";
     }
 
-    /// @notice Internal function to set the starting tokenId.
-    function _startTokenId() internal pure override returns (uint256) {
+    /// @notice function that returns the dagora contract version
+    /// @return the dagora contract version
+    function version() public pure returns (string memory) {
+        return "1.0.0";
+    }
+
+    /// @notice internal function that handles that starting tokenId of the collection
+    /// @return the starting tokenId of the collection eg 1
+    function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
     }
 }

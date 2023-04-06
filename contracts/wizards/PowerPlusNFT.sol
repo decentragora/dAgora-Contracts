@@ -18,6 +18,19 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /// @dev This contract is used as a template for creating new NFT contracts.
 contract PowerPlusNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
 
+    /// @notice The struct used to pass in the params for the constructor.
+    /// @param name_ The name of the token.
+    /// @param symbol_ The symbol of the token.
+    /// @param baseURI_ The base URI for all tokens.
+    /// @param _bulkBuyLimit The maximum number of tokens that can be minted in a single transaction.
+    /// @param _maxAllowListAmount The maximum number of tokens that can be minted for a allowlist address.
+    /// @param _royaltyBps The royalty amount in basis points.
+    /// @param _mintPrice The price of a single token.
+    /// @param _presaleMintCost The price of a single token during the presale.
+    /// @param _maxSupply The maximum number of tokens that can be minted.
+    /// @param _royaltyRecipient The address that will receive the royalties.
+    /// @param _newOwner The address that will receive the ownership of the contract.
+    /// @param _merkleRoot The merkle root for the allowList.
     struct Params {
         string name_;
         string symbol_;
@@ -282,11 +295,20 @@ contract PowerPlusNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
             || ERC2981.supportsInterface(interfaceId);
     }
 
+    /// @notice function that returns the dagora contract type
+    /// @return the dagora contract type
     function typeOf() public pure virtual returns (string memory) {
         return "dAgora PowerPlusNFT";
     }
 
-    /// @notice Internal Function to set the starting tokenId of the contract.
+    /// @notice function that returns the dagora contract version
+    /// @return the dagora contract version
+    function version() public pure returns (string memory) {
+        return "1.0.0";
+    }
+
+    /// @notice internal function that handles that starting tokenId of the collection
+    /// @return the starting tokenId of the collection eg 1
     function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
     }

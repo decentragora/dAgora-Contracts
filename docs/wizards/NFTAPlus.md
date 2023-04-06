@@ -415,11 +415,39 @@ _Only Contract Owner can use this function._
 function typeOf() public pure returns (string)
 ```
 
+function that returns the dagora contract type
+
+#### Return Values
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| [0] | string | the dagora contract type |
+
+### version
+
+```solidity
+function version() public pure returns (string)
+```
+
+function that returns the dagora contract version
+
+#### Return Values
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| [0] | string | the dagora contract version |
+
 ### _startTokenId
 
 ```solidity
 function _startTokenId() internal view virtual returns (uint256)
 ```
 
-Internal function to set the starting tokenId.
+internal function that handles that starting tokenId of the collection
+
+#### Return Values
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| [0] | uint256 | the starting tokenId of the collection eg 1 |
 
