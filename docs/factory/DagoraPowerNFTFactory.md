@@ -44,6 +44,12 @@ address dAgoraMembershipsAddress
 
 The address of the dAgoraMemberships contract.
 
+### powerNFtAddress
+
+```solidity
+address powerNFtAddress
+```
+
 ### minPowerNFTATier
 
 ```solidity

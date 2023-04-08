@@ -112,7 +112,7 @@ contract PowerPlusNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
         maxSupply = _params._maxSupply;
         royaltyRecipient = _params._royaltyRecipient;
         merkleRoot = _params._merkleRoot;
-        isPaused = true;
+        isPaused = false;
         preSaleActive = true;
         baseExtension = ".json";
         transferOwnership(_params._newOwner);
@@ -293,6 +293,24 @@ contract PowerPlusNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
     {
         return ERC721A.supportsInterface(interfaceId)
             || ERC2981.supportsInterface(interfaceId);
+    }
+    
+    /// @notice internal override function that is called before any token transfer.
+    /// @dev this function will revert if the contract is paused, pausing transfers of tokens.
+    /// @param from The address of the sender.
+    /// @param to The address of the receiver.
+    /// @param tokenId The token ID.
+    /// @param quantity The quantity of tokens to transfer.
+    function _beforeTokenTransfers(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 quantity
+    ) internal override(ERC721A) {
+        if (isPaused) {
+            revert("Contract is paused");
+        }
+        super._beforeTokenTransfers(from, to, tokenId, quantity);
     }
 
     /// @notice function that returns the dagora contract type

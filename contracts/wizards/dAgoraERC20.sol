@@ -27,7 +27,7 @@ contract DagoraERC20 is ERC20, Ownable {
         _transferOwnership(_newOwner);
         maxSupply = _maxSupply;
         _mint(_newOwner, initialSupply);
-        isPaused = true;
+        isPaused = false;
     }
 
     /// @notice OnlyOwner function to mint tokens.

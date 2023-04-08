@@ -79,7 +79,7 @@ contract SimpleNFTA is ERC721A, Ownable, ReentrancyGuard {
         mintPrice = _mintPrice;
         maxSupply = _maxSupply;
         bulkBuyLimit = _bulkBuyLimit;
-        isPaused = true;
+        isPaused = false;
         transferOwnership(_newOwner);
     }
 
@@ -177,6 +177,25 @@ contract SimpleNFTA is ERC721A, Ownable, ReentrancyGuard {
         uint256 balance = erc20.balanceOf(address(this));
         require(balance > 0, "No tokens to withdraw");
         erc20.transfer(owner(), balance);
+    }
+
+
+    /// @notice internal override function that is called before any token transfer.
+    /// @dev this function will revert if the contract is paused, pausing transfers of tokens.
+    /// @param from The address of the sender.
+    /// @param to The address of the receiver.
+    /// @param tokenId The token ID.
+    /// @param quantity The quantity of tokens to transfer.
+    function _beforeTokenTransfers(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 quantity
+    ) internal override(ERC721A) {
+        if (isPaused) {
+            revert("Contract is paused");
+        }
+        super._beforeTokenTransfers(from, to, tokenId, quantity);
     }
 
     /// @notice function that returns the dagora contract type

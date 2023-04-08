@@ -471,6 +471,25 @@ OnlyOwner function to withdraw ERC20 tokens from the contract.
 function supportsInterface(bytes4 interfaceId) public view virtual returns (bool)
 ```
 
+### _beforeTokenTransfers
+
+```solidity
+function _beforeTokenTransfers(address from, address to, uint256 tokenId, uint256 quantity) internal
+```
+
+internal override function that is called before any token transfer.
+
+_this function will revert if the contract is paused, pausing transfers of tokens._
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| from | address | The address of the sender. |
+| to | address | The address of the receiver. |
+| tokenId | uint256 | The token ID. |
+| quantity | uint256 | The quantity of tokens to transfer. |
+
 ### typeOf
 
 ```solidity
