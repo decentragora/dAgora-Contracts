@@ -201,16 +201,6 @@ contract DagoraMembershipsV1 is
         _;
     }
 
-    /// @notice Modifier to check if the membership is renewable.
-    /// @dev the membership must be within 30 days of expiration to be renewable.
-    /// @param tokenId the tokenId of the membership.
-    modifier isRenewable(uint256 tokenId) {
-        require(
-            block.timestamp + 30 days + GRACE_PERIOD >= experation[tokenId],
-            "DagoraMemberships: Membership is not renewable"
-        );
-        _;
-    }
 
     /// @notice Modifier to check if the tokenId tier is Perclesian.
     modifier isPerclesian(uint256 tokenId) {
@@ -322,7 +312,6 @@ contract DagoraMembershipsV1 is
         bytes32 _s
     )   external
         isNotPaused
-        isRenewable(_tokenId)
         durationCheck(_durationInMonths)
         onlyDelegateeAndOwner(_tokenId)
         nonReentrant
