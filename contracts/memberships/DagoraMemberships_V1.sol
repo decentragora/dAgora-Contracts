@@ -626,10 +626,10 @@ contract DagoraMembershipsV1 is
     function addressTokenIds(address _owner) external view returns (uint256 _tokenId) {
         //// Check all memberships.member to see if they match the owner
         uint256 totalMemberships = totalSupply();
-        for (uint256 i = 1; i < totalMemberships; i++) {
+        for (uint256 i = 1; i <= totalMemberships; i++) {
             if (memberships[i].member == _owner) {
                 return i;
-            } 
+            }
         }
     }
 

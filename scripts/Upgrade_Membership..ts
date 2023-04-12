@@ -3,7 +3,7 @@ require("@nomiclabs/hardhat-etherscan");
 const hre = require("hardhat");
 
 //npx hardhat run scripts/Upgrade_Membership..ts --network opGoerli
-//npx hardhat verify --network opGoerli 0x14E0FEBadCd3d41255671803cBF38B408dB3a46a 
+//npx hardhat verify --network opGoerli 0xaE0c60865C825CEb8c8eCaB544A44169F58F5Ffb 
 async function main() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);
