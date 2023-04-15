@@ -1,12 +1,19 @@
 const hre = require("hardhat");
 
 async function main() {
-  const constructorArgs = require("../powerPlusArgs");
-  const contractAddress = "0x715e0552B9517C85fc1C230195239bCc90139002";
+  // const constructorArgs = require("../powerPlusArgs");
+  // const contractAddress = "0x438372329620E99Db1A978C659C3230359D7fe01";
+  // await hre.run("verify:verify", {
+  //   network: "opGoerli",
+  //   address: contractAddress,
+  //   constructorArguments: constructorArgs,
+  // });
+  const constructorArgsPaymentSplitter = require("../paymentSplitterArgs");
+  const contractAddressPaymentSplitter = "0x266480D544BcCC1BAf33369DA9bbf539fF9999F6";
   await hre.run("verify:verify", {
     network: "opGoerli",
-    address: contractAddress,
-    constructorArguments: constructorArgs,
+    address: contractAddressPaymentSplitter,
+    constructorArguments: constructorArgsPaymentSplitter,
   });
 }
 

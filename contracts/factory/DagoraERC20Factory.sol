@@ -13,6 +13,8 @@ error DagoraFactory__InvalidTier(uint8 tier, uint8 neededTier);
 error DagoraFactory__NotDAgoraMembershipsOwnerOrDelegate();
 error DagoraFactory__ExpiredMembership();
 
+error DagoraFactory__FailedToCreateContract();
+
 contract DagoraERC20Factory is Initializable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
     
     /// @notice Boolean to determine if the contract is paused.
@@ -92,6 +94,9 @@ contract DagoraERC20Factory is Initializable, OwnableUpgradeable, ReentrancyGuar
             )
         );
         address newImplementation = Create2Upgradeable.deploy(0, salt, bytecode);
+        if (newImplementation == address(0)) {
+            revert DagoraFactory__FailedToCreateContract();
+        }
         userContracts[msg.sender].push(newImplementation);
         contractsDeployed++;
         emit DagoraERC20Created(newImplementation, _newOwner);

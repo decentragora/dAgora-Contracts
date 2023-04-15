@@ -6,7 +6,8 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {OwnableUpgradeable} from '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {Create2Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/Create2Upgradeable.sol";
-import {PowerPlusNFT} from "../../contracts/wizards/PowerPlusNFT.sol";
+import {DagoraPaymentSplitterNFT} from "../wizards/dAgoraPaymentSplitterNFT.sol";
+
 
 error DagoraFactory__TokenCreationPaused();
 error DagoraFactory__InvalidTier(uint8 tier, uint8 neededTier);
@@ -15,10 +16,21 @@ error DagoraFactory__ExpiredMembership();
 
 error DagoraFactory__FailedToCreateContract();
 
-contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, ReentrancyGuardUpgradeable{
-
-
+contract DagoraPaymentSplitterFactory is Initializable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
     
+    struct NFTParams {
+            string name;
+            string symbol;
+            address[] payees;
+            uint256[] shares;
+            uint256 mintPrice;
+            uint256 maxSupply;
+            uint16 bulkBuyLimit;
+            string baseURI;
+            string baseExtension;
+            address newOwner;
+    }
+
     /// @notice Boolean to determine if the contract is paused.
     /// @dev default value is false, contract is not paused on deployment.
     bool public isPaused;
@@ -26,25 +38,23 @@ contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, Reentra
     /// @notice The address of the dAgoraMemberships contract.
     address public dAgoraMembershipsAddress;
 
-    /// @notice The minimum tier required to create a Power NFT contract.
-    uint8 public minPowerNFTATier;
+    /// @notice The minimum tier required to create a NFTAPlus contract.
+    uint8 public minTier;
 
     /// @notice the count of all the contracts deployed by the factory
     uint256 public contractsDeployed;
 
-
-    /// @notice The event emitted when a PowerNFTA contract is created.
-    event PowerPlusNFTACreated(address newContractAddress, address ownerOF);
+    event PaymentSplitterCreated(address newContractAddress, address ownerOf);
 
     mapping(address => address[]) public userContracts;
-    
 
     function initialize(address _dAgoraMembershipsAddress) public initializer {
         __Ownable_init();
         dAgoraMembershipsAddress = _dAgoraMembershipsAddress;
-        minPowerNFTATier = 2;
+        minTier = 1;
         isPaused = true;
     }
+
 
     /// @notice Modifier to check if the contract is paused.
     /// @dev Reverts if the contract is paused.
@@ -64,55 +74,74 @@ contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, Reentra
         _;
     }
 
-    /// @notice Function to create a PowerNFTA contract.
-    /// @dev Reverts if the new owner is 0 address, if the royalty recipient is 0 address, if the max total supply is 0, if the bulk buy limit is 0, if the max allow list amount is 0, if the bulk buy limit is greater than the max total supply, if the max allow list amount is greater than the max total supply, and if the merkle root is 0.
-    /// @param params The struct containing the parameters for the PowerNFTA contract.
-    /// @param _id The id of the users membership tokenId.
-    function createPowerPlusNFT(
-        PowerPlusNFT.Params memory params,
-        uint256 _id
-    )   public
-        isNotPaused
-        canCreate(_id, minPowerNFTATier)
-        nonReentrant
-    {
-        require(params._newOwner != address(0), "New owner cannot be 0 address");
-        require(params._newOwner != address(this), "New owner cannot be factory address");
-        require(params._royaltyRecipient != address(0), "Royalty recipient cannot be 0 address");
-        require(params._royaltyRecipient != address(this), "Royalty recipient cannot be factory address");        
-        require(params._maxSupply > 0, "Max total supply cannot be 0");
-        require(params._bulkBuyLimit > 0 && params._maxAllowListAmount > 0, "Bulk buy limit and max allow list amount cannot be 0");
-        require(params._bulkBuyLimit < params._maxSupply, "Bulk buy limit cannot be greater than max total supply");
-        require(params._maxAllowListAmount < params._maxSupply, "Max allow list amount cannot be greater than max total supply");
-        require(params._merkleRoot != bytes32(0), "Merkle root cannot be 0");
 
-        bytes32 salt = keccak256(abi.encodePacked(params.name_, msg.sender, block.timestamp));
-        bytes memory bytecode = abi.encodePacked(
-            type(PowerPlusNFT).creationCode,
-            abi.encode(
-                params
-            )
-        );
-        address newImplementation = Create2Upgradeable.deploy(0, salt, bytecode);
+    function createNFT(
+        NFTParams memory params,
+        uint256 id
+    ) public isNotPaused canCreate(id, minTier) nonReentrant returns (address) {
+        require(params.newOwner != address(0), "New owner cannot be 0 address");
+        require(params.newOwner != address(this), "New owner cannot be factory address");
+        require(params.maxSupply > 0, "Max total supply cannot be 0");
+        require(params.bulkBuyLimit > 0,  "Bulk buy limit amount cannot be 0");
+        require(params.bulkBuyLimit < params.maxSupply, "Bulk buy limit cannot be greater than max total supply");
+        require(params.payees.length == params.shares.length, "Payees and shares arrays must be the same length");
+        require(paymentSharesTotal(params.shares) == 100, "Shares must add up to 100");
+        require(params.payees.length > 0, "Payees array must be greater than 0");
+        require(params.shares.length > 0, "Shares array must be greater than 0");
+
+        bytes32 salt = keccak256(abi.encodePacked(params.name, msg.sender, block.timestamp));
+
+        address newImplementation = createNFTImpl(params, salt);
         if (newImplementation == address(0)) {
-            revert DagoraFactory__FailedToCreateContract();
+            revert DagoraFactory__FailedToCreateContract(); 
         }
+
         userContracts[msg.sender].push(newImplementation);
         contractsDeployed++;
-        emit PowerPlusNFTACreated(newImplementation, params._newOwner);
+        emit PaymentSplitterCreated(newImplementation, msg.sender);
     }
-        
 
+    /// @notice Function that returns the deployed contracts by a user.
     function getUserContracts(address _user) external view returns(address[] memory) {
         return userContracts[_user];
     }
 
+    /// @notice onlyOwner function to set the paused state of the contract.
     function togglePaused() external onlyOwner {
         isPaused = !isPaused;
     }
+        
+    /// @notice onlyOwner function to set the minimum tier required to create a contract.
+    function setMinTier(uint8 _minTier) external onlyOwner {
+        minTier = _minTier;
+    }
 
-    function setMinPowerNFTATier(uint8 _minPowerNFTATier) external onlyOwner {
-        minPowerNFTATier = _minPowerNFTATier;
+    function paymentSharesTotal(uint256[] memory shares_) internal pure returns (uint256) {
+        uint256 totalShares;
+        for (uint256 i = 0; i < shares_.length; i++) {
+            totalShares += shares_[i];
+        }
+        return totalShares;
+    }
+
+    function createNFTImpl(NFTParams memory params, bytes32 salt) internal returns (address) {
+        bytes memory bytecode = abi.encodePacked(
+            type(DagoraPaymentSplitterNFT).creationCode,
+            abi.encode(
+                params.name,
+                params.symbol,
+                params.payees,
+                params.shares,
+                params.mintPrice,
+                params.maxSupply,
+                params.bulkBuyLimit,
+                params.baseURI,
+                params.baseExtension,
+                params.newOwner
+            )
+        );
+        address newImplementation = Create2Upgradeable.deploy(0, salt, bytecode);
+        return newImplementation;
     }
 
     /// @notice Internal function that checks if a address owns or is a delegate of a membership, and if the membership is valid, and if the membership tier is high enough.
@@ -135,4 +164,5 @@ contract DagoraPowerPlusNFTFactory is Initializable, OwnableUpgradeable, Reentra
             return true;
         }
     }    
+
 }

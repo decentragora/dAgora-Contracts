@@ -11,12 +11,14 @@ async function main() {
     //Get all factory contract to upgrade
     // const ERC20Factory = await ethers.getContractFactory("DagoraERC20Factory");
     // const SimpleNFTAFactory = await ethers.getContractFactory("DagoraSimpleNFTFactory");
+    const DagoraPaymentSplitterFactory = await ethers.getContractFactory("DagoraPaymentSplitterFactory");
     // const DagoraNFTAPlusFactory = await ethers.getContractFactory("DagoraNFTAPlusFactory");
-    const PowerNFTAFactory = await ethers.getContractFactory("DagoraPowerNFTFactory");
-    const PowerPlusFactory = await ethers.getContractFactory("DagoraPowerPlusNFTFactory");
+    // const PowerNFTAFactory = await ethers.getContractFactory("DagoraPowerNFTFactory");
+    // const PowerPlusFactory = await ethers.getContractFactory("DagoraPowerPlusNFTFactory");
 
     // DagoraERC20FactoryAddress:   0x7c886aB95E32D2109866707Bd55E9BF5044A7f5E
     // SimpleNFTFactoryAddress:     0x5D0f338E2713EbCB1fd93cDE66Ac939778B56F3f
+    //DagoraPaymentSplitterFactoryAddress: 0xbd2978F5f7661Ac6300Da67fB84E5a30fc781cd3
     // NFTAPlusFactoryAddress:      0xcae225EdD51997ad88c77277286B79bc5a0Dad89
     // PowerNFTFactoryAddress:      0x63Ae7A699589705628dE8f595f2dc9fF84286DFC
     // PowerPlusNFTFactoryAddress:  0x3741e8511b9db045c4751d070a0373BF0940242f
@@ -24,15 +26,17 @@ async function main() {
     //Upgrade all factory contract
     // const ERC20FactoryProxy = await upgrades.upgradeProxy("0x7c886aB95E32D2109866707Bd55E9BF5044A7f5E", ERC20Factory);
     // const SimpleNFTAFactoryProxy = await upgrades.upgradeProxy("0x5D0f338E2713EbCB1fd93cDE66Ac939778B56F3f", SimpleNFTAFactory);
+    const DagoraPaymentSplitterFactoryProxy = await upgrades.upgradeProxy("0xbd2978F5f7661Ac6300Da67fB84E5a30fc781cd3", DagoraPaymentSplitterFactory);
     // const DagoraNFTAPlusFactoryProxy = await upgrades.upgradeProxy("0xcae225EdD51997ad88c77277286B79bc5a0Dad89", DagoraNFTAPlusFactory);
-    const PowerNFTAFactoryProxy = await upgrades.upgradeProxy("0x63Ae7A699589705628dE8f595f2dc9fF84286DFC", PowerNFTAFactory);
-    const PowerPlusFactoryProxy = await upgrades.upgradeProxy("0x3741e8511b9db045c4751d070a0373BF0940242f", PowerPlusFactory);
+    // const PowerNFTAFactoryProxy = await upgrades.upgradeProxy("0x63Ae7A699589705628dE8f595f2dc9fF84286DFC", PowerNFTAFactory);
+    // const PowerPlusFactoryProxy = await upgrades.upgradeProxy("0x3741e8511b9db045c4751d070a0373BF0940242f", PowerPlusFactory);
 
     // console.log("DagoraERC20FactoryProxy has been upgraded to:", ERC20FactoryProxy.address);
     // console.log("SimpleNFTFactoryProxy has been upgraded to:", SimpleNFTAFactoryProxy.address);
+    console.log("DagoraPaymentSplitterFactoryProxy has been upgraded to:", DagoraPaymentSplitterFactoryProxy.address);
     // console.log("DagoraNFTAPlusFactoryProxy has been upgraded to:", DagoraNFTAPlusFactoryProxy.address);
-    console.log("PowerNFTFactoryProxy has been upgraded to:", PowerNFTAFactoryProxy.address);
-    console.log("PowerPlusFactoryProxy has been upgraded to:", PowerPlusFactoryProxy.address);
+    // console.log("PowerNFTFactoryProxy has been upgraded to:", PowerNFTAFactoryProxy.address);
+    // console.log("PowerPlusFactoryProxy has been upgraded to:", PowerPlusFactoryProxy.address);
 
 }
 // We recommend this pattern to be able to use async/await everywhere

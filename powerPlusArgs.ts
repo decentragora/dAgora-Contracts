@@ -17,18 +17,18 @@ require("@nomiclabs/hardhat-etherscan");
 // (string,string,string,uint16,uint16,uint96,uint256,uint256,uint256,address,address,bytes32)
 module.exports = [
     [
-      "Power Plus T", //name
-      "PWR+",   //symbol
-      "Test",   //baseuri
+      "Test PWR+", //name
+      "Test",   //symbol
+      "fds",   //baseuri
         10,   //bulkBuyLimit
-        10,     //maxAllowListAmount
+        5,     //maxAllowListAmount
         500,  //royaltyBps
       0,    //uint16
       0,    //uint96
       100,  //uint256
-      "0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b",
-      "0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b",
-      "0xfa4c32f3ac23c082a110221d13c7db673357a5d4431918b8bdabc3ee4f676093",
+      "0x5C05cDa796B474eEfc258C172F06d3f9A016bca3",
+      "0x5C05cDa796B474eEfc258C172F06d3f9A016bca3",
+      "0x517e19cd9adf1950ff1f51eb47223c1deb2c775e20569bbde7259ce47ce1da81",
     ],
   ];
   

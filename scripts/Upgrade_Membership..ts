@@ -2,8 +2,12 @@ import { ethers, upgrades } from "hardhat";
 require("@nomiclabs/hardhat-etherscan");
 const hre = require("hardhat");
 
-//npx hardhat run scripts/Upgrade_Membership..ts --network opGoerli
-//npx hardhat verify --network opGoerli 0xaE0c60865C825CEb8c8eCaB544A44169F58F5Ffb 
+{/*
+npx hardhat run scripts/Upgrade_Membership..ts --network opGoerli
+*/}
+{/*
+npx hardhat verify --network opGoerli 0x84a48128c409cE9EBD10c0eD3c0f92b1a901f1E1 
+*/}
 async function main() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);

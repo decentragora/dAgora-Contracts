@@ -13,7 +13,7 @@ error DagoraFactory__TokenCreationPaused();
 error DagoraFactory__InvalidTier(uint8 tier, uint8 neededTier);
 error DagoraFactory__NotDAgoraMembershipsOwnerOrDelegate();
 error DagoraFactory__ExpiredMembership();
-
+error DagoraFactory__FailedToCreateContract();
 
 contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
 
@@ -102,6 +102,9 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
             )
         );
         address newImplementation = Create2Upgradeable.deploy(0, salt, bytecode);
+        if (newImplementation == address(0)) {
+            revert DagoraFactory__FailedToCreateContract();
+        }
         userContracts[msg.sender].push(newImplementation);
         contractsDeployed++;
         emit SimpleNFTACreated(newImplementation, _newOwner);
