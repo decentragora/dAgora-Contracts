@@ -353,22 +353,6 @@ modifier isNotMember()
 
 Modifier to check if the msg.sender has already claimed their membership.
 
-### isRenewable
-
-```solidity
-modifier isRenewable(uint256 tokenId)
-```
-
-Modifier to check if the membership is renewable.
-
-_the membership must be within 30 days of expiration to be renewable._
-
-#### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| tokenId | uint256 | the tokenId of the membership. |
-
 ### isPerclesian
 
 ```solidity

@@ -30,8 +30,24 @@ error DagoraFactory__ExpiredMembership()
 error DagoraFactory__FailedToCreateContract()
 ```
 
-## DagoraERC20Factory
+## DagoraPaymentSplitterFactory
 
+### NFTParams
+
+```solidity
+struct NFTParams {
+  string name;
+  string symbol;
+  address[] payees;
+  uint256[] shares;
+  uint256 mintPrice;
+  uint256 maxSupply;
+  uint16 bulkBuyLimit;
+  string baseURI;
+  string baseExtension;
+  address newOwner;
+}
+```
 ### isPaused
 
 ```solidity
@@ -50,10 +66,10 @@ address dAgoraMembershipsAddress
 
 The address of the dAgoraMemberships contract.
 
-### minERC20Tier
+### minTier
 
 ```solidity
-uint8 minERC20Tier
+uint8 minTier
 ```
 
 The minimum tier required to create a NFTAPlus contract.
@@ -66,13 +82,11 @@ uint256 contractsDeployed
 
 the count of all the contracts deployed by the factory
 
-### DagoraERC20Created
+### PaymentSplitterCreated
 
 ```solidity
-event DagoraERC20Created(address newContractAddress, address ownerOF)
+event PaymentSplitterCreated(address newContractAddress, address ownerOf)
 ```
-
-The event emitted when a NFTAPlus contract is created.
 
 ### userContracts
 
@@ -113,26 +127,11 @@ _Reverts if the user membership tier is not high enough, if the membership is ex
 | tokenId | uint256 | The id of the users membership tokenId. |
 | neededTier | uint8 | The tier required to create the Contract. |
 
-### createDagoraERC20
+### createNFT
 
 ```solidity
-function createDagoraERC20(string name_, string symbol_, address _newOwner, uint256 _initialSupply, uint256 _maxSupply, uint256 _id) public
+function createNFT(struct DagoraPaymentSplitterFactory.NFTParams params, uint256 id) public returns (address)
 ```
-
-Function to create a new DagoraERC20 contract.
-
-_Creates a new DagoraERC20 contract, and emits a DagoraERC20Created event._
-
-#### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| name_ | string | The name of the new DagoraERC20 contract. |
-| symbol_ | string | The symbol of the new DagoraERC20 contract. |
-| _newOwner | address | The address of the new owner of the new DagoraERC20 contract. |
-| _initialSupply | uint256 | The initial supply of the new DagoraERC20 contract. |
-| _maxSupply | uint256 | The max supply of the new DagoraERC20 contract. |
-| _id | uint256 | The id of the users membership tokenId. |
 
 ### getUserContracts
 
@@ -140,16 +139,34 @@ _Creates a new DagoraERC20 contract, and emits a DagoraERC20Created event._
 function getUserContracts(address _user) external view returns (address[])
 ```
 
+Function that returns the deployed contracts by a user.
+
 ### togglePaused
 
 ```solidity
 function togglePaused() external
 ```
 
-### setMinERC20Tier
+onlyOwner function to set the paused state of the contract.
+
+### setMinTier
 
 ```solidity
-function setMinERC20Tier(uint8 _minTier) external
+function setMinTier(uint8 _minTier) external
+```
+
+onlyOwner function to set the minimum tier required to create a contract.
+
+### paymentSharesTotal
+
+```solidity
+function paymentSharesTotal(uint256[] shares_) internal pure returns (uint256)
+```
+
+### createNFTImpl
+
+```solidity
+function createNFTImpl(struct DagoraPaymentSplitterFactory.NFTParams params, bytes32 salt) internal returns (address)
 ```
 
 ### _canCreate

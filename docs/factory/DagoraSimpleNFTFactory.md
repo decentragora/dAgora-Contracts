@@ -24,6 +24,12 @@ error DagoraFactory__NotDAgoraMembershipsOwnerOrDelegate()
 error DagoraFactory__ExpiredMembership()
 ```
 
+## DagoraFactory__FailedToCreateContract
+
+```solidity
+error DagoraFactory__FailedToCreateContract()
+```
+
 ## DagoraSimpleNFTFactory
 
 ### isPaused
