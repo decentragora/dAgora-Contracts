@@ -36,7 +36,8 @@ import { ethers, upgrades } from "hardhat";
 // npx hardhat verify --network opGoerli 0x715e0552B9517C85fc1C230195239bCc90139002 ('Power Plus T' 'PWR+' 'test' 500 0 0 100 0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b 0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b 0xfa4c32f3ac23c082a110221d13c7db673357a5d4431918b8bdabc3ee4f676093)
 
 // Verify PaymentSplitter wizard implementation
-// npx hardhat verify --network opGoerli 0xE4Fbfb3E0893A13c6e0ca141c2527f22Ad1709B0 'Test' 'Test' ["0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b"] [100] 0 1000 10 'Test' '.json' "0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b"
+// npx hardhat verify --network opGoerli 0x86FE2a328C106aC6a713e31D28a36B47c27a8b75 'AG test' 'AGTST' ["0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b", "0x59992E3626D6d5471D676f2de5A6e6dcF0e06De7"] [50, 50] 5000000000000000 1000 10 'Test' '.json' "0x7c3bA47e39741B37F6093b1c2E534f1E84C0B36b"
+
 async function main() {
 
     const [deployer] = await ethers.getSigners();

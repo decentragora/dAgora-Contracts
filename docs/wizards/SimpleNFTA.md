@@ -178,7 +178,7 @@ _Throws if the contract is paused_
 ### mintNFT
 
 ```solidity
-function mintNFT(uint256 amount) public payable
+function mintNFT(address to, uint256 amount) public payable
 ```
 
 the function to mint nft tokens can be one or up to bulkBuyLimit
@@ -189,6 +189,7 @@ _the function can only be called if the contract is not paused_
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| to | address |  |
 | amount | uint256 | The number of tokens to mint can be one or up to bulkBuyLimit |
 
 ### reserveTokens

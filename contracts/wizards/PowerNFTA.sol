@@ -84,13 +84,15 @@ contract PowerNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
     /// @notice Function to Mint nfts.
     /// @param amount The number of tokens to mint.
     /// @dev The amount of tokens to mint must be less than or equal to the bulk buy limit, and contract must not be isPaused.
-    function mintNFT(uint256 amount) public payable isNotPaused nonReentrant {
+    function mintNFT(address to, uint256 amount) public payable isNotPaused nonReentrant {
+        require(amount > 0, "PowerNFT: amount must be greater than 0");
+        require(to != address(0), "PowerNFT: cannot mint to the zero address");
         require(amount <= bulkBuyLimit, "PowerNFT: exceeds bulk buy limit");
         require(totalSupply() + amount <= maxSupply, "PowerNFT: exceeds max supply");
         require(msg.value >= mintPrice * amount, "PowerNFT: insufficient funds");
 
-        _safeMint(msg.sender, amount);
-        emit Minted(msg.sender, amount);
+        _safeMint(to, amount);
+        emit Minted(to, amount);
     }
 
     /// @notice Function to reserve nfts.

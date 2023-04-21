@@ -114,13 +114,16 @@ contract NFTAPlus is ERC721A, Ownable, ReentrancyGuard {
 
     /// @notice This function is used to mint a token.
     /// @dev this function is only callable when the contract is not paused, and the sale is public.
+    /// @param to the address to mint the token to.
     /// @param amount the amount of tokens to mint.
-    function mintNFT(uint256 amount) public payable isNotPaused isPublicSale nonReentrant {
+    function mintNFT(address to, uint256 amount) public payable isNotPaused isPublicSale nonReentrant {
+        require(amount > 0, "Amount must be greater than 0");
+        require(to != address(0), "Cannot mint to address 0");
         require(amount <= bulkBuyLimit, "Exceeds bulk buy limit");
         require(totalSupply() + amount <= maxSupply, "Amount exceeds max supply");
         require(msg.value == mintPrice * amount, "Incorrect amount of ETH sent");
-        _mint(msg.sender, amount);
-        emit Minted(msg.sender, amount);
+        _mint(to, amount);
+        emit Minted(to, amount);
     }
 
     /// @notice This function is used to mint a token during the presale period.

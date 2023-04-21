@@ -205,7 +205,7 @@ _Throws if the proof is invalid._
 ### mintNFT
 
 ```solidity
-function mintNFT(uint256 amount) public payable
+function mintNFT(address to, uint256 amount) public payable
 ```
 
 This function is used to mint a token.
@@ -216,6 +216,7 @@ _this function is only callable when the contract is not paused, and the sale is
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| to | address | the address to mint the token to. |
 | amount | uint256 | the amount of tokens to mint. |
 
 ### presaleMintNFT

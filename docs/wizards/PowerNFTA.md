@@ -141,7 +141,7 @@ Modifer to check if the contract is isPaused.
 ### mintNFT
 
 ```solidity
-function mintNFT(uint256 amount) public payable
+function mintNFT(address to, uint256 amount) public payable
 ```
 
 Function to Mint nfts.
@@ -152,6 +152,7 @@ _The amount of tokens to mint must be less than or equal to the bulk buy limit, 
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| to | address |  |
 | amount | uint256 | The number of tokens to mint. |
 
 ### reserveTokens

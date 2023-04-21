@@ -119,17 +119,20 @@ contract DagoraPaymentSplitterNFT is ERC721A, Ownable, ReentrancyGuard {
     }
 
     /// @notice Funtion to mint one or more tokens.
-    /// @param amonut the number of tokens to mint
+    /// @param to the address to mint the tokens to
+    /// @param amount the number of tokens to mint
     /// @dev Throws if the number of tokens to mint exceeds the bulk buy limit.
     /// @dev Throws if the number of tokens to mint exceeds the max supply.
     /// @dev Throws if the amount of ETH sent is less than the cost to mint a token.
-    function mintNFT(uint256 amonut) public payable isNotPaused nonReentrant {
-        require(amonut <= bulkBuyLimit, "Exceeds bulk buy limit");
-        require(totalSupply() + amonut <= maxSupply, "Exceeds max supply");
-        require(msg.value >= mintPrice * amonut, "Incorrect amount of ETH sent");
+    function mintNFT(address to, uint256 amount) public payable isNotPaused nonReentrant {
+        require(amount > 0, "Amount must be greater than 0");
+        require(to != address(0), "Cannot mint to the zero address");
+        require(amount <= bulkBuyLimit, "Exceeds bulk buy limit");
+        require(totalSupply() + amount <= maxSupply, "Exceeds max supply");
+        require(msg.value >= mintPrice * amount, "Incorrect amount of ETH sent");
 
-        _mint(msg.sender, amonut);
-        emit Minted(msg.sender, totalSupply());
+        _mint(to, amount);
+        emit Minted(to, totalSupply());
     }
 
     /// @notice onlyOwner function to mint one or more tokens.

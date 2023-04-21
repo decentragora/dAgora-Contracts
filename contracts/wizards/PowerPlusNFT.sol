@@ -153,7 +153,9 @@ contract PowerPlusNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
     /// @notice Fcuntion to mint nfts.
     /// @param amount The number of tokens to mint.
     /// @dev this function is used during the public sale period.
-    function mintNFT(uint256 amount) public payable isNotPaused isPublicSale nonReentrant {
+    function mintNFT(address to, uint256 amount) public payable isNotPaused isPublicSale nonReentrant {
+        require(amount > 0, "Amount must be greater than 0");
+        require(to != address(0), "Cannot mint to address 0");
         require(amount <= bulkBuyLimit, "Exceeds bulk buy limit");
         require(totalSupply() + amount <= maxSupply, "Amount exceeds max supply");
         require(msg.value == mintPrice * amount, "Incorrect amount of ETH sent");

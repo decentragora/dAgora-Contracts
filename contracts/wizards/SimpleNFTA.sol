@@ -93,15 +93,16 @@ contract SimpleNFTA is ERC721A, Ownable, ReentrancyGuard {
     /// @notice the function to mint nft tokens can be one or up to bulkBuyLimit
     /// @dev the function can only be called if the contract is not paused
     /// @param amount The number of tokens to mint can be one or up to bulkBuyLimit
-    function mintNFT(uint256 amount) public payable isNotPaused nonReentrant {
-        uint256 currentSupply = totalSupply();
-        uint256 cost = mintPrice * amount;
-        require(cost <= msg.value, "Insufficient funds");
-        require(currentSupply + totalSupply() <= maxSupply, "Exceeds max supply");
+    function mintNFT(address to, uint256 amount) public payable isNotPaused nonReentrant {
+        require(amount > 0, "Amount must be greater than 0");
+        require(to != address(0), "Cannot mint to address 0");
+        require(totalSupply() + amount <= maxSupply, "Exceeds max supply");
         require(amount <= bulkBuyLimit, "Exceeds bulk buy limit");
+        require(msg.value >= mintPrice * amount, "Insufficient funds");
 
-        _mint(msg.sender, amount);
-        emit Minted(msg.sender, amount);
+
+        _mint(to, amount);
+        emit Minted(to, amount);
     }
 
     /// @notice onlyOwner function to mint nft tokens can be one or up to bulkBuyLimit

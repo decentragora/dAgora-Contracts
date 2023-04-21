@@ -252,7 +252,7 @@ a modifier to check if the contract is in the presale period.
 ### mintNFT
 
 ```solidity
-function mintNFT(uint256 amount) public payable
+function mintNFT(address to, uint256 amount) public payable
 ```
 
 Fcuntion to mint nfts.
@@ -263,6 +263,7 @@ _this function is used during the public sale period._
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
+| to | address |  |
 | amount | uint256 | The number of tokens to mint. |
 
 ### presaleMintNFT

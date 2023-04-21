@@ -172,7 +172,7 @@ _Throws if the contract is isPaused._
 ### mintNFT
 
 ```solidity
-function mintNFT(uint256 amonut) public payable
+function mintNFT(address to, uint256 amount) public payable
 ```
 
 Funtion to mint one or more tokens.
@@ -185,7 +185,8 @@ Throws if the amount of ETH sent is less than the cost to mint a token._
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| amonut | uint256 | the number of tokens to mint |
+| to | address | the address to mint the tokens to |
+| amount | uint256 | the number of tokens to mint |
 
 ### reserveTokens
 
