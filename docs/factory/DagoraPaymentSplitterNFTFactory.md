@@ -130,7 +130,7 @@ _Reverts if the user membership tier is not high enough, if the membership is ex
 ### createNFT
 
 ```solidity
-function createNFT(struct DagoraPaymentSplitterFactory.NFTParams params, uint256 id) public returns (address)
+function createNFT(struct DagoraPaymentSplitterFactory.NFTParams params, uint256 id) public returns (address newImplementation)
 ```
 
 ### getUserContracts

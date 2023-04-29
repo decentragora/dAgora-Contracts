@@ -78,7 +78,7 @@ contract DagoraPaymentSplitterFactory is Initializable, OwnableUpgradeable, Reen
     function createNFT(
         NFTParams memory params,
         uint256 id
-    ) public isNotPaused canCreate(id, minTier) nonReentrant returns (address) {
+    ) public isNotPaused canCreate(id, minTier) nonReentrant returns (address newImplementation) {
         require(params.newOwner != address(0), "New owner cannot be 0 address");
         require(params.newOwner != address(this), "New owner cannot be factory address");
         require(params.maxSupply > 0, "Max total supply cannot be 0");
@@ -91,7 +91,7 @@ contract DagoraPaymentSplitterFactory is Initializable, OwnableUpgradeable, Reen
 
         bytes32 salt = keccak256(abi.encodePacked(params.name, msg.sender, block.timestamp));
 
-        address newImplementation = createNFTImpl(params, salt);
+        newImplementation = createNFTImpl(params, salt);
         if (newImplementation == address(0)) {
             revert DagoraFactory__FailedToCreateContract(); 
         }

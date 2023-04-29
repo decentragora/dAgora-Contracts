@@ -4490,6 +4490,426 @@
           }
         }
       }
+    },
+    "295b9cfd49ba2f85f4ef15deaaf9284256e60577d8c6f074174bdb6c6c8d2167": {
+      "address": "0xf5037E561F96F50DEf0A19602ec856A4D64B3f67",
+      "txHash": "0xcfdea7004de4e8299dbacbe017916daf59bde3d8630ecf04ad432ea6dba2e270",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "isPaused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:36"
+          },
+          {
+            "label": "dAgoraMembershipsAddress",
+            "offset": 1,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:39"
+          },
+          {
+            "label": "minTier",
+            "offset": 21,
+            "slot": "151",
+            "type": "t_uint8",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:42"
+          },
+          {
+            "label": "contractsDeployed",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:45"
+          },
+          {
+            "label": "userContracts",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:49"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "19ab2854bf576632ae02b4a09d6f8114a5c8d4d9861fc0fdf4ec80f8c7d02662": {
+      "address": "0xb54F4790C1Bf217787348fedAfBf0583f3708e29",
+      "txHash": "0x51233053536973571b54937bfbb62b1c1cd4d4efcb4ab7f80ab2118e8f202338",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "isPaused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:36"
+          },
+          {
+            "label": "dAgoraMembershipsAddress",
+            "offset": 1,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:39"
+          },
+          {
+            "label": "minTier",
+            "offset": 21,
+            "slot": "151",
+            "type": "t_uint8",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:42"
+          },
+          {
+            "label": "contractsDeployed",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:45"
+          },
+          {
+            "label": "userContracts",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:49"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "c31693accdfbd9e51d1ed83c601c0ded50c3b8b0fb2e738f46966580442353a0": {
+      "address": "0x97AE74A3E2E7dD37A16e6011c18ce01379Fdc093",
+      "txHash": "0x87216aca040c56a71d49a26a322b9a37ea61206b905dc0b27d44e89e2b437ae2",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "isPaused",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_bool",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:36"
+          },
+          {
+            "label": "dAgoraMembershipsAddress",
+            "offset": 1,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:39"
+          },
+          {
+            "label": "minTier",
+            "offset": 21,
+            "slot": "151",
+            "type": "t_uint8",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:42"
+          },
+          {
+            "label": "contractsDeployed",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_uint256",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:45"
+          },
+          {
+            "label": "userContracts",
+            "offset": 0,
+            "slot": "153",
+            "type": "t_mapping(t_address,t_array(t_address)dyn_storage)",
+            "contract": "DagoraPaymentSplitterFactory",
+            "src": "contracts/factory/DagoraPaymentSplitterNFTFactory.sol:49"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_array(t_address)dyn_storage)": {
+            "label": "mapping(address => address[])",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
     }
   }
 }
