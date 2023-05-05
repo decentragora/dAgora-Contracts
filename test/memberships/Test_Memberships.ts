@@ -827,6 +827,8 @@ describe("Test Membership Functions", function () {
         expect(query3).to.equal(3);
         const query4 = await proxy.addressTokenIds(addr4.address);
         expect(query4).to.equal(4);
+        const query5 = await proxy.addressTokenIds(addr5.address);
+        expect(query5).to.equal(0); 
     });
 
 
