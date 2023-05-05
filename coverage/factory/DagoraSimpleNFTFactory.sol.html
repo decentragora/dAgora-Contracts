@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>14/14</span>
+        <span class='fraction'>20/20</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">95.45% </span>
+        <span class="strong">79.41% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>21/22</span>
+        <span class='fraction'>27/34</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">96.97% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>26/26</span>
+        <span class='fraction'>32/33</span>
       </div>
     </div>
   </div>
@@ -171,7 +171,26 @@
 126
 127
 128
-129</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -245,6 +264,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -259,6 +294,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-yes">29×</span>
 <span class="cline-any cline-yes">29×</span>
@@ -314,7 +352,7 @@ error DagoraFactory__TokenCreationPaused();
 error DagoraFactory__InvalidTier(uint8 tier, uint8 neededTier);
 error DagoraFactory__NotDAgoraMembershipsOwnerOrDelegate();
 error DagoraFactory__ExpiredMembership();
-&nbsp;
+error DagoraFactory__FailedToCreateContract();
 &nbsp;
 contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
 &nbsp;
@@ -363,23 +401,39 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
     }
 &nbsp;
 &nbsp;
+    /// @notice Function to create a SimpleNFTA contract.
+    /// @dev Creates a SimpleNFTA contract, and adds the address to the users contracts array.
+    /// @param name_ The name of the SimpleNFTA contract.
+    /// @param symbol_ The symbol of the SimpleNFTA contract.
+    /// @param baseURI_ The baseURI of the SimpleNFTA contract.
+    /// @param _bulkBuyLimit The bulk buy limit of the SimpleNFTA contract.
+    /// @param _mintCost The mint cost of the SimpleNFTA contract.
+    /// @param _maxSupply The max supply of the SimpleNFTA contract.
+    /// @param _newOwner The address of the new owner of the SimpleNFTA contract.
+    /// @param _id The id of the users membership tokenId.
     function createSimpleNFTA(
-        string memory _name,
-        string memory _symbol,
-        string memory _baseURI,
+        string memory name_,
+        string memory symbol_,
+        string memory baseURI_,
         uint16 _bulkBuyLimit,
         uint256 _mintCost,
         uint256 _maxSupply,
         address _newOwner,
         uint256 _id
     ) public isNotPaused canCreate(_id, minSimpleNFTATier) <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
-        bytes32 salt = keccak256(abi.encodePacked(_name, msg.sender, block.timestamp));
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_newOwner != address(0), "Cannot create token with address 0 as owner");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_newOwner != address(this), "Cannot create token with address of factory as owner");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_maxSupply &gt; 0, "Cannot create token with max supply of 0");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_bulkBuyLimit &gt; 0, "Cannot create token with bulk buy limit of 0");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(_bulkBuyLimit &lt; _maxSupply, "Cannot create token with bulk buy limit greater than max supply");
+&nbsp;
+        bytes32 salt = keccak256(abi.encodePacked(name_, msg.sender, block.timestamp));
         bytes memory bytecode = abi.encodePacked(
             type(SimpleNFTA).creationCode,
             abi.encode(
-                _name,
-                _symbol,
-                _baseURI,
+                name_,
+                symbol_,
+                baseURI_,
                 _bulkBuyLimit,
                 _mintCost,
                 _maxSupply,
@@ -387,6 +441,9 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
             )
         );
         address newImplementation = Create2Upgradeable.deploy(0, salt, bytecode);
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (newImplementation == address(0)) {
+            revert DagoraFactory__FailedToCreateContract();
+        }
         userContracts[msg.sender].push(newImplementation);
         contractsDeployed++;
         emit SimpleNFTACreated(newImplementation, _newOwner);
@@ -433,7 +490,7 @@ contract DagoraSimpleNFTFactory is Initializable, OwnableUpgradeable, Reentrancy
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 16 2023 02:51:48 GMT-0600 (Mountain Daylight Saving Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 04 2023 18:55:37 GMT-0600 (Mountain Daylight Saving Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

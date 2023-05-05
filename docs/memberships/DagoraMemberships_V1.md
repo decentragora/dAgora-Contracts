@@ -337,6 +337,18 @@ mapping that stores the delegates of a tokenId
 function initialize(string _name, string _symbol, string baseURI_, address _dagoraTreasury, address _DAI) public
 ```
 
+The initializer function that replaces the constructor.
+
+#### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| _name | string | the name of the token |
+| _symbol | string | the symbol of the token |
+| baseURI_ | string | the base URI for the token metadata |
+| _dagoraTreasury | address | the address of the dagora treasury |
+| _DAI | address | the address of the DAI token. |
+
 ### isNotPaused
 
 ```solidity

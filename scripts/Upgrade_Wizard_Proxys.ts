@@ -2,7 +2,7 @@ import { ethers, upgrades } from "hardhat";
 require("@nomiclabs/hardhat-etherscan");
 const hre = require("hardhat");
 
-//npx hardhat run scripts/Upgrade_Wizard_Proxys.ts --network opGoerli
+// 
 async function main() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with the account:", deployer.address);

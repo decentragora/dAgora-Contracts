@@ -132,11 +132,10 @@ describe("Test NFTAPlus", function () {
     });
         // Mint functions
         it("Should Allow addr1 to Mint to bulkbuylimit", async function () {
-            await nft.connect(addr1).togglePaused();
             await nft.connect(addr1).togglePresale();
             const limit = await nft.bulkBuyLimit();
             const mintCost = await nft.mintPrice();
-            await nft.connect(addr2).mintNFT(limit, { value: mintCost.mul(limit) });
+            await nft.connect(addr2).mintNFT(addr2.address, limit, { value: mintCost.mul(limit) });
             expect(await nft.balanceOf(addr2.address)).to.equal(limit);
             expect(await nft.totalSupply()).to.equal(limit);
             const balanceOfContract = await ethers.provider.getBalance(nft.address);
@@ -144,15 +143,13 @@ describe("Test NFTAPlus", function () {
         });
 
         it("Should not Allow addr1 to Mint to over bulkbuylimit", async function () {
-            nft.connect(addr1).togglePaused();
-            nft.connect(addr1).togglePresale();
+            await nft.connect(addr1).togglePresale();
             const limit = await nft.bulkBuyLimit();
             const mintCost = await nft.mintPrice();
-            await expect(nft.connect(addr2).mintNFT(limit + 1, { value: mintCost.mul(limit + 1) })).to.be.revertedWith("Exceeds bulk buy limit");
+            await expect(nft.connect(addr2).mintNFT(addr2.address, limit + 1, { value: mintCost.mul(limit + 1) })).to.be.revertedWith("Exceeds bulk buy limit");
         });
 
         it("Should Allow a allowlisted address to Mint during presale", async function () {
-            await nft.connect(addr1).togglePaused();
             const limit = await nft.maxAllowListAmount();
             const mintCost = await nft.presaleMintPrice();
             const leaf = keccak256(leaves[0]);
@@ -166,7 +163,6 @@ describe("Test NFTAPlus", function () {
         });
 
         it("Should not Allow a non-allowlisted address to Mint during presale", async function () {
-            await nft.connect(addr1).togglePaused();
             const limit = await nft.maxAllowListAmount();
             const mintCost = await nft.presaleMintPrice();
             const proof = tree.getHexProof(leaves[1]);
@@ -177,7 +173,6 @@ describe("Test NFTAPlus", function () {
         });
 
         it("Should not Allow a allowlisted address to Mint over maxAllowListAmount during presale even if transferred", async function () {
-            await nft.connect(addr1).togglePaused();
             const limit = await nft.maxAllowListAmount();
             const mintCost = await nft.presaleMintPrice();
             const leaf = keccak256(leaves[0]);
@@ -269,17 +264,17 @@ describe("Test NFTAPlus", function () {
         });
 
         it("Should Allow Owner of SimpleNFTA to toggle paused", async function () {
-            expect(await nft.isPaused()).to.equal(true);
-            await nft.connect(addr1).togglePaused();
             expect(await nft.isPaused()).to.equal(false);
             await nft.connect(addr1).togglePaused();
             expect(await nft.isPaused()).to.equal(true);
+            await nft.connect(addr1).togglePaused();
+            expect(await nft.isPaused()).to.equal(false);
         });
     
         it("Should not Allow Non-Owner of SimpleNFTA to toggle paused", async function () {
-            expect(await nft.isPaused()).to.equal(true);
+            expect(await nft.isPaused()).to.equal(false);
             await expect(nft.connect(addr2).togglePaused()).to.be.revertedWith("Ownable: caller is not the owner");
-            expect(await nft.isPaused()).to.equal(true);
+            expect(await nft.isPaused()).to.equal(false);
         });
 
         it("Should Allow Owner of SimpleNFTA to toggle presale", async function () {
@@ -297,12 +292,11 @@ describe("Test NFTAPlus", function () {
         });
     
         it("Should Allow Owner of SimpleNFTA to withdraw ETH", async function () {
-            await nft.connect(addr1).togglePaused();
             await nft.connect(addr1).togglePresale();
             const balanceBefore = await ethers.provider.getBalance(addr1.address);
             const mintCost = await nft.mintPrice();
             expect(nft.address == deployedAddress, "NFT Address is not the same as the deployed address");
-            await nft.connect(addr2).mintNFT(1, { value: mintCost });
+            await nft.connect(addr2).mintNFT(addr2.address, 1, { value: mintCost });
             expect(await nft.balanceOf(addr2.address)).to.equal(1);
             const balanceOfContract = await ethers.provider.getBalance(nft.address);
             expect(balanceOfContract).to.equal(mintCost);
@@ -320,12 +314,11 @@ describe("Test NFTAPlus", function () {
         });
         
         it("Should not Allow Non-Owner of SimpleNFTA to withdraw ETH", async function () {
-            await nft.connect(addr1).togglePaused();
             await nft.connect(addr1).togglePresale();
             const balanceBefore = await ethers.provider.getBalance(addr1.address);
             const mintCost = await nft.mintPrice();
             expect(nft.address == deployedAddress, "NFT Address is not the same as the deployed address");
-            await nft.connect(addr2).mintNFT(1, { value: mintCost });
+            await nft.connect(addr2).mintNFT(addr2.address, 1, { value: mintCost });
             expect(await nft.balanceOf(addr2.address)).to.equal(1);
             const balanceOfContract = await ethers.provider.getBalance(nft.address);
             expect(balanceOfContract).to.equal(mintCost);
@@ -367,21 +360,18 @@ describe("Test NFTAPlus", function () {
         });
     
         it("Should Allow Owner of SimpleNFTA to reserve tokens", async function () {
-            await nft.connect(addr1).togglePaused();
             await nft.connect(addr1).reserveTokens(5)
             expect(await nft.balanceOf(addr1.address)).to.equal(5);
             expect(await nft.totalSupply()).to.equal(5);
         });
     
         it("Should not Allow Non-Owner of SimpleNFTA to reserve tokens", async function () {
-            await nft.connect(addr1).togglePaused();
             await expect(nft.connect(addr2).reserveTokens(5)).to.be.revertedWith("Ownable: caller is not the owner");
             expect(await nft.balanceOf(addr1.address)).to.equal(0);
             expect(await nft.totalSupply()).to.equal(0);
         });
     
         it("Should Return the correct Token URI", async function () {
-            await nft.connect(addr1).togglePaused();
             await nft.connect(addr1).reserveTokens(1)
             expect(await nft.tokenURI(1)).to.equal("https://test.io/nft/1.json");
         });
@@ -412,12 +402,10 @@ describe("Test NFTAPlus", function () {
         });
 
         it("should not allow owner to mint over bulk mint limit", async function (){
-            await nft.connect(addr1).togglePaused();
             await expect(nft.connect(addr1).reserveTokens(100)).to.be.revertedWith("Exceeds bulk buy limit");
         });
 
         it("should not allow owner to mint over max supply", async function (){
-            await nft.connect(addr1).togglePaused();
             // mint full supply
             for (let i = 0; i < 10; i++) {
                 await nft.connect(addr1).reserveTokens(10);
@@ -427,6 +415,7 @@ describe("Test NFTAPlus", function () {
         });
 
         it("Should fail mint if contract is paused", async function () {
+            await nft.connect(addr1).togglePaused();
             const limit = await nft.maxAllowListAmount();
             const presaleMintCost = await nft.presaleMintPrice();
             const mintCost = await nft.mintPrice();
@@ -435,11 +424,10 @@ describe("Test NFTAPlus", function () {
             const cost = mintCost.mul(limit);
             await expect(nft.connect(addr2).presaleMintNFT(proof, 1, { value: presaleMintCost })).to.be.revertedWith("Contract is paused");
             await nft.connect(addr1).togglePresale();
-            await expect(nft.connect(addr2).mintNFT(1, { value: cost })).to.be.revertedWith("Contract is paused");
+            await expect(nft.connect(addr2).mintNFT(addr2.address, 1, { value: cost })).to.be.revertedWith("Contract is paused");
         });
 
         it("Should enforce max supply", async function () {
-            await nft.connect(addr1).togglePaused();
             for (let i = 0; i < 10; i++) {
                 await nft.connect(addr1).reserveTokens(10);
             }
@@ -450,11 +438,10 @@ describe("Test NFTAPlus", function () {
             const cost = mintCost.mul(limit);
             await expect(nft.connect(addr2).presaleMintNFT(proof, 1, { value: cost })).to.be.revertedWith("Amount exceeds max supply");
             await nft.connect(addr1).togglePresale();
-            await expect(nft.connect(addr2).mintNFT(1, { value: cost })).to.be.revertedWith("Amount exceeds max supply");
+            await expect(nft.connect(addr2).mintNFT(addr2.address, 1, { value: cost })).to.be.revertedWith("Amount exceeds max supply");
         });
 
         it("Should revert if not enough funds are sent", async function () {
-            await nft.connect(addr1).togglePaused();
             const limit = await nft.maxAllowListAmount();
             const mintCost = await nft.presaleMintPrice();
             const leaf = keccak256(leaves[0]);
@@ -462,19 +449,17 @@ describe("Test NFTAPlus", function () {
             const cost = mintCost.mul(limit);
             await expect(nft.connect(addr2).presaleMintNFT(proof, 1, { value: cost.sub(1) })).to.be.revertedWith("Incorrect amount of ETH sent");
             await nft.connect(addr1).togglePresale();
-            await expect(nft.connect(addr2).mintNFT(1, { value: cost.sub(1) })).to.be.revertedWith("Incorrect amount of ETH sent");
+            await expect(nft.connect(addr2).mintNFT(addr2.address, 1, { value: cost.sub(1) })).to.be.revertedWith("Incorrect amount of ETH sent");
         });
 
         it("Should revert Public mint during presale", async function () {
-            await nft.connect(addr1).togglePaused();
             const limit = await nft.maxAllowListAmount();
             const mintCost = await nft.presaleMintPrice();
             const cost = mintCost.mul(limit);
-            await expect(nft.connect(addr2).mintNFT(1, { value: cost })).to.be.revertedWith("Contract is not in public sale");
+            await expect(nft.connect(addr2).mintNFT(addr2.address, 1, { value: cost })).to.be.revertedWith("Contract is not in public sale");
         });
 
         it("Should revert if presale mint is called during public sale", async function () {
-            await nft.connect(addr1).togglePaused();
             await nft.connect(addr1).togglePresale();
             const limit = 1;
             const mintCost = await nft.mintPrice();

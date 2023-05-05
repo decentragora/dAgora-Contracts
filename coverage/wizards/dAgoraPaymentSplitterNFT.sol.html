@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for wizards/dAgoraPaymentSplitterNFT.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">wizards/</a> dAgoraPaymentSplitterNFT.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/51</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/48</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/26</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/71</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: GPL-3.0
+pragma solidity 0.8.18;
+&nbsp;
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {ERC721A} from "erc721a/contracts/ERC721A.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+&nbsp;
+contract DagoraPaymentSplitterNFT is ERC721A, Ownable, ReentrancyGuard {
+&nbsp;
+    /// @notice Struct to hold the payee and share amount.
+    /// @dev payee is the address of the payee.
+    /// @dev shareAmount is the amount of shares the payee has.
+    struct PayeeShare {
+        address payee;
+        uint256 shareAmount;
+    }
+&nbsp;
+    /// @notice Boolean to determine if the contract is isPaused.
+    /// @dev default value is true, contract is isPaused on deployment.
+    bool public isPaused;
+&nbsp;
+    /// @notice The base URI for all tokens.
+    string public baseURI;
+&nbsp;
+    /// @notice The file extension of the metadata can be set to nothing.
+    /// @dev default value is json
+    string public baseExtension;
+&nbsp;
+    /// @notice The maximum number of tokens that can be minted in a single transaction.
+    uint16 public bulkBuyLimit;
+&nbsp;
+    /// @notice The cost to mint a token.
+    uint256 public mintPrice;
+&nbsp;
+    /// @notice The maximum number of tokens that can be minted.
+    uint256 public maxSupply;
+&nbsp;
+    /// @notice The number of payees.
+    uint256 public payeeCount;
+&nbsp;
+    /// @notice The total amount of shares.
+    uint256 private _totalShares;
+&nbsp;
+    /// @dev The total amount of released payments.
+    uint256 private _totalReleased;
+&nbsp;
+    /// @dev The addresses of the payees.
+    address[] private _payees; 
+&nbsp;
+    mapping(uint256 =&gt; PayeeShare) public payeeShares;
+    /// @dev The amount of shares each address has.
+    mapping(address =&gt; uint256) private _shares;
+    /// @dev The amount of released payments each address has.
+    mapping (address =&gt; uint256) private _released;
+    /// @dev The amount of released payments each address has.
+    mapping(IERC20 =&gt; uint256) private _erc20TotalReleased;
+    /// @dev The amount of released payments each address has.
+    mapping(IERC20 =&gt; mapping(address =&gt; uint256)) private _erc20Released;
+&nbsp;
+    event Minted(address indexed to, uint256 indexed tokenId);
+    event BaseURIChanged(string baseURI);
+    event BaseExtensionChanged(string baseExtension);
+    event MintCostChanged(uint256 mintPrice);
+    event BulkBuyLimitChanged(uint16 bulkBuyLimit);
+    event isPausedToggled(bool isPaused);
+    event PayeeAdded(address account, uint256 shares);
+    event PaymentReleased(address to, uint256 amount);
+    event ERC20PaymentReleased(IERC20 indexed token, address to, uint256 amount);
+    event PaymentReceived(address from, uint256 amount);
+&nbsp;
+&nbsp;
+    /// @notice Constructor for the contract.
+    /// @param name_ the name of the contract and token
+    /// @param symbol_ the symbol of the token
+    /// @param payees the addresses of the payees
+    /// @param shares_ the amount of shares each payee has
+    /// @param _mintPrice the cost to mint a token
+    /// @param _maxSupply the maximum number of tokens that can be minted
+    /// @param _bulkBuyLimit the maximum number of tokens that can be minted in a single transaction
+    /// @param _baseURI the base URI for all tokens
+    /// @param _baseExtension the file extension of the metadata can be set to nothing
+    /// @param newOwner the address of the new owner
+<span class="fstat-no" title="function not covered" >    constructor(</span>
+        string memory name_,
+        string memory symbol_,
+        address[] memory payees,
+        uint256[] memory shares_,
+        uint256 _mintPrice,
+        uint256 _maxSupply,
+        uint16 _bulkBuyLimit,
+        string memory _baseURI,
+        string memory _baseExtension,
+        address newOwner
+    ) ERC721A(name_, symbol_) {
+<span class="cstat-no" title="statement not covered" >        require(payees.length == shares_.length, "Payees and shares length mismatch")</span>;
+<span class="cstat-no" title="statement not covered" >        require(payees.length &gt; 0, "PaymentSplitter: no payees")</span>;
+        payeeCount = payees.length;
+<span class="cstat-no" title="statement not covered" >        for (uint256 i = 0; i &lt; payees.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >            _addPayee(payees[i], shares_[i])</span>;
+            payeeShares[i] = PayeeShare(payees[i], shares_[i]);
+        }
+&nbsp;
+        mintPrice = _mintPrice;
+        maxSupply = _maxSupply;
+        bulkBuyLimit = _bulkBuyLimit;
+        baseURI = _baseURI;
+        baseExtension = _baseExtension;
+        isPaused = false;
+<span class="cstat-no" title="statement not covered" >        transferOwnership(newOwner)</span>;
+    }
+&nbsp;
+    /// @notice Modifier to check if the contract is isPaused.
+    /// @dev Throws if the contract is isPaused.
+<span class="fstat-no" title="function not covered" >    modifier isNotPaused() {</span>
+<span class="cstat-no" title="statement not covered" >        require(!isPaused, "Contract is paused")</span>;
+        _;
+    }
+&nbsp;
+    /// @notice Funtion to mint one or more tokens.
+    /// @param to the address to mint the tokens to
+    /// @param amount the number of tokens to mint
+    /// @dev Throws if the number of tokens to mint exceeds the bulk buy limit.
+    /// @dev Throws if the number of tokens to mint exceeds the max supply.
+    /// @dev Throws if the amount of ETH sent is less than the cost to mint a token.
+<span class="fstat-no" title="function not covered" >    function mintNFT(address to, uint256 amount) public payable isNotPaused nonReentrant {</span>
+<span class="cstat-no" title="statement not covered" >        require(amount &gt; 0, "Amount must be greater than 0")</span>;
+<span class="cstat-no" title="statement not covered" >        require(to != address(0), "Cannot mint to the zero address")</span>;
+<span class="cstat-no" title="statement not covered" >        require(amount &lt;= bulkBuyLimit, "Exceeds bulk buy limit")</span>;
+<span class="cstat-no" title="statement not covered" >        require(totalSupply() + amount &lt;= maxSupply, "Exceeds max supply")</span>;
+<span class="cstat-no" title="statement not covered" >        require(msg.value &gt;= mintPrice * amount, "Incorrect amount of ETH sent")</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        _mint(to, amount)</span>;
+<span class="cstat-no" title="statement not covered" >        emit Minted(to, totalSupply());</span>
+    }
+&nbsp;
+    /// @notice onlyOwner function to mint one or more tokens.
+    /// @param amount the number of tokens to mint
+    /// @dev Throws if the number of tokens to mint exceeds the max supply.
+<span class="fstat-no" title="function not covered" >    function reserveTokens(uint256 amount) public onlyOwner {</span>
+<span class="cstat-no" title="statement not covered" >        require(totalSupply() + amount &lt;= maxSupply, "Exceeds max supply")</span>;
+<span class="cstat-no" title="statement not covered" >        _mint(msg.sender, amount)</span>;
+<span class="cstat-no" title="statement not covered" >        emit Minted(msg.sender, totalSupply());</span>
+    }
+&nbsp;
+    /// @notice getter function for the total shares.
+    /// @return the total shares
+<span class="fstat-no" title="function not covered" >    function totalShares() public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return _totalShares;</span>
+    }
+&nbsp;
+    /// @notice getter function for the total released.
+    /// @return the total released
+<span class="fstat-no" title="function not covered" >    function totalReleased() public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return _totalReleased;</span>
+    }
+&nbsp;
+    /// @notice getter function for the total released.
+    /// @param token the token to check
+<span class="fstat-no" title="function not covered" >    function totalReleased(IERC20 token) public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return _erc20TotalReleased[token];</span>
+    }
+&nbsp;
+    /// @notice getter function for the shares.
+    /// @param account the address to check
+    /// @return the shares for the address
+<span class="fstat-no" title="function not covered" >    function shares(address account) public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return _shares[account];</span>
+    }
+&nbsp;
+    /// @notice getter function for the released.
+    /// @param account the address to check
+    /// @return the released for the address
+<span class="fstat-no" title="function not covered" >    function released(address account) public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return _released[account];</span>
+    }
+&nbsp;
+    /// @notice getter function for the released.
+    /// @param token the token to check
+    /// @param account the address to check
+<span class="fstat-no" title="function not covered" >    function released(IERC20 token, address account) public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return _erc20Released[token][account];</span>
+    }
+&nbsp;
+    /// @notice getter function for the payees.
+    /// @param index the index of the payee
+    /// @return the address of the payee
+<span class="fstat-no" title="function not covered" >    function payee(uint256 index) public view returns (address) {</span>
+<span class="cstat-no" title="statement not covered" >        return _payees[index];</span>
+    }
+&nbsp;
+    /// @notice getter function for checking how much a payee is owed.
+    /// @param account the address to check
+    /// @return the amount of ETH owed to the address
+<span class="fstat-no" title="function not covered" >    function releasable(address account) public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        uint256 totalReceived = address(this).balance + totalReleased();</span>
+<span class="cstat-no" title="statement not covered" >        return _pendingPayment(account, totalReceived, released(account));</span>
+    }
+&nbsp;
+    /// @notice getter function for checking how much a payee is owed.
+    /// @param token the token to check
+    /// @param account the address to check
+    /// @return the amount of tokens owed to the address
+<span class="fstat-no" title="function not covered" >    function releasable(IERC20 token, address account) public view returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        uint256 totalReceived = token.balanceOf(address(this)) + totalReleased(token);</span>
+<span class="cstat-no" title="statement not covered" >        return _pendingPayment(account, totalReceived, released(token, account));</span>
+    }
+&nbsp;
+    /// @notice function to release the amount owed to a payee.
+    /// @param account the address to release the payment to
+    /// @dev Throws if the address has no shares.
+    /// @dev Throws if the address is not due payment.
+<span class="fstat-no" title="function not covered" >    function release(address payable account) public {</span>
+<span class="cstat-no" title="statement not covered" >        require(_shares[account] &gt; 0, "PaymentSplitter: account has no shares")</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        uint256 payment = releasable(account);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        require(payment != 0, "PaymentSplitter: account is not due payment")</span>;
+&nbsp;
+        // _totalReleased is the sum of all values in _released.
+        // If "_totalReleased += payment" does not overflow, then "_released[account] += payment" cannot overflow.
+        _totalReleased += payment;
+        unchecked {
+            _released[account] += payment;
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        Address.sendValue(account, payment)</span>;
+<span class="cstat-no" title="statement not covered" >        emit PaymentReleased(account, payment);</span>
+    }
+&nbsp;
+   /// @notice returns the tokenURI for a given token.
+    /// @dev this function is only callable when the token exists.
+    /// @param tokenId the tokenID to get the tokenURI for.
+<span class="fstat-no" title="function not covered" >    function tokenURI(uint256 tokenId) public view override returns (string memory) {</span>
+<span class="cstat-no" title="statement not covered" >        require(_exists(tokenId), "Token does not exist")</span>;
+<span class="cstat-no" title="statement not covered" >        return string(abi.encodePacked(baseURI, _toString(tokenId), baseExtension));</span>
+    }
+&nbsp;
+    /// @notice Onlyowner function to set the base URI.
+    /// @dev this function is only callable by the owner of the contract.
+    /// @param __baseURI the base URI to set.
+<span class="fstat-no" title="function not covered" >    function setBaseURI(string memory __baseURI) external onlyOwner {</span>
+        baseURI = __baseURI;
+<span class="cstat-no" title="statement not covered" >        emit BaseURIChanged(baseURI);</span>
+    }
+&nbsp;
+    /// @notice Onlyowner function to set the base extension.
+    /// @dev this function is only callable by the owner of the contract.
+    /// @param _baseExtension the base extension to set.
+<span class="fstat-no" title="function not covered" >    function setBaseExtension(string memory _baseExtension) external onlyOwner {</span>
+        baseExtension = _baseExtension;
+<span class="cstat-no" title="statement not covered" >        emit BaseExtensionChanged(_baseExtension);</span>
+    }
+&nbsp;
+    /// @notice Onlyowner function to set the mint price for the public sale.
+    /// @dev this function is only callable by the owner of the contract.
+    /// @param _mintPrice the mint cost to set.
+<span class="fstat-no" title="function not covered" >    function setMintPrice(uint256 _mintPrice) external onlyOwner {</span>
+        mintPrice = _mintPrice;
+<span class="cstat-no" title="statement not covered" >        emit MintCostChanged(mintPrice);</span>
+    }
+&nbsp;
+    /// @notice Onlyowner function to set the bulk buy limit.
+    /// @dev this function is only callable by the owner of the contract.
+    /// @param _bulkBuyLimit the bulk buy limit to set.
+<span class="fstat-no" title="function not covered" >    function setBulkBuyLimit(uint16 _bulkBuyLimit) external onlyOwner {</span>
+        bulkBuyLimit = _bulkBuyLimit;
+<span class="cstat-no" title="statement not covered" >        emit BulkBuyLimitChanged(_bulkBuyLimit);</span>
+    }
+&nbsp;
+    /// @notice Onlyowner function to set the paused state of the contract.
+    /// @dev this function is only callable by the owner of the contract.
+<span class="fstat-no" title="function not covered" >    function togglePaused() external onlyOwner {</span>
+        isPaused = !isPaused;
+<span class="cstat-no" title="statement not covered" >        emit isPausedToggled(isPaused);</span>
+    }
+&nbsp;
+    /// @notice internal override function that is called before any token transfer.
+    /// @dev this function will revert if the contract is paused, pausing transfers of tokens.
+    /// @param from The address of the sender.
+    /// @param to The address of the receiver.
+    /// @param tokenId The token ID.
+    /// @param quantity The quantity of tokens to transfer.
+<span class="fstat-no" title="function not covered" >    function _beforeTokenTransfers(</span>
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 quantity
+    ) internal override(ERC721A) {
+<span class="cstat-no" title="statement not covered" >        if (isPaused) {</span>
+<span class="cstat-no" title="statement not covered" >            revert("Contract is paused")</span>;
+        }
+<span class="cstat-no" title="statement not covered" >        super._beforeTokenTransfers(from, to, tokenId, quantity)</span>;
+    }
+&nbsp;
+    /// @notice function that returns the dagora contract type
+    /// @return the dagora contract type
+<span class="fstat-no" title="function not covered" >    function typeOf() public pure returns (string memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return "dAgora PaymentSplitterNFT";</span>
+    }
+&nbsp;
+    /// @notice function that returns the dagora contract version
+    /// @return the dagora contract version
+<span class="fstat-no" title="function not covered" >    function version() public pure returns (string memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return "1.0.0";</span>
+    }
+&nbsp;
+    /// @notice internal function that handles that starting tokenId of the collection
+    /// @return the starting tokenId of the collection eg 1
+<span class="fstat-no" title="function not covered" >    function _startTokenId() internal view virtual override returns (uint256) {</span>
+<span class="cstat-no" title="statement not covered" >        return 1;</span>
+    }
+&nbsp;
+    /// @notice internal function that handles any pending payments for a payee.
+    /// @param account the address to check
+    /// @param totalReceived the total amount of ETH received
+    /// @param alreadyReleased the amount of ETH already released
+    /// @return the amount of ETH owed to the address
+<span class="fstat-no" title="function not covered" >    function _pendingPayment(</span>
+        address account,
+        uint256 totalReceived,
+        uint256 alreadyReleased
+    ) private view returns (uint256) {
+<span class="cstat-no" title="statement not covered" >        return (totalReceived * _shares[account]) / _totalShares - alreadyReleased;</span>
+    }
+&nbsp;
+    /// @notice internal function that adds a payee to the contract.
+    /// @param account the address to add as a payee.
+    /// @param shares_ the number of shares the payee has.
+    /// @dev Throws if the address is the zero address.
+    /// @dev Throws if the number of shares is 0.
+    /// @dev Throws if the address already has shares.
+    /// @dev Emits a {PayeeAdded} event.
+    /// @dev only called by the constructor.
+<span class="fstat-no" title="function not covered" >    function _addPayee(address account, uint256 shares_) private {</span>
+<span class="cstat-no" title="statement not covered" >        require(account != address(0), "PaymentSplitter: account is the zero address")</span>;
+<span class="cstat-no" title="statement not covered" >        require(shares_ &gt; 0, "PaymentSplitter: shares are 0")</span>;
+<span class="cstat-no" title="statement not covered" >        require(_shares[account] == 0, "PaymentSplitter: account already has shares")</span>;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        _payees.push(account)</span>;
+        _shares[account] = shares_;
+        _totalShares += shares_;
+<span class="cstat-no" title="statement not covered" >        emit PayeeAdded(account, shares_);</span>
+    }
+    
+    /**
+     * @dev The Ether received will be logged with {PaymentReceived} events. Note that these events are not fully
+     * reliable: it's possible for a contract to receive Ether without triggering this function. This only affects the
+     * reliability of the events, and not the actual splitting of Ether.
+     *
+     * To learn more about this see the Solidity documentation for
+     * https://solidity.readthedocs.io/en/latest/contracts.html#fallback-function[fallback
+     * functions].
+     */
+    receive() external payable virtual {
+        emit PaymentReceived(_msgSender(), msg.value);
+    }
+&nbsp;
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 04 2023 18:55:37 GMT-0600 (Mountain Daylight Saving Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

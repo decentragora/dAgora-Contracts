@@ -121,10 +121,9 @@ describe("Test SimpleNFT", function () {
 
     // Mint functions
     it("Should Allow addr1 to Mint to bulkbuylimit", async function () {
-        await nft.connect(addr1).togglePaused();
         const limit = await nft.bulkBuyLimit();
         const mintCost = await nft.mintPrice();
-        await nft.connect(addr2).mintNFT(limit, { value: mintCost.mul(limit) });
+        await nft.connect(addr2).mintNFT(addr2.address, limit, { value: mintCost.mul(limit) });
         expect(await nft.balanceOf(addr2.address)).to.equal(limit);
         expect(await nft.totalSupply()).to.equal(limit);
         const balanceOfContract = await ethers.provider.getBalance(nft.address);
@@ -132,10 +131,9 @@ describe("Test SimpleNFT", function () {
     });
 
     it("Should not Allow addr1 to Mint to over bulkbuylimit", async function () {
-        nft.connect(addr1).togglePaused();
         const limit = await nft.bulkBuyLimit();
         const mintCost = await nft.mintPrice();
-        await expect(nft.connect(addr2).mintNFT(limit + 1, { value: mintCost.mul(limit + 1) })).to.be.revertedWith("Exceeds bulk buy limit");
+        await expect(nft.connect(addr2).mintNFT(addr2.address, limit + 1, { value: mintCost.mul(limit + 1) })).to.be.revertedWith("Exceeds bulk buy limit");
     });
 
     it("Should Allow Owner of SimpleNFTA to Set Base URI", async function () {
@@ -187,25 +185,24 @@ describe("Test SimpleNFT", function () {
     });
 
     it("Should Allow Owner of SimpleNFTA to toggle paused", async function () {
-        expect(await nft.isPaused()).to.equal(true);
-        await nft.connect(addr1).togglePaused();
         expect(await nft.isPaused()).to.equal(false);
         await nft.connect(addr1).togglePaused();
         expect(await nft.isPaused()).to.equal(true);
+        await nft.connect(addr1).togglePaused();
+        expect(await nft.isPaused()).to.equal(false);
     });
 
     it("Should not Allow Non-Owner of SimpleNFTA to toggle paused", async function () {
-        expect(await nft.isPaused()).to.equal(true);
+        expect(await nft.isPaused()).to.equal(false);
         await expect(nft.connect(addr2).togglePaused()).to.be.revertedWith("Ownable: caller is not the owner");
-        expect(await nft.isPaused()).to.equal(true);
+        expect(await nft.isPaused()).to.equal(false);
     });
 
     it("Should Allow Owner of SimpleNFTA to withdraw ETH", async function () {
-        await nft.connect(addr1).togglePaused();
         const balanceBefore = await ethers.provider.getBalance(addr1.address);
         const mintCost = await nft.mintPrice();
         expect(nft.address == deployedAddress, "NFT Address is not the same as the deployed address");
-        await nft.connect(addr2).mintNFT(1, { value: mintCost });
+        await nft.connect(addr2).mintNFT(addr2.address, 1, { value: mintCost });
         expect(await nft.balanceOf(addr2.address)).to.equal(1);
         const balanceOfContract = await ethers.provider.getBalance(nft.address);
         expect(balanceOfContract).to.equal(mintCost);
@@ -223,11 +220,10 @@ describe("Test SimpleNFT", function () {
     });
     
     it("Should not Allow Non-Owner of SimpleNFTA to withdraw ETH", async function () {
-        await nft.connect(addr1).togglePaused();
         const balanceBefore = await ethers.provider.getBalance(addr1.address);
         const mintCost = await nft.mintPrice();
         expect(nft.address == deployedAddress, "NFT Address is not the same as the deployed address");
-        await nft.connect(addr2).mintNFT(1, { value: mintCost });
+        await nft.connect(addr2).mintNFT(addr2.address, 1, { value: mintCost });
         expect(await nft.balanceOf(addr2.address)).to.equal(1);
         const balanceOfContract = await ethers.provider.getBalance(nft.address);
         expect(balanceOfContract).to.equal(mintCost);
@@ -265,21 +261,18 @@ describe("Test SimpleNFT", function () {
     });
 
     it("Should Allow Owner of SimpleNFTA to reserve tokens", async function () {
-        await nft.connect(addr1).togglePaused();
         await nft.connect(addr1).reserveTokens(5)
         expect(await nft.balanceOf(addr1.address)).to.equal(5);
         expect(await nft.totalSupply()).to.equal(5);
     });
 
     it("Should not Allow Non-Owner of SimpleNFTA to reserve tokens", async function () {
-        await nft.connect(addr1).togglePaused();
         await expect(nft.connect(addr2).reserveTokens(5)).to.be.revertedWith("Ownable: caller is not the owner");
         expect(await nft.balanceOf(addr1.address)).to.equal(0);
         expect(await nft.totalSupply()).to.equal(0);
     });
 
     it("Should Return the correct Token URI", async function () {
-        await nft.connect(addr1).togglePaused();
         await nft.connect(addr1).reserveTokens(1)
         expect(await nft.tokenURI(1)).to.equal("https://Test.com/nft/1.json");
     });
@@ -301,22 +294,21 @@ describe("Test SimpleNFT", function () {
     });
 
     it("Should Revert mint function if the contract is paused", async function () {
-        await expect(nft.connect(addr2).mintNFT(1, { value: ethers.utils.parseEther("0.1") })).to.be.revertedWith("Contract is paused");
+        await nft.connect(addr1).togglePaused();
+        await expect(nft.connect(addr2).mintNFT(addr2.address, 1, { value: ethers.utils.parseEther("0.1") })).to.be.revertedWith("Contract is paused");
     });
 
     it("Should revert if incorrect amount of ETH is sent", async function () {
-        await nft.connect(addr1).togglePaused();
-        await expect(nft.connect(addr2).mintNFT(1, { value: ethers.utils.parseEther("0.01") })).to.be.revertedWith("Insufficient funds");
+        await expect(nft.connect(addr2).mintNFT(addr2.address, 1, { value: ethers.utils.parseEther("0.01") })).to.be.revertedWith("Insufficient funds");
     });
 
-    it("should enfore maxSupply", async function () {
-        await nft.connect(addr1).togglePaused();
+    it("should enforce maxSupply", async function () {
         for (let i = 0; i < 10; i++) {
             await nft.connect(addr1).reserveTokens(10);
         };
         await expect(nft.connect(addr1).reserveTokens(1)).to.be.revertedWith("Exceeds max supply");
         const mintCost = await nft.mintPrice();
-        await expect(nft.connect(addr1).mintNFT(1, { value: mintCost })).to.be.revertedWith("Exceeds max supply");
+        await expect(nft.connect(addr1).mintNFT(addr1.address, 1, { value: mintCost })).to.be.revertedWith("Exceeds max supply");
     });
 
     it("Should revert tokenURI if token does not exist", async function () {

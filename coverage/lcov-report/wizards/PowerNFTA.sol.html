@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">93.94% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>27/27</span>
+        <span class='fraction'>31/33</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">95% </span>
+        <span class="strong">89.13% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>38/40</span>
+        <span class='fraction'>41/46</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">94.44% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>16/16</span>
+        <span class='fraction'>17/18</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">95.65% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>40/40</span>
+        <span class='fraction'>44/46</span>
       </div>
     </div>
   </div>
@@ -238,7 +238,37 @@
 193
 194
 195
-196</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -326,6 +356,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -385,8 +417,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12×</span>
-<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -426,7 +458,35 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -504,7 +564,7 @@ contract PowerNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
         mintPrice = _mintPrice;
         maxSupply = _maxTotalSupply;
         royaltyRecipient = _royaltyRecipient;
-        isPaused = true;
+        isPaused = false;
         baseExtension = ".json";        
         _setDefaultRoyalty(_royaltyRecipient, _royaltyBps);
         transferOwnership(_newOwner);
@@ -519,13 +579,15 @@ contract PowerNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
     /// @notice Function to Mint nfts.
     /// @param amount The number of tokens to mint.
     /// @dev The amount of tokens to mint must be less than or equal to the bulk buy limit, and contract must not be isPaused.
-    function mintNFT(uint256 amount) public payable isNotPaused <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+    function mintNFT(address to, uint256 amount) public payable isNotPaused <span class="missing-if-branch" title="else path not taken" >E</span>nonReentrant {
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(amount &gt; 0, "PowerNFT: amount must be greater than 0");
+        <span class="missing-if-branch" title="else path not taken" >E</span>require(to != address(0), "PowerNFT: cannot mint to the zero address");
         require(amount &lt;= bulkBuyLimit, "PowerNFT: exceeds bulk buy limit");
         require(totalSupply() + amount &lt;= maxSupply, "PowerNFT: exceeds max supply");
         require(msg.value &gt;= mintPrice * amount, "PowerNFT: insufficient funds");
 &nbsp;
-        _safeMint(msg.sender, amount);
-        emit Minted(msg.sender, amount);
+        _safeMint(to, amount);
+        emit Minted(to, amount);
     }
 &nbsp;
     /// @notice Function to reserve nfts.
@@ -618,14 +680,42 @@ contract PowerNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
         IERC20 erc20 = IERC20(_tokenAddr);
         uint256 balance = erc20.balanceOf(address(this));
         require(balance &gt; 0, "PowerNFT: no tokens to withdraw");
-        erc20.transfer(owner(), balance);    }
+        erc20.transfer(owner(), balance);    
+    }
 &nbsp;
+    /// @notice internal override function that is called before any token transfer.
+    /// @dev this function will revert if the contract is paused, pausing transfers of tokens.
+    /// @param from The address of the sender.
+    /// @param to The address of the receiver.
+    /// @param tokenId The token ID.
+    /// @param quantity The quantity of tokens to transfer.
+    function _beforeTokenTransfers(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 quantity
+    ) internal override(ERC721A) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (isPaused) {
+<span class="cstat-no" title="statement not covered" >            revert("Contract is paused")</span>;
+        }
+        super._beforeTokenTransfers(from, to, tokenId, quantity);
+    }
+&nbsp;
+    /// @notice function that returns the dagora contract type
+    /// @return the dagora contract type
     function typeOf() public pure virtual returns (string memory) {
         return "dAgora PowerNFT";
     }
 &nbsp;
-    /// @notice Internal function to set the starting tokenId.
-    function _startTokenId() internal pure override returns (uint256) {
+    /// @notice function that returns the dagora contract version
+    /// @return the dagora contract version
+<span class="fstat-no" title="function not covered" >    function version() public pure returns (string memory) {</span>
+<span class="cstat-no" title="statement not covered" >        return "1.0.0";</span>
+    }
+&nbsp;
+    /// @notice internal function that handles that starting tokenId of the collection
+    /// @return the starting tokenId of the collection eg 1
+    function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
     }
 }</pre></td></tr>
@@ -634,7 +724,7 @@ contract PowerNFT is Ownable, ERC721A, ERC2981, ReentrancyGuard {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 16 2023 02:51:48 GMT-0600 (Mountain Daylight Saving Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu May 04 2023 18:55:37 GMT-0600 (Mountain Daylight Saving Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

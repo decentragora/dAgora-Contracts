@@ -161,6 +161,12 @@ contract DagoraMembershipsV1 is
     /// @notice mapping that stores the delegates of a tokenId
     mapping(uint256 => address[]) public tokenDelegates;
 
+    /// @notice The initializer function that replaces the constructor.
+    /// @param _name the name of the token
+    /// @param _symbol the symbol of the token
+    /// @param baseURI_ the base URI for the token metadata
+    /// @param _dagoraTreasury the address of the dagora treasury
+    /// @param _DAI the address of the DAI token.
     function initialize(
         string memory _name,
         string memory _symbol,
@@ -620,6 +626,7 @@ contract DagoraMembershipsV1 is
                 return i;
             }
         }
+        return 0;
     }
 
     /// @notice Function to get a tokenIds delegates.
@@ -750,7 +757,6 @@ contract DagoraMembershipsV1 is
         return string(abi.encodePacked(baseURI, _toString(tokenId)));
     }
 
-
     /// @notice Internal function to check if an address is a delegate of a specfic tokenId.
     /// @param _tokenId The tokenId of the membership.
     /// @param _delegate The address to check.
@@ -795,8 +801,6 @@ contract DagoraMembershipsV1 is
         );
         super._beforeTokenTransfers(from, to, tokenId, quantity);
     }
-
-    
 
     /// @notice Internal function to check if an address is a contained in a specfic tokenId.
     /// @param _tokenId The tokenId of the membership.

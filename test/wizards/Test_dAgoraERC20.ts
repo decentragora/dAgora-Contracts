@@ -3,7 +3,7 @@ import { assert } from "console";
 import { ethers, upgrades } from "hardhat";
 
 
-describe("Test Power NFTA", function () {
+describe("Test Dagora ERC20", function () {
     let proxy: any;
     let proxyAddress: any;
     let factory: any;
@@ -103,9 +103,7 @@ describe("Test Power NFTA", function () {
         expect(owner).to.equal(addr1.address);
         expect(totalSupply).to.equal(ethers.utils.parseUnits('1000', 18));
         expect(maxSupply).to.equal(ethers.utils.parseUnits('100000', 18));
-        await token.connect(addr1).togglePaused();
     });
-
 
     it("have correct name set", async function () {
         expect(await token.name()).to.equal('Test Token');
