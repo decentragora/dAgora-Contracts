@@ -2,6 +2,10 @@
 
 ## DagoraMembershipsV1
 
+This contract manages the memberships for the Dagora platform.
+
+_This contract is upgradeable in order to add new features._
+
 ### Tiers
 
 ```solidity

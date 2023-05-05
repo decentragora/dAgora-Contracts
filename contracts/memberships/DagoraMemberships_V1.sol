@@ -7,13 +7,15 @@ import {ReentrancyGuardUpgradeable} from '@openzeppelin/contracts-upgradeable/se
 import {IERC20PermitUpgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/draft-IERC20PermitUpgradeable.sol';
 import {IERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
 
-
+/// @title Dagora Memberships V1
+/// @author DecentrAgora
+/// @notice This contract manages the memberships for the Dagora platform.
+/// @dev This contract is upgradeable in order to add new features.
 contract DagoraMembershipsV1 is
     OwnableUpgradeable,
     ReentrancyGuardUpgradeable,
     ERC721AUpgradeable
 {
-
     /// @notice Enum for membership tiers.
     /// @dev The order of the tiers is important, as it determines the order of the tiers in the enum
     /// @param Ecclesia the lowest tier of membership
@@ -285,7 +287,6 @@ contract DagoraMembershipsV1 is
         emit MembershipPurchased(msg.sender, _tokenId, _tier, experation[_tokenId]);
     }
 
-
     /// @notice Function to claim a ecclesia membership.
     function freeMint() public isNotPaused isNotMember nonReentrant {
         uint256 _tokenId = _getNextTokenId();
@@ -297,7 +298,6 @@ contract DagoraMembershipsV1 is
         _mint(msg.sender, 1);
         emit FreeMembershipClaimed(msg.sender, _tokenId, 0, experation[_tokenId]);
     }
-
 
     /// @notice Function to Renew a membership.
     /// @param _tokenId The tokenId of the membership.

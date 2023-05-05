@@ -15,8 +15,8 @@ async function main() {
         'Dagora Memberships',
         'DAGORA', 
         'https://decentragora.xyz/api/tokenid/',
-        '0x1de380594de7aba6442d879713c86ba7395abe7b',
-        '0xD68E69e2B5AE5baB29ff2DD363Ce1685465Df531'
+        '0x567582053C3Ad36494d4e4480f2dBB7aacf25C47',
+        '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1'
     ]);
     await membershipProxy.deployed();
 
