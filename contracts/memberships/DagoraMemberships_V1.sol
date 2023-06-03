@@ -168,13 +168,11 @@ contract DagoraMembershipsV1 is
     /// @param _symbol the symbol of the token
     /// @param baseURI_ the base URI for the token metadata
     /// @param _dagoraTreasury the address of the dagora treasury
-    /// @param _DAI the address of the DAI token.
     function initialize(
         string memory _name,
         string memory _symbol,
         string memory baseURI_,
-        address _dagoraTreasury,
-        address _DAI
+        address _dagoraTreasury
     ) public initializerERC721A initializer  {
         require(!_isInitialized, 'DagoraMemberships: Already initialized');
         __ERC721A_init(_name, _symbol);
@@ -182,18 +180,17 @@ contract DagoraMembershipsV1 is
         __ReentrancyGuard_init();
         dagoraTreasury = _dagoraTreasury;
         transferOwnership(_dagoraTreasury);
-        DAI = _DAI;
         baseURI = baseURI_;
         isPaused = true;
         ecclesiaPrice = 0;
-        ecclesiaRenewPrice = 5 * 10 ** 18;
-        dagorianPrice = 50 * 10 ** 18;
-        dagoraRenewPrice = 5 * 10 ** 18;
-        hoplitePrice = 80 * 10 ** 18;
-        hopliteRenewPrice = 10 * 10 ** 18;
-        percelsiaPrice = 1000 * 10 ** 18;
-        percelsiaRenewPrice = 50 * 10 ** 18;
-        discount = 5 * 10 ** 18;
+        ecclesiaRenewPrice = 2600000000000000;
+        dagorianPrice = 26000000000000000;
+        dagoraRenewPrice = 2600000000000000;
+        hoplitePrice = 42000000000000000;
+        hopliteRenewPrice = 5200000000000000;
+        percelsiaPrice = 520000000000000000;
+        percelsiaRenewPrice = 26000000000000000;
+        discount = 2600000000000000;
         _isInitialized = true;
     }
 
@@ -249,36 +246,21 @@ contract DagoraMembershipsV1 is
     /// @notice Function to mint a membership.
     /// @param _durationInMonths The duration of the membership in months. (1-12)
     /// @param _tier The tier of the membership. (Perclesian, Hoplite, dAgorian, Ecclesia)
-    /// @param _deadline The deadline for the permit signature.
-    /// @param _proxy The address of the proxy contract.
-    /// @param _v The v value of the permit signature.
-    /// @param _r The r value of the permit signature.
-    /// @param _s The s value of the permit signature.
-    /// @dev The permit signature is used to transfer the DAI from the msg.sender to the dAgoraTreasury.
     function mintMembership(
         uint8 _tier,
-        uint96 _durationInMonths,
-        uint256 _deadline,
-        address _proxy,
-        uint8 _v,
-        bytes32 _r,
-        bytes32 _s
+        uint96 _durationInMonths
     )   public
         isNotPaused
         isNotMember
         durationCheck(_durationInMonths)
         nonReentrant
+        payable
     {
         require(_tier > 0 && _tier < 4, "dAgoraMemberships: Invalid tier");
-        require(_proxy == proxyImplementation, "dAgoraMemberships: Invalid proxy");
         uint256 _duration = _durationInMonths * 30 days;
         uint256 _price = getMintPrice(_durationInMonths, _tier);
         uint256 _tokenId = _getNextTokenId();
-
-        require(IERC20Upgradeable(DAI).balanceOf(msg.sender) >= _price, "dAgoraMemberships: Insufficient balance");
-        IERC20PermitUpgradeable(DAI).permit(msg.sender, _proxy, _price, _deadline, _v, _r, _s);
-        bool success = IERC20Upgradeable(DAI).transferFrom(msg.sender, dagoraTreasury, _price);
-        require(success, "dAgoraMemberships: Transfer failed");
+        require(msg.value >= _price, "dAgoraMemberships: Insufficient funds");
 
         experation[_tokenId] = block.timestamp + (_duration + GRACE_PERIOD);
         memberships[_tokenId] = Membership(_tier, msg.sender, _tokenId,  experation[_tokenId]);
@@ -301,33 +283,20 @@ contract DagoraMembershipsV1 is
 
     /// @notice Function to Renew a membership.
     /// @param _tokenId The tokenId of the membership.
-    /// @param _deadline The deadline for the permit signature.
     /// @param _durationInMonths The duration of the membership in months. (1-12)
-    /// @param _proxy The address of the proxy contract.
-    /// @param _v The v value of the permit signature.
-    /// @param _r The r value of the permit signature.
-    /// @param _s The s value of the permit signature.
-    /// @dev The permit signature is used to transfer the DAI from the msg.sender to the dAgoraTreasury.
     function renewMembership(
         uint96 _durationInMonths,
-        uint256 _tokenId,
-        uint256 _deadline,
-        address _proxy,
-        uint8 _v,
-        bytes32 _r,
-        bytes32 _s
+        uint256 _tokenId
     )   external
         isNotPaused
         durationCheck(_durationInMonths)
         onlyDelegateeAndOwner(_tokenId)
         nonReentrant
+        payable
     {
-        require(_proxy == proxyImplementation, "dAgoraMemberships: Invalid proxy");
         uint256 _duration = _durationInMonths * 30 days;
         uint256 _price = getRenewalPrice(_durationInMonths, memberships[_tokenId].tier);
-        IERC20PermitUpgradeable(DAI).permit(msg.sender, _proxy, _price, _deadline, _v, _r, _s);
-        bool success = IERC20Upgradeable(DAI).transferFrom(msg.sender, dagoraTreasury, _price);
-        require(success, "dAgoraMemberships: Transfer failed");
+        require(msg.value >= _price, "dAgoraMemberships: Insufficient funds");
 
         uint256 __experation = experation[_tokenId] + _duration;
         experation[_tokenId] = __experation;
@@ -339,34 +308,22 @@ contract DagoraMembershipsV1 is
     /// @param newTier The new tier of the membership.
     /// @param oldTier The old tier of the membership.
     /// @param tokenId The tokenId of the membership.
-    /// @param deadline The deadline for the permit signature.
-    /// @param _proxy The address of the proxy contract.
-    /// @param v The v value of the permit signature.
-    /// @param r The r value of the permit signature.
-    /// @param s The s value of the permit signature.
-    /// @dev The permit signature is used to transfer the DAI from the msg.sender to the dAgoraTreasury.
     function upgradeMembership(
         uint8 newTier,
         uint8 oldTier,
-        uint256 tokenId,
-        uint256 deadline,
-        address _proxy,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
+        uint256 tokenId
     )   public
         isNotPaused
         onlyController(tokenId)
         _isValidMembership(tokenId)
         nonReentrant
+        payable
     {
         require(newTier > oldTier, "dAgoraMemberships: Invalid upgrade");
         require(newTier > 0 && newTier < 4, "dAgoraMemberships: Invalid tier");
-        require(_proxy == proxyImplementation, "dAgoraMemberships: Invalid proxy");
         uint256 _price = _getUpgradePrice(tokenId, oldTier, newTier);
-        IERC20PermitUpgradeable(DAI).permit(msg.sender, _proxy, _price, deadline, v, r, s);
-        bool success = IERC20Upgradeable(DAI).transferFrom(msg.sender, dagoraTreasury, _price);
-        require(success, "dAgoraMemberships: Transfer failed");
+        require(msg.value >= _price, "dAgoraMemberships: Insufficient funds");
+
         memberships[tokenId].tier = newTier;
     }
 

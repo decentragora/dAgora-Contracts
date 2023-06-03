@@ -5,7 +5,6 @@ import { ethers, upgrades} from "hardhat";
 describe("Test Deployment", function () {
     let proxy: any;
     let proxyAddress: any;
-    let DAI: any;
     let dagoraTreasury: any;
     let addr1: any;
     let addr2: any;
@@ -13,9 +12,6 @@ describe("Test Deployment", function () {
 
     beforeEach(async function () {
         [dagoraTreasury, addr1, addr2, ...addrs] = await ethers.getSigners();
-        const Dai = await ethers.getContractFactory("Dai");
-        DAI = await Dai.deploy();
-        await DAI.deployed();
 
         const membership = await ethers.getContractFactory("DagoraMembershipsV1");
         proxy = await upgrades.deployProxy(membership, [
@@ -23,22 +19,14 @@ describe("Test Deployment", function () {
             'DAGORA',
             'https://dagora.io/memberships/',
             dagoraTreasury.address,
-            DAI.address
         ]);
 
         await proxy.deployed();
         proxyAddress = proxy.address;
 
-        //mint dai for addr1
-        await DAI.mint();
-        DAI.connect(addr1).mint();
-
     });
 
     describe("Deployment", function () {
-        it("Addr1 should have 10000 dai", async function () {
-            expect(await DAI.balanceOf(addr1.address)).to.equal(ethers.utils.parseEther('10000'));
-        });
 
         it("Should set the right owner", async function () {
             expect(await proxy.owner()).to.equal(dagoraTreasury.address);
@@ -56,10 +44,6 @@ describe("Test Deployment", function () {
             expect(await proxy.baseURI()).to.equal('https://dagora.io/memberships/');
         });
 
-        it("Should set the right DAI address", async function () {
-            expect(await proxy.DAI()).to.equal(DAI.address);
-        });
-
         it("Should set the right treasury address", async function () {
             expect(await proxy.dagoraTreasury()).to.equal(dagoraTreasury.address);
         });
@@ -68,16 +52,25 @@ describe("Test Deployment", function () {
             expect(await proxy.totalSupply()).to.equal(0);
         });
 
+
+                    // ecclesiaRenewPrice = 2600000000000000 || 0.0026 ETH;
+    // dagorianPrice = 26000000000000000 || 0.026 ETH;
+    // dagoraRenewPrice = 2600000000000000 || 0.0026 ETH;
+    // hoplitePrice = 42000000000000000 || 0.042 ETH;
+    // hopliteRenewPrice = 5200000000000000 || 0.0052 ETH;
+    // percelsiaPrice = 520000000000000000 || 0.52 ETH;
+    // percelsiaRenewPrice = 26000000000000000 || 0.026 ETH;
+    // discount = 2600000000000000 || 0.0026 ETH;
         it("Should Have Right Prices set", async function () {
-            expect(await proxy.ecclesiaPrice()).to.equal(ethers.utils.parseEther('0'));
-            expect(await proxy.ecclesiaRenewPrice()).to.equal(ethers.utils.parseEther('5'));
-            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('50'));
-            expect(await proxy.dagoraRenewPrice()).to.equal(ethers.utils.parseEther('5'));
-            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('80'));
-            expect(await proxy.hopliteRenewPrice()).to.equal(ethers.utils.parseEther('10'));
-            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('1000'));
-            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('50'));
-            expect(await proxy.discount()).to.equal(ethers.utils.parseEther('5'));
+            expect(await proxy.ecclesiaPrice()).to.equal(0);
+            expect(await proxy.ecclesiaRenewPrice()).to.equal(ethers.utils.parseEther('0.0026'));
+            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('0.026'));
+            expect(await proxy.dagoraRenewPrice()).to.equal(ethers.utils.parseEther('0.0026'));
+            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('0.042'));
+            expect(await proxy.hopliteRenewPrice()).to.equal(ethers.utils.parseEther('0.0052'));
+            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('0.52'));
+            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('0.026'));
+            expect(await proxy.discount()).to.equal(ethers.utils.parseEther('0.0026'));
         });
 
         it("Should not allow another user to initailization", async function () {
@@ -86,7 +79,6 @@ describe("Test Deployment", function () {
                 'DAGORA',
                 'https://dagora.io/memberships/',
                 dagoraTreasury.address,
-                DAI.address
             )).to.be.revertedWith("ERC721A__Initializable: contract is already initialized");
         });
 

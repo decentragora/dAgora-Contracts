@@ -5,7 +5,6 @@ import { ethers, upgrades} from "hardhat";
 describe("Test Only Owner Functions", function () {
     let proxy: any;
     let proxyAddress: any;
-    let DAI: any;
     let dagoraTreasury: any;
     let addr1: any;
     let addr2: any;
@@ -15,9 +14,6 @@ describe("Test Only Owner Functions", function () {
     beforeEach(async function () {
         startingTimestamp = Math.floor(Date.now() / 1000);
         [dagoraTreasury, addr1, addr2, ...addrs] = await ethers.getSigners();
-        const Dai = await ethers.getContractFactory("Dai");
-        DAI = await Dai.deploy();
-        await DAI.deployed();
 
         const membership = await ethers.getContractFactory("DagoraMembershipsV1");
         proxy = await upgrades.deployProxy(membership, [
@@ -25,16 +21,10 @@ describe("Test Only Owner Functions", function () {
             'DAGORA',
             'https://dagora.io/memberships/',
             dagoraTreasury.address,
-            DAI.address
         ]);
         await proxy.deployed();
         proxyAddress = proxy.address;
-
-        //mint dai for addr1
-        await DAI.connect(addr1).mint();
-        expect(await DAI.balanceOf(addr1.address)).to.equal(ethers.utils.parseEther('10000'));
     });
-
 
     describe("Only Owner Functions", function () {
         //Gifts TODO
@@ -213,63 +203,72 @@ describe("Test Only Owner Functions", function () {
 
         // setDiscount
         it("Should allow owner to set discount", async function () {
-            expect(await proxy.discount()).to.equal(ethers.utils.parseEther('5'));
+            expect(await proxy.discount()).to.equal(ethers.utils.parseEther('0.0026'));
             await proxy.setDiscount(ethers.utils.parseEther('10'));
             expect(await proxy.discount()).to.equal(ethers.utils.parseEther('10'));
         });
 
+            // ecclesiaRenewPrice = 2600000000000000 || 0.0026 ETH;
+    // dagorianPrice = 26000000000000000 || 0.026 ETH;
+    // dagoraRenewPrice = 2600000000000000 || 0.0026 ETH;
+    // hoplitePrice = 42000000000000000 || 0.042 ETH;
+    // hopliteRenewPrice = 5200000000000000 || 0.0052 ETH;
+    // percelsiaPrice = 520000000000000000 || 0.52 ETH;
+    // percelsiaRenewPrice = 26000000000000000 || 0.026 ETH;
+    // discount = 2600000000000000 || 0.0026 ETH;
+
         // setDiscount - should not allow non-owner
         it("Should not allow non-owner to set discount", async function () {
-            expect(await proxy.discount()).to.equal(ethers.utils.parseEther('5'));
+            expect(await proxy.discount()).to.equal(ethers.utils.parseEther('0.0026'));
             await expect(proxy.connect(addr1).setDiscount(10)).to.be.revertedWith('Ownable: caller is not the owner');
-            expect(await proxy.discount()).to.equal(ethers.utils.parseEther('5'));
+            expect(await proxy.discount()).to.equal(2600000000000000);
         });
 
         // setPercelsiaPrice
         it("Should allow owner to set Percelsia price", async function () {
-            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('1000'));
+            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('0.52'));
             await proxy.setPercelsiaPrice(ethers.utils.parseEther('100'));
             expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('100'));
         });
 
         // setPercelsiaPrice - should not allow non-owner
         it("Should not allow non-owner to set Percelsia price", async function () {
-            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('1000'));
+            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('0.52'));
             await expect(proxy.connect(addr1).setPercelsiaPrice(ethers.utils.parseEther('100'))).to.be.revertedWith('Ownable: caller is not the owner');
-            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('1000'));
+            expect(await proxy.percelsiaPrice()).to.equal(ethers.utils.parseEther('0.52'));
         });
 
         // setHoplitePrice
         it("Should allow owner to set Hoplite price", async function () {
-            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('80'));
+            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('0.042'));
             await proxy.setHoplitePrice(ethers.utils.parseEther('100'));
             expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('100'));
         });
 
         // setHoplitePrice - should not allow non-owner
         it("Should not allow non-owner to set Hoplite price", async function () {
-            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('80'));
+            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('0.042'));
             await expect(proxy.connect(addr1).setHoplitePrice(ethers.utils.parseEther('1000'))).to.be.revertedWith('Ownable: caller is not the owner');
-            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('80'));
+            expect(await proxy.hoplitePrice()).to.equal(ethers.utils.parseEther('0.042'));
         });
 
         // setDagorianPrice
         it("Should allow owner to set Dagorian price", async function () {
-            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('50'));
+            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('0.026'));
             await proxy.setDagorianPrice(ethers.utils.parseEther('1000'));
             expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('1000'));
         });
 
         // setDagorianPrice - should not allow non-owner
         it("Should not allow non-owner to set Dagorian price", async function () {
-            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('50'));
+            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('0.026'));
             await expect(proxy.connect(addr1).setDagorianPrice(ethers.utils.parseEther('1000'))).to.be.revertedWith('Ownable: caller is not the owner');
-            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('50'));
+            expect(await proxy.dagorianPrice()).to.equal(ethers.utils.parseEther('0.026'));
         });
 
         // setEcclesiaPrice
         it("Should allow owner to set Ecclesia price", async function () {
-            expect(await proxy.ecclesiaPrice()).to.equal(ethers.utils.parseEther('0'));
+            expect(await proxy.ecclesiaPrice()).to.equal(0);
             await proxy.setEcclesiaPrice(ethers.utils.parseEther('1000'));
             expect(await proxy.ecclesiaPrice()).to.equal(ethers.utils.parseEther('1000'));
         });
@@ -281,47 +280,54 @@ describe("Test Only Owner Functions", function () {
             expect(await proxy.ecclesiaPrice()).to.equal(ethers.utils.parseEther('0'));
         });
 
-
+    // ecclesiaRenewPrice = 2600000000000000 || 0.0026 ETH;
+    // dagorianPrice = 26000000000000000 || 0.026 ETH;
+    // dagoraRenewPrice = 2600000000000000 || 0.0026 ETH;
+    // hoplitePrice = 42000000000000000 || 0.042 ETH;
+    // hopliteRenewPrice = 5200000000000000 || 0.0052 ETH;
+    // percelsiaPrice = 520000000000000000 || 0.52 ETH;
+    // percelsiaRenewPrice = 26000000000000000 || 0.026 ETH;
+    // discount = 2600000000000000 || 0.0026 ETH;
         // setPercelsiaRenewPrice
         it("Should allow owner to set Percelsia renew price", async function () {
-            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('50'));
+            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('0.026'));
             await proxy.setPercelsiaRenewPrice(ethers.utils.parseEther('100'));
             expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('100'));
         });
 
         // setPercelsiaRenewPrice - should not allow non-owner
         it("Should not allow non-owner to set Percelsia renew price", async function () {
-            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('50'));
+            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('0.026'));
             await expect(proxy.connect(addr1).setPercelsiaRenewPrice(ethers.utils.parseEther('100'))).to.be.revertedWith('Ownable: caller is not the owner');
-            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('50'));
+            expect(await proxy.percelsiaRenewPrice()).to.equal(ethers.utils.parseEther('0.026'));
         });
 
         // setHopliteRenewPrice
         it("Should allow owner to set Hoplite renew price", async function () {
-            expect(await proxy.hopliteRenewPrice()).to.equal(ethers.utils.parseEther('10'));
+            expect(await proxy.hopliteRenewPrice()).to.equal(5200000000000000);
             await proxy.setHopliteRenewPrice(ethers.utils.parseEther('100'));
             expect(await proxy.hopliteRenewPrice()).to.equal(ethers.utils.parseEther('100'));
         });
 
         // setHopliteRenewPrice - should not allow non-owner
         it("Should not allow non-owner to set Hoplite renew price", async function () {
-            expect(await proxy.hopliteRenewPrice()).to.equal(ethers.utils.parseEther('10'));
+            expect(await proxy.hopliteRenewPrice()).to.equal(5200000000000000);
             await expect(proxy.connect(addr1).setHopliteRenewPrice(ethers.utils.parseEther('1000'))).to.be.revertedWith('Ownable: caller is not the owner');
-            expect(await proxy.hopliteRenewPrice()).to.equal(ethers.utils.parseEther('10'));
+            expect(await proxy.hopliteRenewPrice()).to.equal(5200000000000000);
         });
 
         // setDagorianRenewPrice
         it("Should allow owner to set Dagorian renew price", async function () {
-            expect(await proxy.dagoraRenewPrice()).to.equal(ethers.utils.parseEther('5'));
+            expect(await proxy.dagoraRenewPrice()).to.equal(2600000000000000);
             await proxy.setDagorianRenewPrice(ethers.utils.parseEther('1000'));
             expect(await proxy.dagoraRenewPrice()).to.equal(ethers.utils.parseEther('1000'));
         });
 
         // setDagorianRenewPrice - should not allow non-owner
         it("Should not allow non-owner to set Dagorian renew price", async function () {
-            expect(await proxy.dagoraRenewPrice()).to.equal(ethers.utils.parseEther('5'));
+            expect(await proxy.dagoraRenewPrice()).to.equal(2600000000000000);
             await expect(proxy.connect(addr1).setDagorianRenewPrice(ethers.utils.parseEther('1000'))).to.be.revertedWith('Ownable: caller is not the owner');
-            expect(await proxy.dagoraRenewPrice()).to.equal(ethers.utils.parseEther('5'));
+            expect(await proxy.dagoraRenewPrice()).to.equal(2600000000000000);
         });
         
         // setDagoraTreasury
@@ -356,16 +362,6 @@ describe("Test Only Owner Functions", function () {
 
         it("Should not allow non-owner to withdraw eth from contract", async function () {
             await expect(proxy.connect(addr2).withdrawETH()).to.be.revertedWith('Ownable: caller is not the owner');
-        });
-
-        // withdrawERC20
-        it("Should allow owner to withdraw ERC20 from contract", async function () {
-            /// send ERC20 to contract
-            await DAI.connect(addr1).transfer(proxy.address, ethers.utils.parseEther('100'));
-            expect(await DAI.balanceOf(proxy.address)).to.equal(ethers.utils.parseEther('100'));
-            await proxy.withdrawERC20(DAI.address);
-            expect(await DAI.balanceOf(proxy.address)).to.equal(ethers.utils.parseEther('0'));
-            expect(await DAI.balanceOf(dagoraTreasury.address)).to.equal(ethers.utils.parseEther('100'));
         });
 
         it("Should not allow non-owner to withdraw eth from contract", async function () {

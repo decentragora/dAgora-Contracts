@@ -28,9 +28,6 @@ describe("Test  Create NFTAPlus Factory", function () {
 
     beforeEach(async function () {
         [dagoraTreasury, addr1, addr2, addr3, ...addrs] = await ethers.getSigners();
-        const Dai = await ethers.getContractFactory("Dai");
-        DAI = await Dai.deploy();
-        await DAI.deployed();
 
         leaves = [
             addr2.address,
@@ -49,7 +46,6 @@ describe("Test  Create NFTAPlus Factory", function () {
             'DAGORA',
             'https://dagora.io/memberships/',
             dagoraTreasury.address,
-            DAI.address
         ]);
         await proxy.deployed();
         proxyAddress = proxy.address;
@@ -65,9 +61,6 @@ describe("Test  Create NFTAPlus Factory", function () {
         factoryProxyAddress = factoryProxy.address;
         factoryProxy.togglePaused();
 
-        //mint dai for addr1
-        await DAI.mint();
-        DAI.connect(addr1).mint();
 
         //Gift membership to addr1
         await proxy.connect(dagoraTreasury).giftMembership(addr1.address, 1, 3);

@@ -71,11 +71,7 @@ describe("Test Membership delegate Functions", function () {
     let addr10: any;
     let addr11: any;
     let addr12: any;
-    let addrs: any;
-    let domain: any;
-    let types: any;
-    let message: any;
-    let deadline: any;
+    let addrs: any;  
     let implementationAddress: any;
     let startingTimestamp: any;
 
@@ -85,16 +81,12 @@ describe("Test Membership delegate Functions", function () {
         const blockTimestamp = (await ethers.provider.getBlock(currentBlock)).timestamp;
         startingTimestamp= blockTimestamp;
         [dagoraTreasury, addr1, addr2, addr3, addr4, addr5, addr6, addr7, addr8, addr9, addr10, addr11, addr12, ...addrs] = await ethers.getSigners();
-        const Dai = await ethers.getContractFactory("Dai"); //// Mock DAI contract
-        DAI = await Dai.deploy();
-        deadline = Date.now() + 1000 * 60 * 60 * 24 * 30; /// 30 days from now
         const membershipV1 = await ethers.getContractFactory("DagoraMembershipsV1");
         proxy = await upgrades.deployProxy(membershipV1, [
             'Dagora Memberships',
             'DAGORA',
             'https://decentragora.xyz/api/tokenid/',
             dagoraTreasury.address,
-            DAI.address
         ]);
         await proxy.deployed();
 
@@ -103,8 +95,7 @@ describe("Test Membership delegate Functions", function () {
         /// set implementation address to proxy
         await proxy.setProxyAddress(proxy.address);
 
-        await DAI.connect(addr1).mint()
-        await DAI.connect(addr2).mint();
+
 
         ///Toggle Paused on Proxy membership state
         await proxy.connect(dagoraTreasury).togglePaused();
@@ -122,16 +113,11 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow dagorian members to delegate", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 1);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);    
+           
         await proxy.connect(addr1).mintMembership(
             1,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            {value: price}
         );
 
         /// Try to delegate
@@ -141,16 +127,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow Hoplite members to delegate", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 2);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);    
         await proxy.connect(addr1).mintMembership(
             2,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price },
         );
 
         /// Try to delegate
@@ -160,16 +140,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should allow Perclesian members to delegate", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price },
         );
         
         /// Try to delegate
@@ -181,16 +155,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should allow a owner to swap delegates", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         /// Try to delegate
@@ -207,16 +175,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow a non-owner to swap delegates", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price}
         );
 
         /// Try to delegate
@@ -231,16 +193,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should allow a owner to remove delegates", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
             
         /// Try to delegate
@@ -257,16 +213,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow a non-owner to remove delegates", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         /// Try to delegate
@@ -281,16 +231,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should allow Perclesian members to delegate to multiple addresses", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         /// Try to delegate 10 times
@@ -308,16 +252,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow a delegate to delegate", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         /// Try to delegate
@@ -332,16 +270,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow a delegate to remove delegates", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         /// Try to delegate
@@ -356,16 +288,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow owner to delegate to themselves", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         /// Try to delegate
@@ -380,16 +306,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow owner to delegate to zero address", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         /// Try to delegate
@@ -404,16 +324,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should not allow owner to delegate to a address that is already delegated", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
         
         /// Try to delegate
@@ -429,16 +343,10 @@ describe("Test Membership delegate Functions", function () {
     it("Should allow a delegate to renew membership", async function () {
         /// Mint membership
         const price = await proxy.getMintPrice(1, 3);
-        const sig = await getPermitSignature(addr1, DAI, proxy.address, price, deadline);
-        const { v, r, s } =  await ethers.utils.splitSignature(sig);
         await proxy.connect(addr1).mintMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            v,
-            r,
-            s
+            { value: price }
         );
 
         let membership = await proxy.getMembership(1);
@@ -454,17 +362,10 @@ describe("Test Membership delegate Functions", function () {
 
         /// Mint membership
         const renewPrice = await proxy.getRenewalPrice(3, 3);
-        const renewSig = await getPermitSignature(addr2, DAI, proxy.address, renewPrice, deadline);
-        const { v: renewV, r: renewR, s: renewS } =  await ethers.utils.splitSignature(renewSig);
-
         await proxy.connect(addr2).renewMembership(
             3,
             1,
-            deadline,
-            proxy.address,
-            renewV,
-            renewR,
-            renewS
+            { value: renewPrice }
         );
         membership = await proxy.getMembership(1);
         expect(membership[0]).to.equal(3);

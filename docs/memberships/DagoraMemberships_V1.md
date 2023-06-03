@@ -338,7 +338,7 @@ mapping that stores the delegates of a tokenId
 ### initialize
 
 ```solidity
-function initialize(string _name, string _symbol, string baseURI_, address _dagoraTreasury, address _DAI) public
+function initialize(string _name, string _symbol, string baseURI_, address _dagoraTreasury) public
 ```
 
 The initializer function that replaces the constructor.
@@ -351,7 +351,6 @@ The initializer function that replaces the constructor.
 | _symbol | string | the symbol of the token |
 | baseURI_ | string | the base URI for the token metadata |
 | _dagoraTreasury | address | the address of the dagora treasury |
-| _DAI | address | the address of the DAI token. |
 
 ### isNotPaused
 
@@ -414,12 +413,10 @@ Modifier to check if the msg.sender is the owner or delegatee of the membership.
 ### mintMembership
 
 ```solidity
-function mintMembership(uint8 _tier, uint96 _durationInMonths, uint256 _deadline, address _proxy, uint8 _v, bytes32 _r, bytes32 _s) public
+function mintMembership(uint8 _tier, uint96 _durationInMonths) public payable
 ```
 
 Function to mint a membership.
-
-_The permit signature is used to transfer the DAI from the msg.sender to the dAgoraTreasury._
 
 #### Parameters
 
@@ -427,11 +424,6 @@ _The permit signature is used to transfer the DAI from the msg.sender to the dAg
 | ---- | ---- | ----------- |
 | _tier | uint8 | The tier of the membership. (Perclesian, Hoplite, dAgorian, Ecclesia) |
 | _durationInMonths | uint96 | The duration of the membership in months. (1-12) |
-| _deadline | uint256 | The deadline for the permit signature. |
-| _proxy | address | The address of the proxy contract. |
-| _v | uint8 | The v value of the permit signature. |
-| _r | bytes32 | The r value of the permit signature. |
-| _s | bytes32 | The s value of the permit signature. |
 
 ### freeMint
 
@@ -444,12 +436,10 @@ Function to claim a ecclesia membership.
 ### renewMembership
 
 ```solidity
-function renewMembership(uint96 _durationInMonths, uint256 _tokenId, uint256 _deadline, address _proxy, uint8 _v, bytes32 _r, bytes32 _s) external
+function renewMembership(uint96 _durationInMonths, uint256 _tokenId) external payable
 ```
 
 Function to Renew a membership.
-
-_The permit signature is used to transfer the DAI from the msg.sender to the dAgoraTreasury._
 
 #### Parameters
 
@@ -457,21 +447,14 @@ _The permit signature is used to transfer the DAI from the msg.sender to the dAg
 | ---- | ---- | ----------- |
 | _durationInMonths | uint96 | The duration of the membership in months. (1-12) |
 | _tokenId | uint256 | The tokenId of the membership. |
-| _deadline | uint256 | The deadline for the permit signature. |
-| _proxy | address | The address of the proxy contract. |
-| _v | uint8 | The v value of the permit signature. |
-| _r | bytes32 | The r value of the permit signature. |
-| _s | bytes32 | The s value of the permit signature. |
 
 ### upgradeMembership
 
 ```solidity
-function upgradeMembership(uint8 newTier, uint8 oldTier, uint256 tokenId, uint256 deadline, address _proxy, uint8 v, bytes32 r, bytes32 s) public
+function upgradeMembership(uint8 newTier, uint8 oldTier, uint256 tokenId) public payable
 ```
 
 Function to upgrade a membership.
-
-_The permit signature is used to transfer the DAI from the msg.sender to the dAgoraTreasury._
 
 #### Parameters
 
@@ -480,11 +463,6 @@ _The permit signature is used to transfer the DAI from the msg.sender to the dAg
 | newTier | uint8 | The new tier of the membership. |
 | oldTier | uint8 | The old tier of the membership. |
 | tokenId | uint256 | The tokenId of the membership. |
-| deadline | uint256 | The deadline for the permit signature. |
-| _proxy | address | The address of the proxy contract. |
-| v | uint8 | The v value of the permit signature. |
-| r | bytes32 | The r value of the permit signature. |
-| s | bytes32 | The s value of the permit signature. |
 
 ### cancelMembership
 

@@ -18,9 +18,7 @@ describe("Test  Create Dagora ERC20  Factory", function () {
 
     beforeEach(async function () {
         [dagoraTreasury, addr1, addr2, ...addrs] = await ethers.getSigners();
-        const Dai = await ethers.getContractFactory("Dai");
-        DAI = await Dai.deploy();
-        await DAI.deployed();
+
 
         const membership = await ethers.getContractFactory("DagoraMembershipsV1");
         proxy = await upgrades.deployProxy(membership, [
@@ -28,7 +26,6 @@ describe("Test  Create Dagora ERC20  Factory", function () {
             'DAGORA',
             'https://dagora.io/memberships/',
             dagoraTreasury.address,
-            DAI.address
         ]);
         await proxy.deployed();
         proxyAddress = proxy.address;
@@ -43,10 +40,6 @@ describe("Test  Create Dagora ERC20  Factory", function () {
         await factoryProxy.deployed();
         factoryProxyAddress = factoryProxy.address;
         factoryProxy.togglePaused();
-
-        //mint dai for addr1
-        await DAI.mint();
-        DAI.connect(addr1).mint();
 
         //Gift membership to addr1
         await proxy.connect(dagoraTreasury).giftMembership(addr1.address, 1, 3);

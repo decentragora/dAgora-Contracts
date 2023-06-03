@@ -46,10 +46,6 @@ describe("Test Power Plus NFT", function () {
         root = tree.getHexRoot();            
         // Get starting timestamp
         startTimeStamp = Math.floor(Date.now() / 1000);
-        //Deploy DAI
-        const Dai = await ethers.getContractFactory("Dai");
-        DAI = await Dai.deploy();
-        await DAI.deployed();
 
         //Deploy Membership Proxy
         const membership = await ethers.getContractFactory("DagoraMembershipsV1");
@@ -58,7 +54,6 @@ describe("Test Power Plus NFT", function () {
             'DAGORA',
             'https://dagora.io/memberships/',
             dagoraTreasury.address,
-            DAI.address
         ]);
         await proxy.deployed();
         proxyAddress = proxy.address;
@@ -71,10 +66,6 @@ describe("Test Power Plus NFT", function () {
         ]);
         await factoryProxy.deployed();
         await factoryProxy.togglePaused();
-        //mint dai for addr1
-        await DAI.mint();
-        await DAI.connect(addr1).mint();
-        await DAI.connect(addr2).mint();
         // Gift membership to addr1 for 3 months
         await proxy.connect(dagoraTreasury).giftMembership(addr1.address, 2, 3);
         expect(await proxy.ownerOf(1)).to.equal(addr1.address);

@@ -1,9 +1,10 @@
 import { ethers, upgrades } from "hardhat";
 
 //npx hardhat run scripts/Deploy_Factory_Proxys.ts --network opGoerli
+//npx hardhat run scripts/Deploy_Factory_Proxys.ts --network optimism 
 
 // Verify ERC20 Factory implementation
-//npx hardhat verify --network opGoerli 0xb72C91AFDB40E5Da8642BB9Da5446210A4229eD9
+//npx hardhat verify --network optimism 0x41b93fF8039f4aF67508d6E07784Ba17aE84fc00
 // npx hardhat verify --network opGoerli 0xf5AE5bb934aAbCd8058d82F0A78bae98226DC542
 // npx hardhat verify --network opGoerli 0xbB30329Fcf765C0f833d66cD9b41a197073c1197
 
@@ -44,11 +45,13 @@ async function main() {
     console.log("Deploying contracts with the account:", deployer.address);
     console.log("Account balance:", (await deployer.getBalance()).toString());
 
-    const membershipAddress = '0x2866eedf82B941CeE9a7a17eF14b28112272633d'; //REAL
+    const membershipAddress = '0x9839C0f5715BDA074af1C6802cb9D157169c18D5';
+    const dagoraTreasury = '0x567582053C3Ad36494d4e4480f2dBB7aacf25C47';
+
     /// get all factory contracts
     // const ERC20Factory = await ethers.getContractFactory("DagoraERC20Factory");
     // const SimpleNFTAFactory = await ethers.getContractFactory("DagoraSimpleNFTFactory");
-    const PaymentSplitterFactory = await ethers.getContractFactory("DagoraPaymentSplitterFactory");
+    // const PaymentSplitterFactory = await ethers.getContractFactory("DagoraPaymentSplitterFactory");
     // const DagoraNFTAPlusFactory = await ethers.getContractFactory("DagoraNFTAPlusFactory");
     // const PowerNFTAFactory = await ethers.getContractFactory("DagoraPowerNFTFactory");
     // const PowerPlusFactory = await ethers.getContractFactory("DagoraPowerPlusNFTFactory");
@@ -56,25 +59,33 @@ async function main() {
     //deploy all factory contracts
     // const erc20Factory = await upgrades.deployProxy(ERC20Factory, [membershipAddress]);
     // const simpleNFTAFactory = await upgrades.deployProxy(SimpleNFTAFactory, [membershipAddress]);
-    const paymentSplitterFactory = await upgrades.deployProxy(PaymentSplitterFactory, [membershipAddress]);
+    // const paymentSplitterFactory = await upgrades.deployProxy(PaymentSplitterFactory, [membershipAddress]);
     // const nftaPlusFactory = await upgrades.deployProxy(DagoraNFTAPlusFactory, [membershipAddress]);
     // const powerNFTAFactory = await upgrades.deployProxy(PowerNFTAFactory, [membershipAddress]);
     // const powerPlusFactory = await upgrades.deployProxy(PowerPlusFactory, [membershipAddress]);
 
     // await erc20Factory.deployed();
     // await simpleNFTAFactory.deployed();
-    await paymentSplitterFactory.deployed();
+    // await paymentSplitterFactory.deployed();
     // await nftaPlusFactory.deployed();
     // await powerNFTAFactory.deployed();
     // await powerPlusFactory.deployed();
 
     // console.log("ERC20Factory deployed to:", erc20Factory.address);
     // console.log("SimpleNFTAFactory deployed to:", simpleNFTAFactory.address);
-    console.log("PaymentSplitterFactory deployed to:", paymentSplitterFactory.address);
+    // console.log("PaymentSplitterFactory deployed to:", paymentSplitterFactory.address);
     // console.log("DagoraNFTAPlusFactory deployed to:", nftaPlusFactory.address);
     // console.log("PowerNFTAFactory deployed to:", powerNFTAFactory.address); 
     // console.log("PowerPlusFactory deployed to:", powerPlusFactory.address);
     
+    // transfer ownership to dagora treasury
+    // await erc20Factory.transferOwnership(dagoraTreasury);   
+    // await simpleNFTAFactory.transferOwnership(dagoraTreasury);
+    // await paymentSplitterFactory.transferOwnership(dagoraTreasury);
+    // await nftaPlusFactory.transferOwnership(dagoraTreasury);
+    // await powerNFTAFactory.transferOwnership(dagoraTreasury);
+    // await powerPlusFactory.transferOwnership(dagoraTreasury);
+
 }
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
